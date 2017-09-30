@@ -1,0 +1,5 @@
+filter:
+    excludeMethod:
+        - 'GET'
+event:
+    hidePayload: false
