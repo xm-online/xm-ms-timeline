@@ -2,7 +2,10 @@ package com.icthh.xm.ms.timeline.repository.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.icthh.xm.commons.logging.util.MDCUtil;
+import com.icthh.xm.commons.logging.aop.IgnoreLogginAspect;
+import com.icthh.xm.commons.logging.util.MdcUtils;
+import com.icthh.xm.commons.tenant.TenantContextHolder;
+import com.icthh.xm.commons.tenant.TenantContextUtils;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.service.TenantPropertiesService;
 import com.icthh.xm.ms.timeline.service.TimelineService;
@@ -19,9 +22,11 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@IgnoreLogginAspect
 public class TimelineEventConsumer {
     private final TimelineService timelineService;
     private final TenantPropertiesService tenantPropertiesService;
+    private final TenantContextHolder tenantContextHolder;
 
     /**
      * Consume timeline event message.
@@ -32,17 +37,18 @@ public class TimelineEventConsumer {
         backoff = @Backoff(delayExpression = "${application.retry.delay}",
             multiplierExpression = "${application.retry.multiplier}"))
     public void consumeEvent(ConsumerRecord<String, String> message) {
-        MDCUtil.put();
+        MdcUtils.putRid();
         try {
-            log.info("Input message {}", message);
+            log.info("Consume event from topic [{}]", message.topic());
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
             try {
                 XmTimeline xmTimeline = mapper.readValue(message.value(), XmTimeline.class);
+                TenantContextUtils.setTenant(tenantContextHolder, xmTimeline.getTenant());
                 if (CollectionUtils.isNotEmpty(tenantPropertiesService.getTenantProps().getFilter().getExcludeMethod())
                     && tenantPropertiesService.getTenantProps().getFilter().getExcludeMethod()
                     .contains(xmTimeline.getHttpMethod())) {
-                    log.debug("Message {} was excluded by http method ", xmTimeline);
+                    log.debug("Message '{}' was excluded by http method", xmTimeline);
                     return;
                 }
                 if (StringUtils.isBlank(xmTimeline.getTenant())) {
@@ -50,10 +56,11 @@ public class TimelineEventConsumer {
                 }
                 timelineService.insertTimelines(xmTimeline);
             } catch (IOException e) {
-                log.error("Kafka message has incorrect format ", e);
+                log.error("Timeline message has incorrect format: '{}'", message.value(), e);
             }
         } finally {
-            MDCUtil.remove();
+            tenantContextHolder.getPrivilegedContext().destroyCurrentContext();
+            MdcUtils.removeRid();
         }
     }
 }

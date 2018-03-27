@@ -8,14 +8,16 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import java.time.Instant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.Instant;
 
 /**
  * REST controller for managing Timelines.
@@ -49,7 +51,11 @@ public class XmTimelineResource {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Successful retrieval of timelines", response = TimelinePageVM.class),
         @ApiResponse(code = 500, message = "Internal server error")})
+    @PreAuthorize("hasPermission({'userKey':#userKey, 'idOrKey': #idOrKey, 'dateFrom': #dateFrom, 'dateTo': #dateTo, "
+        + "'operation': #operation}, 'TIMELINE.GET_LIST')")
     public ResponseEntity<TimelinePageVM> getTimelines(
+        @ApiParam(name = "msName", value = "Microservices name for timeline filter")
+        @RequestParam(value = "msName", required = false) String msName,
         @ApiParam(name = "userKey", value = "User key for timeline filter")
         @RequestParam(value = "userKey", required = false) String userKey,
         @ApiParam(name = "idOrKey", value = "Entity Id or entity key for timeline filter")
@@ -67,7 +73,7 @@ public class XmTimelineResource {
     ) {
 
         return new ResponseEntity<>(
-            service.getTimelines(userKey, idOrKey, dateFrom, dateTo, operation, next, limit), HttpStatus.OK);
+            service.getTimelines(msName, userKey, idOrKey, dateFrom, dateTo, operation, next, limit), HttpStatus.OK);
     }
 
 }

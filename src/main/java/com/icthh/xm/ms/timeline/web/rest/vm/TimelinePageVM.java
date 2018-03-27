@@ -3,13 +3,13 @@ package com.icthh.xm.ms.timeline.web.rest.vm;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 
 import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 public class TimelinePageVM {
 
     private List<XmTimeline> timelines;
@@ -19,5 +19,13 @@ public class TimelinePageVM {
     public TimelinePageVM(List<XmTimeline> timelines, String next) {
         this.timelines = timelines;
         this.next = next;
+    }
+
+    @Override
+    public String toString() {
+        return "TimelinePageVM{" +
+               "timelines.size=" + (timelines == null ? 0 : timelines.size()) +
+               ", next='" + next + '\'' +
+               '}';
     }
 }

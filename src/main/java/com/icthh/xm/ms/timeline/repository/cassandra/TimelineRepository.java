@@ -12,11 +12,16 @@ import com.datastax.driver.core.Session;
 import com.datastax.driver.core.querybuilder.Insert;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.querybuilder.Select;
-import com.icthh.xm.ms.timeline.config.tenant.TenantContext;
+import com.icthh.xm.commons.tenant.TenantContextHolder;
+import com.icthh.xm.commons.tenant.TenantContextUtils;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.repository.cassandra.mapper.TimelineMapper;
 import com.icthh.xm.ms.timeline.service.TenantPropertiesService;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,9 +29,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
 
 @Service
 public class TimelineRepository {
@@ -69,11 +71,14 @@ public class TimelineRepository {
     }
 
     private TenantPropertiesService tenantPropertiesService;
+    private TenantContextHolder tenantContextHolder;
     private Session session;
 
     public TimelineRepository(TenantPropertiesService tenantPropertiesService,
+                              TenantContextHolder tenantContextHolder,
                               Session session) {
         this.tenantPropertiesService = tenantPropertiesService;
+        this.tenantContextHolder = tenantContextHolder;
         this.session = session;
     }
 
@@ -91,10 +96,13 @@ public class TimelineRepository {
                                                        Instant dateFrom,
                                                        Instant dateTo,
                                                        String page,
-                                                       int limit) {
-        Select select = QueryBuilder.select(getFields()).from(TenantContext.getCurrent().getTenant(),
-            TABLE_TIMELINE_BY_USER_AND_DATE);
+                                                       int limit,
+                                                       String msName) {
+        Select select = QueryBuilder.select(getFields()).from(
+                        TenantContextUtils.getRequiredTenantKeyValue(tenantContextHolder),
+                        TABLE_TIMELINE_BY_USER_AND_DATE);
         select.where(eq(USER_KEY_COL, userKey));
+        setFilterByMsNameIfPassed(select, msName);
         prepareWhereClause(select, null, dateFrom, dateTo, limit);
         return getPage(select, page, limit);
     }
@@ -115,10 +123,13 @@ public class TimelineRepository {
                                                             Instant dateFrom,
                                                             Instant dateTo,
                                                             String page,
-                                                            int limit) {
-        Select select = QueryBuilder.select(getFields()).from(TenantContext.getCurrent().getTenant(),
-            TABLE_TIMELINE_BY_USER_AND_OP_AND_DATE);
+                                                            int limit,
+                                                            String msName) {
+        Select select = QueryBuilder.select(getFields()).from(
+                        TenantContextUtils.getRequiredTenantKeyValue(tenantContextHolder),
+                        TABLE_TIMELINE_BY_USER_AND_OP_AND_DATE);
         select.where(eq(USER_KEY_COL, userKey));
+        setFilterByMsNameIfPassed(select, msName);
         prepareWhereClause(select, operation, dateFrom, dateTo, limit);
         return getPage(select, page, limit);
     }
@@ -137,10 +148,13 @@ public class TimelineRepository {
                                                       Instant dateFrom,
                                                       Instant dateTo,
                                                       String page,
-                                                      int limit) {
-        Select select = QueryBuilder.select(getFields()).from(TenantContext.getCurrent().getTenant(),
-            TABLE_TIMELINE_BY_ENTITY_AND_DATE);
+                                                      int limit,
+                                                      String msName) {
+        Select select = QueryBuilder.select(getFields()).from(
+                        TenantContextUtils.getRequiredTenantKeyValue(tenantContextHolder),
+                        TABLE_TIMELINE_BY_ENTITY_AND_DATE);
         select.where(eq(ENTITY_ID_COL, id));
+        setFilterByMsNameIfPassed(select, msName);
         prepareWhereClause(select, null, dateFrom, dateTo, limit);
         return getPage(select, page, limit);
     }
@@ -161,10 +175,13 @@ public class TimelineRepository {
                                                            Instant dateFrom,
                                                            Instant dateTo,
                                                            String page,
-                                                           int limit) {
-        Select select = QueryBuilder.select(getFields()).from(TenantContext.getCurrent().getTenant(),
-            TABLE_TIMELINE_BY_ENTITY_AND_OP_AND_DATE);
+                                                           int limit,
+                                                           String msName) {
+        Select select = QueryBuilder.select(getFields()).from(
+                        TenantContextUtils.getRequiredTenantKeyValue(tenantContextHolder),
+                        TABLE_TIMELINE_BY_ENTITY_AND_OP_AND_DATE);
         select.where(eq(ENTITY_ID_COL, id));
+        setFilterByMsNameIfPassed(select, msName);
         prepareWhereClause(select, operation, dateFrom, dateTo, limit);
         return getPage(select, page, limit);
     }
@@ -302,5 +319,16 @@ public class TimelineRepository {
     private boolean payloadCondition(String column) {
         return !(TRUE.equals(tenantPropertiesService.getTenantProps().getEvent().getHidePayload())
             && (REQUEST_BODY_COL.equals(column) || RESPONSE_BODY_COL.equals(column)));
+    }
+
+    /**
+     * Sets microservice name to 'where' clause if it passed.
+     * @param select select request builder object
+     * @param msName microservice name
+     */
+    public void setFilterByMsNameIfPassed(Select select, String msName) {
+        if (StringUtils.isNoneBlank(msName)) {
+            select.where(eq(MS_NAME_COL, msName));
+        }
     }
 }

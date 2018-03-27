@@ -2,19 +2,19 @@ package com.icthh.xm.ms.timeline.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.icthh.xm.ms.timeline.config.tenant.TenantInfo;
+import lombok.Data;
+
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
-
-import lombok.Data;
 
 @Data
 public class SystemEvent {
 
     private String eventId;
     private String messageSource;
-    private TenantInfo tenantInfo;
+    private String tenantKey;
+    private String userLogin;
     private String eventType;
     @JsonIgnore
     private Instant startDate = Instant.now();

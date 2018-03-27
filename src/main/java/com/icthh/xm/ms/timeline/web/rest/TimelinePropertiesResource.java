@@ -1,5 +1,7 @@
 package com.icthh.xm.ms.timeline.web.rest;
 
+import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
+
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -8,14 +10,19 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.icthh.xm.ms.timeline.domain.properties.TenantProperties;
 import com.icthh.xm.ms.timeline.service.TenantPropertiesService;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimeLineValidationVM;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Api(value = "timelines")
 @RestController
@@ -35,6 +42,7 @@ public class TimelinePropertiesResource {
         @ApiResponse(code = 500, message = "Internal server error")})
     @SneakyThrows
     @Timed
+    @PreAuthorize("hasPermission(null, 'TIMELINE.TENANT.PROPERTIES.VALIDATE')")
     public TimeLineValidationVM validate(@RequestBody String timelineYml) {
         try {
             mapper.readValue(timelineYml, TenantProperties.class);
@@ -52,6 +60,7 @@ public class TimelinePropertiesResource {
         @ApiResponse(code = 500, message = "Internal server error")})
     @SneakyThrows
     @Timed
+    @PreAuthorize("hasPermission({'timelineYml': #timelineYml}, 'TIMELINE.TENANT.PROPERTIES.UPDATE')")
     public ResponseEntity<Void> updateTimelineProperties(@RequestBody String timelineYml) {
         tenantPropertiesService.updateTenantProps(timelineYml);
         return ResponseEntity.ok().build();

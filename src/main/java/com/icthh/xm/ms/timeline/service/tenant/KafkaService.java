@@ -3,12 +3,14 @@ package com.icthh.xm.ms.timeline.service.tenant;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.icthh.xm.commons.errors.exception.BusinessException;
+import com.icthh.xm.commons.exceptions.BusinessException;
 import com.icthh.xm.commons.logging.aop.IgnoreLogginAspect;
-import com.icthh.xm.commons.logging.util.MDCUtil;
+import com.icthh.xm.commons.logging.util.MdcUtils;
+import com.icthh.xm.commons.security.XmAuthenticationContextHolder;
+import com.icthh.xm.commons.tenant.TenantContextHolder;
+import com.icthh.xm.commons.tenant.TenantContextUtils;
 import com.icthh.xm.ms.timeline.config.ApplicationProperties;
 import com.icthh.xm.ms.timeline.config.Constants;
-import com.icthh.xm.ms.timeline.config.tenant.TenantContext;
 import com.icthh.xm.ms.timeline.domain.SystemEvent;
 import com.icthh.xm.ms.timeline.repository.kafka.TimelineEventConsumer;
 import kafka.admin.AdminUtils;
@@ -42,6 +44,8 @@ public class KafkaService {
     private final TimelineEventConsumer consumer;
     private final ApplicationProperties properties;
     private final KafkaTemplate<String, String> template;
+    private final TenantContextHolder tenantContextHolder;
+    private final XmAuthenticationContextHolder authContextHolder;
 
     @Value("${spring.application.name}")
     private String appName;
@@ -188,9 +192,10 @@ public class KafkaService {
 
     private String createSystemEvent(String tenant, String command) {
         SystemEvent event = new SystemEvent();
-        event.setEventId(MDCUtil.getRid());
+        event.setEventId(MdcUtils.getRid());
         event.setEventType(command);
-        event.setTenantInfo(TenantContext.getCurrent());
+        event.setTenantKey(TenantContextUtils.getRequiredTenantKeyValue(tenantContextHolder));
+        event.setUserLogin(authContextHolder.getContext().getRequiredLogin());
         event.setMessageSource(appName);
         event.getData().put(Constants.EVENT_TENANT, tenant);
         ObjectMapper mapper = new ObjectMapper();

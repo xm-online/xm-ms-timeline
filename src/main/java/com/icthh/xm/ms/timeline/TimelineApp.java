@@ -1,6 +1,6 @@
 package com.icthh.xm.ms.timeline;
 
-import com.icthh.xm.commons.logging.util.MDCUtil;
+import com.icthh.xm.commons.logging.util.MdcUtils;
 import com.icthh.xm.ms.timeline.client.OAuth2InterceptedFeignConfiguration;
 import com.icthh.xm.ms.timeline.config.ApplicationProperties;
 import com.icthh.xm.ms.timeline.config.DefaultProfileUtil;
@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.*;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
@@ -79,7 +78,7 @@ public class TimelineApp {
      */
     public static void main(String[] args) throws UnknownHostException {
 
-        MDCUtil.put();
+        MdcUtils.putRid();
 
         SpringApplication app = new SpringApplication(TimelineApp.class);
         DefaultProfileUtil.addDefaultProfile(app);
