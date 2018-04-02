@@ -1,23 +1,30 @@
 package com.icthh.xm.ms.timeline.service;
 
-import com.icthh.xm.ms.timeline.config.tenant.TenantContext;
+import com.icthh.xm.commons.tenant.TenantContextHolder;
+import com.icthh.xm.commons.tenant.TenantContextUtils;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.domain.ext.IdOrKey;
 import com.icthh.xm.ms.timeline.repository.cassandra.EntityMappingRepository;
 import com.icthh.xm.ms.timeline.repository.cassandra.TimelineRepository;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
-import java.time.Instant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
 
 @Service
 public class TimelineService {
     private TimelineRepository timelineRepository;
     private EntityMappingRepository entityMappingRepository;
+    private TenantContextHolder tenantContextHolder;
 
-    public TimelineService(TimelineRepository timelineRepository, EntityMappingRepository entityMappingRepository) {
+    public TimelineService(
+                    TimelineRepository timelineRepository,
+                    EntityMappingRepository entityMappingRepository,
+                    TenantContextHolder tenantContextHolder) {
         this.timelineRepository = timelineRepository;
         this.entityMappingRepository = entityMappingRepository;
+        this.tenantContextHolder = tenantContextHolder;
     }
 
     /**
@@ -32,7 +39,8 @@ public class TimelineService {
      * @param limit     the limit per page
      * @return page with timelines and next page code
      */
-    public TimelinePageVM getTimelines(String userKey,
+    public TimelinePageVM getTimelines(String msName,
+                                       String userKey,
                                        String idOrKey,
                                        Instant dateFrom,
                                        Instant dateTo,
@@ -48,21 +56,23 @@ public class TimelineService {
             if (idOrKeyObj.isId()) {
                 id = idOrKeyObj.getId();
             } else {
-                id = entityMappingRepository.getIdByKey(idOrKeyObj.getKey(), TenantContext.getCurrent().getTenant());
+                id = entityMappingRepository.getIdByKey(idOrKeyObj.getKey(),
+                                TenantContextUtils.getRequiredTenantKeyValue(tenantContextHolder));
             }
 
             if (StringUtils.isNotBlank(operation)) {
                 return timelineRepository.getTimelinesByEntityAndOpAndDate(
-                    id, operation, dateFrom, dateTo, next, limit);
+                    id, operation, dateFrom, dateTo, next, limit, msName);
             }
-            return timelineRepository.getTimelinesByEntityAndDate(id, dateFrom, dateTo, next, limit);
+            return timelineRepository.getTimelinesByEntityAndDate(id, dateFrom, dateTo, next, limit, msName);
 
         }
 
         if (StringUtils.isNotBlank(operation)) {
-            return timelineRepository.getTimelinesByUserKeyAndOpAndDate(userKey, operation, dateFrom, dateTo, next, limit);
+            return timelineRepository.getTimelinesByUserKeyAndOpAndDate(userKey, operation,
+                            dateFrom, dateTo, next, limit, msName);
         }
-        return timelineRepository.getTimelinesByUserKeyAndDate(userKey, dateFrom, dateTo, next, limit);
+        return timelineRepository.getTimelinesByUserKeyAndDate(userKey, dateFrom, dateTo, next, limit, msName);
     }
 
     /**

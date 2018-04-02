@@ -1,14 +1,13 @@
 package com.icthh.xm.ms.timeline.service;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.icthh.xm.commons.logging.aop.IgnoreLogginAspect;
 import com.icthh.xm.commons.config.client.api.RefreshableConfiguration;
 import com.icthh.xm.commons.config.client.repository.TenantConfigRepository;
+import com.icthh.xm.commons.tenant.TenantContextHolder;
+import com.icthh.xm.commons.tenant.TenantContextUtils;
 import com.icthh.xm.ms.timeline.config.ApplicationProperties;
-import com.icthh.xm.ms.timeline.config.tenant.TenantContext;
 import com.icthh.xm.ms.timeline.domain.properties.TenantProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -16,8 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
-
-import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
@@ -37,9 +34,11 @@ public class TenantPropertiesService implements RefreshableConfiguration {
 
     private final TenantConfigRepository tenantConfigRepository;
 
+    private final TenantContextHolder tenantContextHolder;
+
     @IgnoreLogginAspect
     public TenantProperties getTenantProps() {
-        String tenant = TenantContext.getCurrent().getTenant();
+        String tenant = TenantContextUtils.getRequiredTenantKeyValue(tenantContextHolder);
         if (!tenantProps.containsKey(tenant)) {
             throw new IllegalArgumentException("Tenant configuration not found");
         }
@@ -48,7 +47,7 @@ public class TenantPropertiesService implements RefreshableConfiguration {
 
     @SneakyThrows
     public void updateTenantProps(String timelineYml) {
-        String tenant = TenantContext.getCurrent().getTenant();
+        String tenant = TenantContextUtils.getRequiredTenantKeyValue(tenantContextHolder);
         String configName = applicationProperties.getTenantPropertiesName();
 
         // Simple validation correct structure

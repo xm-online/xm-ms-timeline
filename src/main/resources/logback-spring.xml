@@ -63,6 +63,7 @@
     <logger name="sun.net.www" level="INFO"/>
     <logger name="sun.rmi.transport" level="WARN"/>
     <logger name="org.apache.kafka.clients.consumer.ConsumerConfig" level="OFF"/>
+    <logger name="org.reflections" level="INFO"/>
 
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
         <resetJUL>true</resetJUL>

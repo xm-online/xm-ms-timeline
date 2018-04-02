@@ -85,8 +85,8 @@ jhipster:
         client-authorization:
             access-token-uri: http://uaa/oauth/token
             token-service-id: uaa
-            client-id: internal
-            client-secret: internal
+            client-id:
+            client-secret:
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx.enabled: true
         logs: # Reports Dropwizard metrics in the logs
@@ -102,7 +102,12 @@ jhipster:
 # https://jhipster.github.io/common-application-properties/
 # ===================================================================
 
+xm-config:
+    enabled: false
+
 application:
     cassandra-migration-folder: config/cql/changelog
     tenant-properties-path-pattern: /config/tenants/{tenantName}/timeline/${tenant-properties-name}
     tenant-properties-name: timeline.yml
+    kafka-system-queue: system_queue
+

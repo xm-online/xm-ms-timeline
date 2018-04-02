@@ -94,8 +94,8 @@ jhipster:
         client-authorization:
             access-token-uri: http://uaa/oauth/token
             token-service-id: uaa
-            client-id: internal
-            client-secret: internal
+            client-id:
+            client-secret:
     mail: # specific JHipster mail property, for standard properties see MailProperties
         from: timeline@localhost
         base-url: http://127.0.0.1:8083

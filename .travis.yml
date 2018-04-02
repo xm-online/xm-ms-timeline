@@ -1,0 +1,36 @@
+language: java
+jdk:
+- oraclejdk8
+install: true
+addons:
+  sonarcloud:
+    organization: xm-online
+    token:
+      secure: gofjsVj712X09z1KLzurW3PFLLZ6djkr7PiWeZc5gXKu9StP1g3jQfAeGVT9VD/ZIxm9Kh5uk9Tr+EMifTda7b0K/WayRXB0JyuJiSf0o3ZYBd84vfgGrCT0PLb0Y5zYoqsSFM1BPyDYGtKQbEmrrnFMcEFCdrKgzfDYHt9RiAM5TSp+7pg54J2nx0Udumc+9G/8HdEnHPLSnfpd3A+l7w+YlX1JOdpwDlCEoS5NVAR/FE9DVi1hegKmXXscY/3XlhADQKZp49ggTOIpg2f8s3GXdIHynUw0MSn1kvR9yNxCPZD8XnJ1tgo5Dl0a8E5ZyMs0/pXIgk+lQlVxFpBy0lGZi3d1PzwGPOOWY556qWf8PjEeqEKMl2FXkcTWi3Y2WPsQc0fbRWtxR3B/SKWlophbxA44yjaEIPorah1PxGC5Xq2EOMFKvM7+8lY/a2EwAUwwdT5Hkw8imYbmwThnF+LD46VzFeQK1uI8CGV+jVYwgPrukfFCMSbjO5jHudh1fr4H31Gu/RxIRGvhH8KQ2xwINX6ogBb6UKs7K1PhLfNAs907E2y++NOKFsf5/GpCCdn7m74HAWRDG/OmfvOSuYxiZWZ3FAYNnwSXTo+82ZMRs+zPIJ9FC7I2LfJxS7uYsSzdfbCqvCocbtmOkxx0H9h3vqqVJilG4pKnAsMKRaI=
+    branches:
+    - master
+script:
+  - set -e
+  - ./gradlew --no-daemon --refresh-dependencies clean check test
+  - ./gradlew -x test -Pprod --no-daemon bootRepackage
+  -  docker login -u $DOCKER_USER -p $DOCKER_PASS
+  - export DOCKER_REPO=$(echo  -n $TRAVIS_REPO_SLUG | sed -e 's/^xm-online\//xmonline\//g')
+  - export IMAGE_BRANCH=$(echo -n $TRAVIS_BRANCH | sed -e 's/\//-/g')
+  - docker build -t $DOCKER_REPO:$IMAGE_BRANCH -t $DOCKER_REPO:$IMAGE_BRANCH-$TRAVIS_BUILD_NUMBER  
+    --label commit_id="$TRAVIS_COMMIT" --label commit_message="$TRAVIS_COMMIT_MESSAGE"
+    -f src/main/docker/Dockerfile .
+  - docker push $DOCKER_REPO:$IMAGE_BRANCH
+  - docker push $DOCKER_REPO:$IMAGE_BRANCH-$TRAVIS_BUILD_NUMBER
+  - if [ "$IMAGE_BRANCH" == "master" ]; then 
+    docker tag $DOCKER_REPO:$IMAGE_BRANCH $DOCKER_REPO:latest; 
+    docker push $DOCKER_REPO:latest; 
+    export SONAR_PK=$(echo  -n $TRAVIS_REPO_SLUG | sed -e 's/\//:/g');
+    ./gradlew -x test --no-daemon sonarqube -Dsonar.projectKey="$SONAR_PK" -Dsonar.projectName="$SONAR_PK" -Dsonar.java.binaries="." -Dsonar.projectVersion="$IMAGE_BRANCH"; fi
+cache:
+  directories:
+  - ~/.gradle
+  - ~/.m2
+env:
+  global:
+  - secure: Lu3DNUkXMOk0nIZv3TRLQV0atobNFtHhEp32XCc2Ea8+/139uvUHviGUVarnwXbEKTL8PB2fL3Gwa8EmZ46L9+OL2YgYTptMEd3Tw3UsSp4PmOvFR9vBRVX9kqsh2WaEGybAKob8D5woE4+3KEHN4znF43vgeV8nJbzoCEVZyIJCpb40Y/Mx81cm8g4T+uXeA1eu1UXWrKdMWCVyx6tAY8JK5pZPr1HNvCdvO4nt1RZ/uHygzG6CUQK3kAtFE/Yuu9PzkOFwxtXJLBdH3D8K7cea8oAzSgXJj7s6aH5UYH0CULJ+7S/uISA4bC6j+FKEyxEKBWDm2pUYfi9gkmZCGIY2ZfhK20W7KJfk8fOGlfYAhQN+6CuZgJIuQcgr7I5bMypb21eCoPv5HALxEOs53qR+Oxgfqq8mkqWYLYksx3A254VDEBJ36D6vyu2tnEiPKWQpWSpvkmG7NtDaXzE9YJRazVCt5YjDSID3xmiI7JBYwaojiLmO1NQCW+hO6JANVP3GgUaCEkOeXZdUnD3ElqtE9sqtITOZI3XyTbfjGmhBm9upwJnnOsBRYogzLMq2bV5RbmnQ3UdHhD/yViX+9wKUYdxgK287FSP98YkJe3Ta/iafcWu8Vf+XfAXRwC8Ck66bCsLjiWhavOj3ZdW3VNWWzgTnvZH9QKKr24Y/2uo=
+  - secure: di8qEKiuGTiDaS1554rA4QB9sfXEEkqUmW0/AR15Se9SHLLNMDzd/03NZbFQBEHr16jgp34ZUTGQ32BziMw+D25TbtRxKm3E+XDzZ/2YSUYuIxWtF3bKsOcRY/v/gOMwz/ns8l4NxisfbQX6qr5bPuKLiehhkkjyKFCIEfFjVAw8XP1BoUaISbvJSw47IMWbly6NrIlNqzkKGQspPWT7YHI5BVtseqy+PMl7jQVmfIeb++cg4rI992ETVVI75oOCXOxJV5z3uipJCQdUC3F8XdyLG3cfSGRJzipCSTULy84UGywXYegBGzU0bFiTW4lhOtejtq0+VbHhK+YCBNMk8m6QQ1MpANWB78rbGZtTsE2Be5wCnsjijx5Zejm6ksICAIUMk3di6hBOjAmLdCyCXrjM6Y2lImV9wYXvCN5W1P+spv0Ao1sjQ2X9yQ/tfSmtuJw0gPEsYJmYmtY4+D8oglgnPfvCCiiXlUA449hF0Jeu47RUCh6HizHxDdvBX8EvDuczjPYdqnXEgP0H30p8GaCC0P7PXpoTRExvA7LmI9Y1Ls5DnFbner7loGUM7MMnoscsOCHOlqnCIrOY+fgz0QW9lBx4zSajkamcI+Flf26NECetyCLAw9pBWMXG7u1N0P0wRcCYKihxYNklWqpN7ce/6czVO5qb/qJ98RXJITI=
