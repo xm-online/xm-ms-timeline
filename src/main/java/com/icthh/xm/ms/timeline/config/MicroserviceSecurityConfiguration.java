@@ -75,7 +75,7 @@ public class MicroserviceSecurityConfiguration extends ResourceServerConfigurerA
     public JwtAccessTokenConverter jwtAccessTokenConverter(
             @Qualifier("loadBalancedRestTemplate") RestTemplate keyUriRestTemplate) throws CertificateException {
 
-        JwtAccessTokenConverter converter = new DomainJwtAccessTokenConverter();
+        DomainJwtAccessTokenConverter converter = new DomainJwtAccessTokenConverter();
         converter.setVerifierKey(getKeyFromConfigServer(keyUriRestTemplate));
         return converter;
     }

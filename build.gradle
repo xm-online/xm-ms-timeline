@@ -111,6 +111,7 @@ if (OperatingSystem.current().isWindows()) {
 }
 
 test {
+    systemProperty "spring.profiles.active", "test"
     include '**/*UnitTest*'
     include '**/*IntTest*'
 
@@ -285,8 +286,6 @@ dependencies {
     compile "com.icthh.xm.commons:xm-commons-permission:${xm_commons_version}"
     compile "com.icthh.xm.commons:xm-commons-tenant-endpoint:${xm_commons_version}"
     compile "com.icthh.xm.commons:xm-commons-ms-web:${xm_commons_version}"
-
-    compile 'org.bitsofinfo:hazelcast-consul-discovery-spi:1.0-RC7'
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 }
 
