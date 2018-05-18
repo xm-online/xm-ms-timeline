@@ -27,7 +27,8 @@ import java.util.Collection;
 
 @ComponentScan(
     value = "com.icthh.xm",
-    excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = OAuth2InterceptedFeignConfiguration.class)
+    excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
+        classes = OAuth2InterceptedFeignConfiguration.class)
 )
 @EnableAutoConfiguration(exclude = {MetricFilterAutoConfiguration.class, MetricRepositoryAutoConfiguration.class})
 @EnableConfigurationProperties({ApplicationProperties.class})

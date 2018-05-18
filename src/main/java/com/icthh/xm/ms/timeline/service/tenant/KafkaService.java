@@ -1,17 +1,19 @@
 package com.icthh.xm.ms.timeline.service.tenant;
 
+import static java.util.Collections.singletonMap;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.icthh.xm.commons.exceptions.BusinessException;
 import com.icthh.xm.commons.logging.aop.IgnoreLogginAspect;
 import com.icthh.xm.commons.logging.util.MdcUtils;
+import com.icthh.xm.commons.messaging.event.system.SystemEvent;
 import com.icthh.xm.commons.security.XmAuthenticationContextHolder;
 import com.icthh.xm.commons.tenant.TenantContextHolder;
 import com.icthh.xm.commons.tenant.TenantContextUtils;
 import com.icthh.xm.ms.timeline.config.ApplicationProperties;
 import com.icthh.xm.ms.timeline.config.Constants;
-import com.icthh.xm.ms.timeline.domain.SystemEvent;
 import com.icthh.xm.ms.timeline.repository.kafka.TimelineEventConsumer;
 import kafka.admin.AdminUtils;
 import kafka.admin.RackAwareMode;
@@ -197,7 +199,8 @@ public class KafkaService {
         event.setTenantKey(TenantContextUtils.getRequiredTenantKeyValue(tenantContextHolder));
         event.setUserLogin(authContextHolder.getContext().getRequiredLogin());
         event.setMessageSource(appName);
-        event.getData().put(Constants.EVENT_TENANT, tenant);
+        //TODO make SystemEvent.data Map by default, check if used everywhere
+        event.setData(singletonMap(Constants.EVENT_TENANT, tenant));
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         try {
