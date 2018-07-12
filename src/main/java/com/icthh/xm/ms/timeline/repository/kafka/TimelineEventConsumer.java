@@ -8,7 +8,7 @@ import com.icthh.xm.commons.tenant.TenantContextHolder;
 import com.icthh.xm.commons.tenant.TenantContextUtils;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.service.TenantPropertiesService;
-import com.icthh.xm.ms.timeline.service.TimelineService;
+import com.icthh.xm.ms.timeline.service.timeline.TimelineService;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

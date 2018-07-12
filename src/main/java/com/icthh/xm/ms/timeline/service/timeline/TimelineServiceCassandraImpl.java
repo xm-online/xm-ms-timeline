@@ -1,4 +1,4 @@
-package com.icthh.xm.ms.timeline.service;
+package com.icthh.xm.ms.timeline.service.timeline;
 
 import com.icthh.xm.commons.tenant.TenantContextHolder;
 import com.icthh.xm.commons.tenant.TenantContextUtils;
@@ -12,13 +12,12 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 
-@Service
-public class TimelineService {
+public class TimelineServiceCassandraImpl implements TimelineService {
     private TimelineRepository timelineRepository;
     private EntityMappingRepository entityMappingRepository;
     private TenantContextHolder tenantContextHolder;
 
-    public TimelineService(
+    public TimelineServiceCassandraImpl(
                     TimelineRepository timelineRepository,
                     EntityMappingRepository entityMappingRepository,
                     TenantContextHolder tenantContextHolder) {
@@ -39,6 +38,7 @@ public class TimelineService {
      * @param limit     the limit per page
      * @return page with timelines and next page code
      */
+    @Override
     public TimelinePageVM getTimelines(String msName,
                                        String userKey,
                                        String idOrKey,
@@ -79,6 +79,7 @@ public class TimelineService {
      * Insert timelines.
      * @param xmTimeline  the timeline
      */
+    @Override
     public void insertTimelines(XmTimeline xmTimeline) {
         insertIdAndKey(xmTimeline);
         if (StringUtils.isBlank(xmTimeline.getOperationName())) {
