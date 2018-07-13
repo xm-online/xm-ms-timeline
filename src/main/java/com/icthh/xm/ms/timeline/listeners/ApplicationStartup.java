@@ -9,11 +9,13 @@ import com.icthh.xm.commons.config.client.repository.TenantListRepository;
 import com.icthh.xm.commons.logging.util.MdcUtils;
 import com.icthh.xm.commons.permission.inspector.PrivilegeInspector;
 import com.icthh.xm.ms.timeline.config.ApplicationProperties;
+import com.icthh.xm.ms.timeline.config.ServiceConfiguration;
 import com.icthh.xm.ms.timeline.repository.kafka.SystemTopicConsumer;
 import com.icthh.xm.ms.timeline.repository.kafka.TimelineEventConsumer;
 import io.github.jhipster.config.JHipsterConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
@@ -50,7 +52,9 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
     public void onApplicationEvent(ApplicationReadyEvent event) {
         if (!env.acceptsProfiles(JHipsterConstants.SPRING_PROFILE_TEST)) {
             createKafkaConsumers();
-            migrateCassandra();
+            if (StringUtils.equalsIgnoreCase(properties.getTimelineServiceImpl(), ServiceConfiguration.CASSANDRA_IMPL)) {
+                migrateCassandra();
+            }
             privilegeInspector.readPrivileges(MdcUtils.getRid());
         } else {
             log.warn("WARNING! Privileges inspection is disabled by "

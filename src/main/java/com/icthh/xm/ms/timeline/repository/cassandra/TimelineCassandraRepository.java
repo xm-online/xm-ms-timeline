@@ -30,8 +30,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Service
-public class TimelineRepository {
+public class TimelineCassandraRepository {
 
     private static final String TABLE_TIMELINE_BY_USER_AND_DATE = "timeline_by_user_and_date";
     private static final String TABLE_TIMELINE_BY_USER_AND_OP_AND_DATE = "timeline_by_user_and_operation_and_date";
@@ -74,9 +73,9 @@ public class TimelineRepository {
     private TenantContextHolder tenantContextHolder;
     private Session session;
 
-    public TimelineRepository(TenantPropertiesService tenantPropertiesService,
-                              TenantContextHolder tenantContextHolder,
-                              Session session) {
+    public TimelineCassandraRepository(TenantPropertiesService tenantPropertiesService,
+                                       TenantContextHolder tenantContextHolder,
+                                       Session session) {
         this.tenantPropertiesService = tenantPropertiesService;
         this.tenantContextHolder = tenantContextHolder;
         this.session = session;

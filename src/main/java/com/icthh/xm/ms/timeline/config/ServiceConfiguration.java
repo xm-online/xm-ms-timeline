@@ -2,40 +2,50 @@ package com.icthh.xm.ms.timeline.config;
 
 import com.icthh.xm.commons.tenant.TenantContextHolder;
 import com.icthh.xm.ms.timeline.repository.cassandra.EntityMappingRepository;
-import com.icthh.xm.ms.timeline.repository.cassandra.TimelineRepository;
-import com.icthh.xm.ms.timeline.service.timeline.TimelineService;
-import com.icthh.xm.ms.timeline.service.timeline.TimelineServiceCassandraImpl;
-import com.icthh.xm.ms.timeline.service.timeline.TimelineServiceLoggerImpl;
-import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.NotImplementedException;
+import com.icthh.xm.ms.timeline.repository.cassandra.TimelineCassandraRepository;
+import com.icthh.xm.ms.timeline.repository.jpa.TimelineJpaRepository;
+import com.icthh.xm.ms.timeline.service.timeline.*;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan(basePackages = "com.icthh.xm")
-@RequiredArgsConstructor
 public class ServiceConfiguration {
 
-    private final ApplicationProperties applicationProperties;
+    public static final String CASSANDRA_IMPL = "cassandra";
+    public static final String LOGGER_IMPL = "logger";
+    public static final String H2DB_IMPL = "h2db";
+    public static final String POSTGRES_IMPL = "postgresdb";
 
-    private static final String CASSANDRA_IMPL = "cassandra";
-    private static final String LOGGER_IMPL = "logger";
-    private static final String H2DB_IMPL = "h2db";
-    private static final String POSTGRES_IMPL = "postgresdb";
-
-    @Bean
-    public TimelineService timelineService(TimelineRepository timelineRepository,
-                                              EntityMappingRepository entityMappingRepository,
-                                              TenantContextHolder tenantContextHolder) {
-
-        switch (applicationProperties.getTimelineServiceImpl()) {
-            case CASSANDRA_IMPL: return new TimelineServiceCassandraImpl(timelineRepository, entityMappingRepository, tenantContextHolder);
-            case LOGGER_IMPL: return new TimelineServiceLoggerImpl();
-            case H2DB_IMPL: throw new NotImplementedException("Strategy " + applicationProperties.getTimelineServiceImpl() + " not implemented");
-            case POSTGRES_IMPL: throw new NotImplementedException("Strategy " + applicationProperties.getTimelineServiceImpl() + " not implemented");
-            default: return new TimelineServiceCassandraImpl(timelineRepository, entityMappingRepository, tenantContextHolder);
-        }
+    @Bean(name = "timelineService")
+    @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = CASSANDRA_IMPL)
+    public TimelineService cassandraTimelineService(TimelineCassandraRepository tr, EntityMappingRepository emr, TenantContextHolder tch) {
+        return new TimelineServiceCassandraImpl(tr, emr, tch);
     }
 
+    @Bean(name = "timelineService")
+    @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = LOGGER_IMPL)
+    public TimelineService loggerTimelineService() {
+        return new TimelineServiceLoggerImpl();
+    }
+
+    @Bean(name = "timelineService")
+    @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = H2DB_IMPL)
+    public TimelineService h2dbTimelineService(TimelineJpaRepository timelineJpaRepository) {
+        return new TimelineServiceH2dbImpl(timelineJpaRepository);
+    }
+
+    @Bean(name = "timelineService")
+    @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = POSTGRES_IMPL)
+    public TimelineService postgresDBTimelineService() {
+        return new TimelineServicePostgresDBImpl();
+    }
+
+    @Bean(name = "timelineService")
+    @ConditionalOnProperty(name = "application.timeline-service-impl", matchIfMissing = true)
+    @ConditionalOnMissingBean
+    public TimelineService defaultTimelineService(TimelineCassandraRepository tr, EntityMappingRepository emr, TenantContextHolder tch) {
+        return new TimelineServiceCassandraImpl(tr, emr, tch);
+    }
 }

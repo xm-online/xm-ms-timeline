@@ -11,7 +11,7 @@ import com.icthh.xm.commons.tenant.TenantContextHolder;
 import com.icthh.xm.commons.tenant.TenantKey;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.repository.cassandra.EntityMappingRepository;
-import com.icthh.xm.ms.timeline.repository.cassandra.TimelineRepository;
+import com.icthh.xm.ms.timeline.repository.cassandra.TimelineCassandraRepository;
 import com.icthh.xm.ms.timeline.service.timeline.TimelineServiceCassandraImpl;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 
@@ -34,7 +34,7 @@ public class TimelineServiceCassandraUnitTest {
     private static final int LIMIT = 10;
     private static final String TENANT = "xm";
 
-    private TimelineRepository timelineRepository;
+    private TimelineCassandraRepository timelineRepository;
     private EntityMappingRepository entityMappingRepository;
     private TenantContextHolder tenantContextHolder;
     private TimelineServiceCassandraImpl timelineService;
@@ -43,7 +43,7 @@ public class TimelineServiceCassandraUnitTest {
     @Before
     public void init() {
 
-        timelineRepository = mock(TimelineRepository.class);
+        timelineRepository = mock(TimelineCassandraRepository.class);
         entityMappingRepository = mock(EntityMappingRepository.class);
         tenantContextHolder = mock(TenantContextHolder.class);
         timelineService = new TimelineServiceCassandraImpl(timelineRepository, entityMappingRepository,

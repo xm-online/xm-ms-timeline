@@ -8,6 +8,11 @@ import com.datastax.driver.core.policies.RetryPolicy;
 import com.datastax.driver.extras.codecs.jdk8.InstantCodec;
 import com.datastax.driver.extras.codecs.jdk8.LocalDateCodec;
 import com.datastax.driver.extras.codecs.jdk8.ZonedDateTimeCodec;
+import com.icthh.xm.commons.tenant.TenantContextHolder;
+import com.icthh.xm.ms.timeline.config.ServiceConfiguration;
+import com.icthh.xm.ms.timeline.repository.cassandra.EntityMappingRepository;
+import com.icthh.xm.ms.timeline.repository.cassandra.TimelineCassandraRepository;
+import com.icthh.xm.ms.timeline.service.TenantPropertiesService;
 import io.github.jhipster.config.JHipsterConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +20,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +28,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.util.StringUtils;
 
 @Configuration
+@ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = ServiceConfiguration.CASSANDRA_IMPL)
 @EnableConfigurationProperties(CassandraProperties.class)
 @Profile({JHipsterConstants.SPRING_PROFILE_DEVELOPMENT, JHipsterConstants.SPRING_PROFILE_PRODUCTION})
 public class CassandraConfiguration {
@@ -116,5 +123,15 @@ public class CassandraConfiguration {
     public Session session(Cluster cluster) {
         log.debug("Configuring Cassandra session");
         return cluster.connect();
+    }
+
+    @Bean
+    public EntityMappingRepository entityMappingRepository(Session session) {
+        return new EntityMappingRepository(session);
+    }
+
+    @Bean
+    public TimelineCassandraRepository timelineRepository(TenantPropertiesService tenantPropertiesService, TenantContextHolder tenantContextHolder, Session session) {
+        return new TimelineCassandraRepository(tenantPropertiesService, tenantContextHolder, session);
     }
 }

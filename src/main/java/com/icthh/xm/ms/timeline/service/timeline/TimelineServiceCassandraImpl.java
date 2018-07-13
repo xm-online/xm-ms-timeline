@@ -5,20 +5,19 @@ import com.icthh.xm.commons.tenant.TenantContextUtils;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.domain.ext.IdOrKey;
 import com.icthh.xm.ms.timeline.repository.cassandra.EntityMappingRepository;
-import com.icthh.xm.ms.timeline.repository.cassandra.TimelineRepository;
+import com.icthh.xm.ms.timeline.repository.cassandra.TimelineCassandraRepository;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 
 public class TimelineServiceCassandraImpl implements TimelineService {
-    private TimelineRepository timelineRepository;
+    private TimelineCassandraRepository timelineRepository;
     private EntityMappingRepository entityMappingRepository;
     private TenantContextHolder tenantContextHolder;
 
     public TimelineServiceCassandraImpl(
-                    TimelineRepository timelineRepository,
+                    TimelineCassandraRepository timelineRepository,
                     EntityMappingRepository entityMappingRepository,
                     TenantContextHolder tenantContextHolder) {
         this.timelineRepository = timelineRepository;
