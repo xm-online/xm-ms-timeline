@@ -11,7 +11,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.Objects;
 
 @AllArgsConstructor
