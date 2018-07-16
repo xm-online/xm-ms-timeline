@@ -1,6 +1,8 @@
 package com.icthh.xm.ms.timeline.service.timeline;
 
+import com.icthh.xm.commons.tenant.TenantContextUtils;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
+import com.icthh.xm.ms.timeline.domain.ext.IdOrKey;
 import com.icthh.xm.ms.timeline.repository.jpa.TimelineJpaRepository;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 import lombok.AllArgsConstructor;
@@ -70,8 +72,9 @@ public class TimelineServiceH2dbImpl implements TimelineService {
         if (Objects.nonNull(dateTo)) {
             specificationsForFiltering = combineLessThanOrEqualToSpecifications(specificationsForFiltering, dateTo, "startDate");
         }
-
-        // TODO implement "idOrKey" logic
+        if (StringUtils.isNumeric(idOrKey)) {
+            specificationsForFiltering = combineEqualSpecifications(specificationsForFiltering, idOrKey, "entityId");
+        }
 
         int page = next != null ? Integer.parseInt(next) : 0;
 
