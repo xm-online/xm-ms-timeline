@@ -74,9 +74,9 @@ public class TimelineServiceH2dbImpl implements TimelineService {
             specificationsForFiltering = combineEqualSpecifications(specificationsForFiltering, idOrKey, "entityId");
         }
 
-        int page = next != null ? Integer.parseInt(next) : 1;
+        int page = next != null ? Integer.parseInt(next) : 0;
 
-        PageRequest pageRequest = new PageRequest(page, limit);
+        PageRequest pageRequest = new PageRequest(page, limit == 0 ? 100 : limit);
 
         Page<XmTimeline> timelines = specificationsForFiltering != null ? timelineRepository.findAll(specificationsForFiltering, pageRequest) : timelineRepository.findAll(pageRequest);
 

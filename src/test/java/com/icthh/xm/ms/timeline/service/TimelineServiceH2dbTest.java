@@ -45,9 +45,9 @@ public class TimelineServiceH2dbTest {
     @Test
     public void testTimelineH2db() {
         timelineService.insertTimelines(createTestTimeline());
-        Assertions.assertThat(timelineService.getTimelines(MS_NAME, USER_KEY, ENTITY_ID_LONG.toString(), DATE.minus(1, ChronoUnit.DAYS), DATE.plus(1, ChronoUnit.DAYS), OPERATION, null, 0).getTimelines()).hasSize(1);
-        Assertions.assertThat(timelineService.getTimelines(null, null, null, null, null, null, null, 0).getTimelines()).hasSize(1);
-        Assertions.assertThat(timelineService.getTimelines("WRONG_MS_NAME", USER_KEY, ENTITY_ID_LONG.toString(), DATE, DATE, OPERATION, null, 0).getTimelines()).hasSize(0);
+        Assertions.assertThat(timelineService.getTimelines(MS_NAME, USER_KEY, ENTITY_ID_LONG.toString(), DATE.minus(1, ChronoUnit.DAYS), DATE.plus(1, ChronoUnit.DAYS), OPERATION, null, 20).getTimelines()).hasSize(1);
+        Assertions.assertThat(timelineService.getTimelines(null, null, null, null, null, null, null, 20).getTimelines()).hasSize(1);
+        Assertions.assertThat(timelineService.getTimelines("WRONG_MS_NAME", USER_KEY, ENTITY_ID_LONG.toString(), DATE, DATE, OPERATION, null, 20).getTimelines()).hasSize(0);
     }
 
     private XmTimeline createTestTimeline() {
