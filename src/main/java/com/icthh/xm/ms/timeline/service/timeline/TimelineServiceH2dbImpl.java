@@ -5,8 +5,9 @@ import com.icthh.xm.ms.timeline.repository.jpa.TimelineJpaRepository;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specifications;
 
 import java.time.Instant;
@@ -62,19 +63,23 @@ public class TimelineServiceH2dbImpl implements TimelineService {
             specificationsForFiltering = combineEqualSpecifications(specificationsForFiltering, userKey, "userKey");
         }
         if (StringUtils.isNotBlank(operation)) {
-            specificationsForFiltering = combineEqualSpecifications(specificationsForFiltering, operation, "operation");
+            specificationsForFiltering = combineEqualSpecifications(specificationsForFiltering, operation, "operationName");
         }
         if (Objects.nonNull(dateFrom)) {
-            specificationsForFiltering = combineLessThanOrEqualToSpecifications(specificationsForFiltering, dateFrom, "dateFrom");
+            specificationsForFiltering = combineGreaterThanOrEqualToSpecifications(specificationsForFiltering, dateFrom, "startDate");
         }
         if (Objects.nonNull(dateTo)) {
-            specificationsForFiltering = combineGreaterThanOrEqualToSpecifications(specificationsForFiltering, dateTo, "dateTo");
+            specificationsForFiltering = combineLessThanOrEqualToSpecifications(specificationsForFiltering, dateTo, "startDate");
         }
 
-        // TODO (method is not finished yet)
+        // TODO implement "idOrKey" logic
 
-        List timelines = specificationsForFiltering != null ? timelineRepository.findAll(specificationsForFiltering) : timelineRepository.findAll();
+        int page = next != null ? Integer.parseInt(next) : 0;
 
-        return new TimelinePageVM(timelines, null);
+        PageRequest pageRequest = new PageRequest(page, limit);
+
+        Page<XmTimeline> timelines = specificationsForFiltering != null ? timelineRepository.findAll(specificationsForFiltering, pageRequest) : timelineRepository.findAll(pageRequest);
+
+        return new TimelinePageVM(timelines.getContent(), timelines.hasNext() ? String.valueOf(page + 1) : null);
     }
 }
