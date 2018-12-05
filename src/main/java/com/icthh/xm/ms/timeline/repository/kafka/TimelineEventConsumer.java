@@ -8,7 +8,7 @@ import com.icthh.xm.commons.tenant.TenantContextHolder;
 import com.icthh.xm.commons.tenant.TenantContextUtils;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.service.TenantPropertiesService;
-import com.icthh.xm.ms.timeline.service.TimelineService;
+import com.icthh.xm.ms.timeline.service.TimelineCassandraService;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @IgnoreLogginAspect
 public class TimelineEventConsumer {
-    private final TimelineService timelineService;
+    private final TimelineCassandraService timelineCassandraService;
     private final TenantPropertiesService tenantPropertiesService;
     private final TenantContextHolder tenantContextHolder;
 
@@ -54,7 +54,7 @@ public class TimelineEventConsumer {
                 if (StringUtils.isBlank(xmTimeline.getTenant())) {
                     xmTimeline.setTenant(message.topic());
                 }
-                timelineService.insertTimelines(xmTimeline);
+                timelineCassandraService.insertTimelines(xmTimeline);
             } catch (IOException e) {
                 log.error("Timeline message has incorrect format: '{}'", message.value(), e);
             }

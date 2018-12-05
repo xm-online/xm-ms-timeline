@@ -1,7 +1,7 @@
 package com.icthh.xm.ms.timeline.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.icthh.xm.ms.timeline.service.TimelineService;
+import com.icthh.xm.ms.timeline.service.TimelineCassandraService;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,9 +28,9 @@ import java.time.Instant;
 @Slf4j
 public class XmTimelineResource {
 
-    private TimelineService service;
+    private TimelineCassandraService service;
 
-    public XmTimelineResource(TimelineService service) {
+    public XmTimelineResource(TimelineCassandraService service) {
         this.service = service;
     }
 
