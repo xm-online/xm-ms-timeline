@@ -260,6 +260,7 @@ dependencies {
     compile group: 'com.builtamont', name: 'cassandra-migration', version: '0.11'
     compile group: 'net.sf.uadetector', name: 'uadetector-resources', version: '2014.10'
     compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jackson_dataformat_yaml_version}"
+    compile 'postgresql:postgresql:9.1-901-1.jdbc4'
 
     testCompile "org.awaitility:awaitility:${awaitility_version}"
     testCompile "com.jayway.jsonpath:json-path"

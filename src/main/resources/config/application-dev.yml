@@ -52,6 +52,9 @@ spring:
         locator:
             discovery:
                 enabled: true
+    datasource:
+        url: jdbc:postgresql:test
+        driver-class-name: org.postgresql.Driver
 
 # ===================================================================
 # To enable SSL, generate a certificate using:
