@@ -130,7 +130,7 @@ application:
     # =============================
     # options [cassandra, logger, h2db, postgresdb]
     # =============================
-    timeline-service-impl: cassandra
+    timeline-service-impl: postgresdb
     retry:
         max-attempts: 3
         delay: 1000 #in milliseconds

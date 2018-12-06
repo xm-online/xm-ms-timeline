@@ -38,8 +38,8 @@ public class ServiceConfiguration {
 
     @Bean(name = "timelineService")
     @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = POSTGRES_IMPL)
-    public TimelineService postgresDBTimelineService() {
-        return new TimelineServicePostgresDBImpl();
+    public TimelineService postgresDBTimelineService(TimelineJpaRepository timelineJpaRepository) {
+        return new TimelineServicePostgresDBImpl(timelineJpaRepository);
     }
 
     @Bean(name = "timelineService")
