@@ -23,6 +23,7 @@ buildscript {
 // Plugin for support environment's with gradle.properties (gradle-local.properties is default local environment)
 plugins {
     id 'net.saliman.properties' version '1.4.6'
+    id 'org.liquibase.gradle' version '2.0.1'
 }
 
 apply from: 'gradle/git.gradle'
@@ -173,6 +174,38 @@ version = '0.0.1-SNAPSHOT'
 
 description = ''
 
+project.ext.diffChangelogFile = 'src/main/resources/config/liquibase/changelog/' + new Date().format('yyyyMMddHHmmss') + '_changelog.xml'
+if (!project.hasProperty('runList')) {
+    project.ext.runList = 'main'
+}
+
+liquibase {
+    activities {
+        main {
+            driver ''
+            url ''
+            username 'otp'
+            password ''
+            changeLogFile 'src/main/resources/config/liquibase/master.xml'
+            defaultSchemaName ''
+            logLevel 'debug'
+            classpath 'src/main/resources/'
+        }
+        diffLog {
+            driver ''
+            url ''
+            username 'otp'
+            password ''
+            changeLogFile project.ext.diffChangelogFile
+            referenceUrl 'hibernate:spring:com.icthh.xm.ms.otp.domain?dialect=&amp;hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy'
+            defaultSchemaName ''
+            logLevel 'debug'
+            classpath 'src/main/resources/'
+        }
+    }
+
+    runList = project.ext.runList
+}
 configurations {
     providedRuntime
     compile.exclude module: "spring-boot-starter-tomcat"
@@ -217,6 +250,12 @@ dependencies {
     compile "commons-io:commons-io:${commons_io_version}"
     compile "javax.transaction:javax.transaction-api"
     compile "net.jpountz.lz4:lz4:${lz4_version}"
+    compile "org.liquibase:liquibase-core"
+    compile "com.mattbertolini:liquibase-slf4j"
+    liquibaseRuntime "org.liquibase:liquibase-core"
+    liquibaseRuntime "org.liquibase.ext:liquibase-hibernate5:${liquibase_hibernate5_version}"
+    liquibaseRuntime "org.postgresql:postgresql"
+    liquibaseRuntime sourceSets.main.compileClasspath
     compile "org.springframework.boot:spring-boot-actuator"
     compile "org.springframework.boot:spring-boot-autoconfigure"
     compile "org.springframework.boot:spring-boot-loader-tools"
