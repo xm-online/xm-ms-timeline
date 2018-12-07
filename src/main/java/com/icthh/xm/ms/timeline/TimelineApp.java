@@ -32,7 +32,7 @@ import java.util.Collection;
         classes = OAuth2InterceptedFeignConfiguration.class)
 )
 @EnableAutoConfiguration(exclude = {MetricFilterAutoConfiguration.class, MetricRepositoryAutoConfiguration.class})
-@EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class,  org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration.class, org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration.class, org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration.class})
+@EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
 @EnableDiscoveryClient
 public class TimelineApp {
 
