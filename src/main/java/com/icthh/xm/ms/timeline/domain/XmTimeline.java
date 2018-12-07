@@ -59,6 +59,7 @@ public class XmTimeline implements Serializable {
     private Integer httpStatusCode;
 
     @Column(name = "start_date")
+    @Convert(converter = InstantConverter.class)
     private Instant startDate;
 
     @Lob
