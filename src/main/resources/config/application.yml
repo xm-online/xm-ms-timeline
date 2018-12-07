@@ -59,6 +59,8 @@ spring:
         producer:
             key-serializer: org.apache.kafka.common.serialization.StringSerializer
             value-serializer: org.apache.kafka.common.serialization.StringSerializer
+#    autoconfigure:
+#        exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
 
 security:
     basic:
@@ -130,7 +132,7 @@ application:
     # =============================
     # options [cassandra, logger, h2db, postgresdb]
     # =============================
-    timeline-service-impl: postgresdb
+    timeline-service-impl: cassandra
     retry:
         max-attempts: 3
         delay: 1000 #in milliseconds
