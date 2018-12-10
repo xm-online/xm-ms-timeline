@@ -59,9 +59,6 @@ spring:
         producer:
             key-serializer: org.apache.kafka.common.serialization.StringSerializer
             value-serializer: org.apache.kafka.common.serialization.StringSerializer
-#    autoconfigure:
-#        exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
-
 security:
     basic:
         enabled: false
@@ -129,9 +126,9 @@ application:
     tenant-ignored-path-list: /v2/api-docs, /api/profile-info, /swagger-resources/configuration/ui, /management/health
     kafka-system-topic: system_topic
     kafka-system-queue: system_queue
-    # =============================
-    # options [cassandra, logger, h2db, postgresdb]
-    # =============================
+    # =================================================
+    # options [cassandra, logger, db-h2, db-postgres]
+    # =================================================
     timeline-service-impl: cassandra
     retry:
         max-attempts: 3

@@ -31,7 +31,7 @@ spring:
             host: localhost
             port: 8500
     kafka:
-        bootstrap-servers: localhost:9092
+        bootstrap-servers: localhost:9093
     data:
         cassandra:
             contactPoints: localhost
@@ -39,7 +39,25 @@ spring:
             compression: LZ4
         jpa:
          repositories:
-            enabled: false
+            enabled: true
+    jpa:
+        database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
+        database: POSTGRESQL
+        show-sql: false
+        properties:
+            hibernate.id.new_generator_mappings: true
+            hibernate.cache.use_second_level_cache: false
+            hibernate.cache.use_query_cache: false
+            hibernate.generate_statistics: false
+            hibernate.cache.use_minimal_puts: true
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        url: jdbc:postgresql:timeline
+        driver-class-name: org.postgresql.Driver
+        username: postgres
+        password: postgres
+#    autoconfigure:
+#        exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration, org.springframework.boot.actuate.autoconfigure.EndpointAutoConfiguration
     mail:
         host: localhost
         port: 25
@@ -55,23 +73,13 @@ spring:
         locator:
             discovery:
                 enabled: true
-#    datasource:
-#      type: none
-#        url: jdbc:postgresql:test
-#        driver-class-name: org.postgresql.Driver
-#        username: postgres
-#        password: postgres
-    autoconfigure:
-        exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration, org.springframework.boot.actuate.autoconfigure.EndpointAutoConfiguration
-#    autoconfigure:
-#        exclude: org.springframework.boot.devtools.autoconfigure.DevToolsDataSourceAutoConfiguration
 liquibase:
-    enabled: false
+    enabled: true
 
 management:
     health:
         db:
-         enabled: false
+         enabled: true
 
 # ===================================================================
 # To enable SSL, generate a certificate using:
@@ -154,4 +162,7 @@ jhipster:
 application:
     zookeeper:
         host: localhost:2181
-    timeline-service-impl: cassandra
+    # =================================================
+    # options [cassandra, logger, db-h2, db-postgres]
+    # =================================================
+    timeline-service-impl: db-postgres

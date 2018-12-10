@@ -33,9 +33,9 @@
             <column name="http_method" type="varchar(50)"/>
             <column name="http_status_code" type="varchar(50)"/>
             <column name="start_date" type="timestamp  without time zone "/>
-            <column name="request_body" type="varchar(50)"/>
+            <column name="request_body" type="text"/>
             <column name="request_length" type="bigint"/>
-            <column name="response_body" type="varchar(500)"/>
+            <column name="response_body" type="text"/>
             <column name="response_length" type="bigint"/>
             <column name="channel_type" type="varchar(50)"/>
             <column name="op_system" type="varchar(50)"/>
@@ -48,21 +48,20 @@
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="timeline_id" type="bigint" >
+            <column name="timeline_id" type="bigint">
             </column>
-            <column name="header_key" type="varchar(50)" ></column>
-            <column name="header_value" type="varchar(50)" ></column>
+            <column name="header_key" type="varchar(50)"/>
+            <column name="header_value" type="text"/>
         </createTable>
 
         <createTable tableName="timeline_request_headers">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="timeline_id" type="bigint" >
+            <column name="timeline_id" type="bigint">
             </column>
-            <column name="header_key" type="varchar(50)" ></column>
-            <column name="header_value" type="varchar(50)" ></column>
+            <column name="header_key" type="varchar(50)"/>
+            <column name="header_value" type="text"/>
         </createTable>
-
     </changeSet>
 </databaseChangeLog>

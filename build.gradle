@@ -252,6 +252,8 @@ dependencies {
     compile "net.jpountz.lz4:lz4:${lz4_version}"
     compile "org.liquibase:liquibase-core"
     compile "com.mattbertolini:liquibase-slf4j"
+    compile "com.zaxxer:HikariCP:${hikaricp_version}"
+    compile "org.postgresql:postgresql"
     liquibaseRuntime "org.liquibase:liquibase-core"
     liquibaseRuntime "org.liquibase.ext:liquibase-hibernate5:${liquibase_hibernate5_version}"
     liquibaseRuntime "org.postgresql:postgresql"
@@ -287,7 +289,7 @@ dependencies {
     compile "org.springframework.cloud:spring-cloud-security"
     compile "org.springframework.cloud:spring-cloud-starter-feign"
     compile "org.springframework.boot:spring-boot-starter-cloud-connectors"
-    compile ("org.springframework:spring-context-support")
+    compile "org.springframework:spring-context-support"
     compile "org.springframework.security:spring-security-config"
     compile "org.springframework.security:spring-security-data"
     compile "org.springframework.security:spring-security-web"
@@ -301,7 +303,6 @@ dependencies {
     compile group: 'com.builtamont', name: 'cassandra-migration', version: '0.11'
     compile group: 'net.sf.uadetector', name: 'uadetector-resources', version: '2014.10'
     compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jackson_dataformat_yaml_version}"
-    compile 'postgresql:postgresql:9.1-901-1.jdbc4'
 
     testCompile "org.awaitility:awaitility:${awaitility_version}"
     testCompile "com.jayway.jsonpath:json-path"
@@ -329,6 +330,7 @@ dependencies {
     compile "com.icthh.xm.commons:xm-commons-permission:${xm_commons_version}"
     compile "com.icthh.xm.commons:xm-commons-tenant-endpoint:${xm_commons_version}"
     compile "com.icthh.xm.commons:xm-commons-ms-web:${xm_commons_version}"
+    compile "com.icthh.xm.commons:xm-commons-migration-db:${xm_commons_version}"
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 }
 
