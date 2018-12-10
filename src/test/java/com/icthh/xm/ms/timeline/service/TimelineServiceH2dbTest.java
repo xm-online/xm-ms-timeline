@@ -3,7 +3,6 @@ package com.icthh.xm.ms.timeline.service;
 import com.icthh.xm.ms.timeline.TimelineApp;
 import com.icthh.xm.ms.timeline.config.SecurityBeanOverrideConfiguration;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
-import com.icthh.xm.ms.timeline.service.timeline.TimelineServiceH2dbImpl;
 import io.github.jhipster.config.JHipsterConstants;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -21,7 +20,7 @@ import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {TimelineApp.class, SecurityBeanOverrideConfiguration.class})
-@TestPropertySource(properties = { "application.timeline-service-impl = h2db"})
+@TestPropertySource(properties = {"application.timeline-service-impl = db"})
 @ActiveProfiles(JHipsterConstants.SPRING_PROFILE_TEST)
 public class TimelineServiceH2dbTest {
 
@@ -36,15 +35,43 @@ public class TimelineServiceH2dbTest {
     private static final Long ENTITY_ID_LONG = 111L;
     private static final String ENTITY_KEY = "test_entity_key";
 
-//    @MockBean
-//    private TimelineJpaRepository timelineRepository;
-
     @Test
     public void testTimelineH2db() {
         timelineService.insertTimelines(createTestTimeline());
-        Assertions.assertThat(timelineService.getTimelines(MS_NAME, USER_KEY, ENTITY_ID_LONG.toString(), DATE.minus(1, ChronoUnit.DAYS), DATE.plus(1, ChronoUnit.DAYS), OPERATION, null, 20).getTimelines()).hasSize(1);
-        Assertions.assertThat(timelineService.getTimelines(null, null, null, null, null, null, null, 20).getTimelines()).hasSize(1);
-        Assertions.assertThat(timelineService.getTimelines("WRONG_MS_NAME", USER_KEY, ENTITY_ID_LONG.toString(), DATE, DATE, OPERATION, null, 20).getTimelines()).hasSize(0);
+
+        Assertions.assertThat(timelineService.getTimelines(MS_NAME,
+            USER_KEY,
+            ENTITY_ID_LONG.toString(),
+            DATE.minus(1,
+                ChronoUnit.DAYS),
+            DATE.plus(1,
+                ChronoUnit.DAYS),
+            OPERATION,
+            null,
+            20)
+            .getTimelines()).hasSize(1);
+
+        Assertions.assertThat(timelineService.getTimelines(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            20)
+            .getTimelines()).hasSize(1);
+
+        Assertions.assertThat(timelineService.getTimelines(
+            "WRONG_MS_NAME",
+            USER_KEY,
+            ENTITY_ID_LONG.toString(),
+            DATE,
+            DATE,
+            OPERATION,
+            null,
+            20)
+            .getTimelines()).hasSize(0);
     }
 
     private XmTimeline createTestTimeline() {
@@ -58,12 +85,12 @@ public class TimelineServiceH2dbTest {
         timeline.setStartDate(DATE);
         timeline.setOperationName(OPERATION);
 
-        Map mapRequestHeaders = new HashMap();
+        Map<String, String> mapRequestHeaders = new HashMap<>();
         mapRequestHeaders.put("request_header_key_1", "request_header_value_1");
         mapRequestHeaders.put("request_header_key_2", "request_header_value_2");
         timeline.setRequestHeaders(mapRequestHeaders);
 
-        Map mapResponseHeaders = new HashMap();
+        Map<String, String> mapResponseHeaders = new HashMap<>();
         mapResponseHeaders.put("response_header_key_1", "response_header_value_1");
         mapResponseHeaders.put("response_header_key_2", "response_header_value_2");
         timeline.setResponseHeaders(mapResponseHeaders);

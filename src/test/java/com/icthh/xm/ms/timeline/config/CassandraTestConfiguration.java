@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Profile;
 
 @Configuration
 @Profile(JHipsterConstants.SPRING_PROFILE_TEST)
-@ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = ServiceConfiguration.CASSANDRA_IMPL)
+@ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = Constants.CASSANDRA_IMPL)
 public class CassandraTestConfiguration extends CassandraConfiguration {
 
     private final Logger log = LoggerFactory.getLogger(CassandraTestConfiguration.class);
