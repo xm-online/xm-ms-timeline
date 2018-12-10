@@ -32,6 +32,8 @@ management:
             enabled: false # When using the MailService, configure an SMTP server and set this to true
         binders:
             enabled: true
+        db:
+         enabled: false
 spring:
     application:
         name: timeline
@@ -59,6 +61,16 @@ spring:
         producer:
             key-serializer: org.apache.kafka.common.serialization.StringSerializer
             value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    data:
+        jpa:
+         repositories:
+            enabled: false
+    autoconfigure:
+        exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration, org.springframework.boot.actuate.autoconfigure.EndpointAutoConfiguration
+
+liquibase:
+    enabled: false
+
 security:
     basic:
         enabled: false

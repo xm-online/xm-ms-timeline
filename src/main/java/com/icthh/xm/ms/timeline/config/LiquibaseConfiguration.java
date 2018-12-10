@@ -1,34 +1,30 @@
 package com.icthh.xm.ms.timeline.config;
 
+import static com.icthh.xm.ms.timeline.config.Constants.CHANGE_LOG_PATH;
+
 import io.github.jhipster.config.JHipsterConstants;
 import io.github.jhipster.config.liquibase.AsyncSpringLiquibase;
+
+import javax.sql.DataSource;
+
 import liquibase.integration.spring.SpringLiquibase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.task.TaskExecutor;
 
-import javax.sql.DataSource;
-
-import static com.icthh.xm.ms.timeline.config.Constants.CHANGE_LOG_PATH;
-import static com.icthh.xm.ms.timeline.config.Constants.DB_IMPL_PREFIX;
-
-@AutoConfigureAfter({HibernateJpaAutoConfiguration.class})
+@ConditionalOnExpression("'${application.imeline-service-impl}'.startsWith('db-')")
 @Configuration
 public class LiquibaseConfiguration {
 
     private final Logger log = LoggerFactory.getLogger(LiquibaseConfiguration.class);
 
     private final Environment env;
-
 
     public LiquibaseConfiguration(Environment env) {
         this.env = env;
@@ -37,7 +33,6 @@ public class LiquibaseConfiguration {
     @Bean
     public SpringLiquibase liquibase(@Qualifier("taskExecutor") TaskExecutor taskExecutor,
                                      DataSource dataSource, LiquibaseProperties liquibaseProperties) {
-
         // Use liquibase.integration.spring.SpringLiquibase if you don't want Liquibase to start asynchronously
         SpringLiquibase liquibase = new AsyncSpringLiquibase(taskExecutor, env);
         liquibase.setDataSource(dataSource);
