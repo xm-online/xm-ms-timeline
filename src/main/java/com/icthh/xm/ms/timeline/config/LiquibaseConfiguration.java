@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.task.TaskExecutor;
 
-@ConditionalOnExpression("'${application.imeline-service-impl}'.startsWith('db-')")
+@ConditionalOnExpression("'${application.timeline-service-impl}'.startsWith('db-')")
 @Configuration
 public class LiquibaseConfiguration {
 

@@ -56,8 +56,6 @@ spring:
 #        driver-class-name: org.postgresql.Driver
 #        username: postgres
 #        password: postgres
-#    autoconfigure:
-#        exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration, org.springframework.boot.actuate.autoconfigure.EndpointAutoConfiguration
     mail:
         host: localhost
         port: 25
@@ -73,7 +71,13 @@ spring:
         locator:
             discovery:
                 enabled: true
-
+#liquibase:
+#    enabled: true
+#
+#management:
+#    health:
+#        db:
+#         enabled: true
 # ===================================================================
 # To enable SSL, generate a certificate using:
 # keytool -genkey -alias timeline -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650
