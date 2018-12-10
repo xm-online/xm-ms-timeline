@@ -1,12 +1,9 @@
 package com.icthh.xm.ms.timeline.service;
 
-import com.icthh.xm.ms.timeline.AbstractCassandraTest;
 import com.icthh.xm.ms.timeline.TimelineApp;
 import com.icthh.xm.ms.timeline.config.SecurityBeanOverrideConfiguration;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
-import com.icthh.xm.ms.timeline.service.timeline.TimelineService;
 import com.icthh.xm.ms.timeline.service.timeline.TimelineServiceH2dbImpl;
-import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 import io.github.jhipster.config.JHipsterConstants;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;

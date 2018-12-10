@@ -9,10 +9,10 @@ import com.icthh.xm.ms.timeline.repository.cassandra.EntityMappingRepository;
 import com.icthh.xm.ms.timeline.repository.cassandra.TimelineCassandraRepository;
 import com.icthh.xm.ms.timeline.repository.jpa.TimelineJpaRepository;
 
-import com.icthh.xm.ms.timeline.service.timeline.TimelineService;
-import com.icthh.xm.ms.timeline.service.timeline.TimelineServiceCassandraImpl;
-import com.icthh.xm.ms.timeline.service.timeline.TimelineServiceDbImpl;
-import com.icthh.xm.ms.timeline.service.timeline.TimelineServiceLoggerImpl;
+import com.icthh.xm.ms.timeline.service.TimelineService;
+import com.icthh.xm.ms.timeline.service.cassandra.TimelineServiceCassandraImpl;
+import com.icthh.xm.ms.timeline.service.db.TimelineServiceDbImpl;
+import com.icthh.xm.ms.timeline.service.logger.TimelineServiceLoggerImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;

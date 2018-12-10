@@ -1,7 +1,7 @@
 package com.icthh.xm.ms.timeline.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.icthh.xm.ms.timeline.service.timeline.TimelineService;
+import com.icthh.xm.ms.timeline.service.TimelineService;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

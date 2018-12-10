@@ -1,4 +1,4 @@
-package com.icthh.xm.ms.timeline.service.timeline;
+package com.icthh.xm.ms.timeline.service;
 
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;

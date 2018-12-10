@@ -1,7 +1,7 @@
 package com.icthh.xm.ms.timeline.service;
 
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
-import com.icthh.xm.ms.timeline.service.timeline.TimelineServiceLoggerImpl;
+import com.icthh.xm.ms.timeline.service.logger.TimelineServiceLoggerImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;

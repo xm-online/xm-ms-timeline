@@ -12,7 +12,7 @@ import com.icthh.xm.commons.tenant.TenantKey;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.repository.cassandra.EntityMappingRepository;
 import com.icthh.xm.ms.timeline.repository.cassandra.TimelineCassandraRepository;
-import com.icthh.xm.ms.timeline.service.timeline.TimelineServiceCassandraImpl;
+import com.icthh.xm.ms.timeline.service.cassandra.TimelineServiceCassandraImpl;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 
 import org.junit.Before;

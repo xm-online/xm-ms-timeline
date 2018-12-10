@@ -1,7 +1,8 @@
-package com.icthh.xm.ms.timeline.service.timeline;
+package com.icthh.xm.ms.timeline.service.logger;
 
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.domain.ext.IdOrKey;
+import com.icthh.xm.ms.timeline.service.TimelineService;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;

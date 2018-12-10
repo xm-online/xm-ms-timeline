@@ -52,9 +52,9 @@ public class CassandraConfiguration {
     @Bean
     public Cluster cluster(CassandraProperties properties) {
         Cluster.Builder builder = Cluster.builder()
-            .withClusterName(properties.getClusterName())
-            .withProtocolVersion(protocolVersion)
-            .withPort(getPort(properties));
+                .withClusterName(properties.getClusterName())
+                .withProtocolVersion(protocolVersion)
+                .withPort(getPort(properties));
 
         if (properties.getUsername() != null) {
             builder.withCredentials(properties.getUsername(), properties.getPassword());
@@ -88,9 +88,9 @@ public class CassandraConfiguration {
             .newTupleType(DataType.timestamp(), DataType.varchar());
 
         cluster.getConfiguration().getCodecRegistry()
-            .register(LocalDateCodec.instance)
-            .register(InstantCodec.instance)
-            .register(new ZonedDateTimeCodec(tupleType));
+                .register(LocalDateCodec.instance)
+                .register(InstantCodec.instance)
+                .register(new ZonedDateTimeCodec(tupleType));
 
         if (metricRegistry != null) {
             cluster.init();

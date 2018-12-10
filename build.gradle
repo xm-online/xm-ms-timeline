@@ -251,7 +251,7 @@ dependencies {
     compile "javax.transaction:javax.transaction-api"
     compile "net.jpountz.lz4:lz4:${lz4_version}"
     compile "org.liquibase:liquibase-core"
-    compile "com.mattbertolini:liquibase-slf4j"
+    compile "com.mattbertolini:liquibase-slf4j:${liquibase_slf4j_version}"
     compile "com.zaxxer:HikariCP:${hikaricp_version}"
     compile "org.postgresql:postgresql"
     liquibaseRuntime "org.liquibase:liquibase-core"

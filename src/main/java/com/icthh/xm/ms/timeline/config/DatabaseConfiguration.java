@@ -1,6 +1,7 @@
 package com.icthh.xm.ms.timeline.config;
 
 import static com.icthh.xm.ms.timeline.config.Constants.CHANGE_LOG_PATH;
+import static com.icthh.xm.ms.timeline.config.Constants.DB_IMPL;
 
 import io.github.jhipster.config.JHipsterConstants;
 import io.github.jhipster.config.liquibase.AsyncSpringLiquibase;
@@ -18,7 +19,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.task.TaskExecutor;
 
-@ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = "db")
+@ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = DB_IMPL)
 @Configuration
 public class DatabaseConfiguration {
 
