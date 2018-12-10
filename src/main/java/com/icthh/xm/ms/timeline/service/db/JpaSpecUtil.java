@@ -29,25 +29,25 @@ public class JpaSpecUtil {
             -> builder.greaterThanOrEqualTo(root.get(propertyName), filterValue);
     }
 
-    public <T> Specifications<T> combineEqualSpecifications(Specifications<T> prevSpec,
-                                                            String filterValue,
-                                                            String propertyName) {
+    public static <T> Specifications<T> combineEqualSpecifications(Specifications<T> prevSpec,
+                                                                   String filterValue,
+                                                                   String propertyName) {
         Specifications<T> specifications = Specifications.where(equalSpecification(filterValue, propertyName));
         return prevSpec != null ? prevSpec.and(specifications) : specifications;
     }
 
-    public <T> Specifications<T> combineLessThanOrEqualToSpecifications(Specifications<T> prevSpec,
-                                                                        Instant filterValue,
-                                                                        String propertyName) {
+    public static <T> Specifications<T> combineLessThanOrEqualToSpecifications(Specifications<T> prevSpec,
+                                                                               Instant filterValue,
+                                                                               String propertyName) {
         Specifications<T> specifications = Specifications.where(
             lessThanOrEqualToSpecification(filterValue, propertyName));
 
         return prevSpec != null ? prevSpec.and(specifications) : specifications;
     }
 
-    public <T> Specifications<T> combineGreaterThanOrEqualToSpecifications(Specifications<T> prevSpec,
-                                                                           Instant filterValue,
-                                                                           String propertyName) {
+    public static <T> Specifications<T> combineGreaterThanOrEqualToSpecifications(Specifications<T> prevSpec,
+                                                                                  Instant filterValue,
+                                                                                  String propertyName) {
         Specifications<T> specifications = Specifications.where(
             greaterThanOrEqualToSpecification(filterValue, propertyName));
 

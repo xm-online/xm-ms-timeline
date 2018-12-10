@@ -3,6 +3,8 @@ package com.icthh.xm.ms.timeline.service.db;
 import static com.icthh.xm.ms.timeline.service.db.JpaSpecUtil.combineEqualSpecifications;
 import static com.icthh.xm.ms.timeline.service.db.JpaSpecUtil.combineGreaterThanOrEqualToSpecifications;
 import static com.icthh.xm.ms.timeline.service.db.JpaSpecUtil.combineLessThanOrEqualToSpecifications;
+import static java.math.BigInteger.ONE;
+import static java.math.BigInteger.ZERO;
 
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.repository.jpa.TimelineJpaRepository;
@@ -70,14 +72,15 @@ public class TimelineServiceDbImpl implements TimelineService {
                 combineEqualSpecifications(specificationsForFiltering, idOrKey, FIELD_ENTITY_ID);
         }
 
-        int page = next != null ? Integer.parseInt(next) : 0;
-        PageRequest pageRequest = new PageRequest(page, limit == 0 ? 100 : limit);
+        int page = next != null ? Integer.parseInt(next) : ZERO.intValue();
+        PageRequest pageRequest = new PageRequest(page, limit);
 
         Page<XmTimeline> timelines = specificationsForFiltering != null
             ? timelineRepository.findAll(specificationsForFiltering, pageRequest)
             : timelineRepository.findAll(pageRequest);
 
-        return new TimelinePageVM(timelines.getContent(), timelines.hasNext() ? String.valueOf(page + 1) : null);
+        return new TimelinePageVM(timelines.getContent(),
+            timelines.hasNext() ? String.valueOf(page + ONE.intValue()) : null);
     }
 
 
