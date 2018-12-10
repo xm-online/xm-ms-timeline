@@ -1,8 +1,8 @@
 package com.icthh.xm.ms.timeline.config;
 
 import static com.icthh.xm.ms.timeline.config.Constants.CASSANDRA_IMPL;
-import static com.icthh.xm.ms.timeline.config.Constants.LOGGER_IMPL;
 import static com.icthh.xm.ms.timeline.config.Constants.DB_IMPL;
+import static com.icthh.xm.ms.timeline.config.Constants.LOGGER_IMPL;
 
 import com.icthh.xm.commons.tenant.TenantContextHolder;
 import com.icthh.xm.ms.timeline.repository.cassandra.EntityMappingRepository;

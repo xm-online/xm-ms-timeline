@@ -1,8 +1,8 @@
 package com.icthh.xm.ms.timeline.domain;
 
-import javax.persistence.AttributeConverter;
 import java.sql.Timestamp;
 import java.time.Instant;
+import javax.persistence.AttributeConverter;
 
 public class InstantConverter implements AttributeConverter<Instant, Timestamp> {
 
@@ -13,7 +13,7 @@ public class InstantConverter implements AttributeConverter<Instant, Timestamp> 
     }
 
     @Override
-    public Instant convertToEntityAttribute(Timestamp aLong) {
-        return Instant.ofEpochMilli(aLong.getTime());
+    public Instant convertToEntityAttribute(Timestamp timestamp) {
+        return Instant.ofEpochMilli(timestamp.getTime());
     }
 }

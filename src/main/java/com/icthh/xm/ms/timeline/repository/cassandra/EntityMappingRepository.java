@@ -8,7 +8,6 @@ import com.datastax.driver.core.Session;
 import com.datastax.driver.core.querybuilder.Insert;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.querybuilder.Select;
-import org.springframework.stereotype.Service;
 
 public class EntityMappingRepository {
 

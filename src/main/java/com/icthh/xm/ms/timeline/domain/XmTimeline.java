@@ -1,20 +1,33 @@
 package com.icthh.xm.ms.timeline.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Map;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.Table;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "xmtimeline")
 @Getter
 @Setter
-@ToString(exclude = {"httpStatusCode","startDate","requestBody","responseBody","requestHeaders","responseHeaders","browser","opSystem"})
+@ToString(exclude = {"httpStatusCode", "startDate", "requestBody", "responseBody",
+    "requestHeaders", "responseHeaders", "browser", "opSystem"})
 public class XmTimeline implements Serializable {
 
     @JsonIgnore
@@ -80,15 +93,15 @@ public class XmTimeline implements Serializable {
     private String channelType;
 
     @ElementCollection
-    @MapKeyColumn(name="header_key")
-    @Column(name="header_value")
-    @CollectionTable(name="timeline_request_headers", joinColumns=@JoinColumn(name="timeline_id"))
+    @MapKeyColumn(name = "header_key")
+    @Column(name = "header_value")
+    @CollectionTable(name = "timeline_request_headers", joinColumns = @JoinColumn(name = "timeline_id"))
     private Map<String, String> requestHeaders;
 
     @ElementCollection
-    @MapKeyColumn(name="header_key")
-    @Column(name="header_value")
-    @CollectionTable(name="timeline_response_headers", joinColumns=@JoinColumn(name="timeline_id"))
+    @MapKeyColumn(name = "header_key")
+    @Column(name = "header_value")
+    @CollectionTable(name = "timeline_response_headers", joinColumns = @JoinColumn(name = "timeline_id"))
     private Map<String, String> responseHeaders;
 
     @Column(name = "exec_time")
