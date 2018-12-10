@@ -3,6 +3,10 @@ package com.icthh.xm.ms.timeline.service.timeline;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.repository.jpa.TimelineJpaRepository;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
+
+import java.time.Instant;
+import java.util.Objects;
+
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -10,11 +14,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
-import java.time.Instant;
-import java.util.Objects;
-
 @AllArgsConstructor
-public class TimelineServiceH2dbImpl implements TimelineService {
+public class TimelineServiceDbImpl implements TimelineService {
 
     private TimelineJpaRepository timelineRepository;
 
