@@ -66,7 +66,7 @@ spring:
          repositories:
             enabled: false
     autoconfigure:
-        exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration, org.springframework.boot.actuate.autoconfigure.EndpointAutoConfiguration
+        exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
 
 liquibase:
     enabled: false
