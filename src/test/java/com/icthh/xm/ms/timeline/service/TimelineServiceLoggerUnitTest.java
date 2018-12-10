@@ -29,9 +29,38 @@ public class TimelineServiceLoggerUnitTest {
     @Test
     public void testLoggerTimelineService() {
         timelineService.insertTimelines(timeline);
-        Assertions.assertThat(timelineService.getTimelines(MS_NAME, USER_KEY, ENTITY_ID_LONG.toString(), DATE, DATE, OPERATION, null, 0).getTimelines()).hasSize(1);
-        Assertions.assertThat(timelineService.getTimelines(null, null, null, null, null, null, null, 0).getTimelines()).hasSize(1);
-        Assertions.assertThat(timelineService.getTimelines("WRONG_MS_NAME", USER_KEY, ENTITY_ID_LONG.toString(), DATE, DATE, OPERATION, null, 0).getTimelines()).hasSize(0);
+        Assertions.assertThat(timelineService.getTimelines(
+            MS_NAME,
+            USER_KEY,
+            ENTITY_ID_LONG.toString(),
+            DATE,
+            DATE,
+            OPERATION,
+            null,
+            0)
+            .getTimelines()).hasSize(1);
+
+        Assertions.assertThat(timelineService.getTimelines(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            0)
+            .getTimelines()).hasSize(1);
+
+        Assertions.assertThat(timelineService.getTimelines(
+            "WRONG_MS_NAME",
+            USER_KEY,
+            ENTITY_ID_LONG.toString(),
+            DATE,
+            DATE,
+            OPERATION,
+            null,
+            0)
+            .getTimelines()).hasSize(0);
     }
 
     private XmTimeline createTestTimeline() {

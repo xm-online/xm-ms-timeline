@@ -22,7 +22,7 @@ import java.util.Map;
 @SpringBootTest(classes = {TimelineApp.class, SecurityBeanOverrideConfiguration.class})
 @TestPropertySource(properties = {"application.timeline-service-impl = db"})
 @ActiveProfiles(JHipsterConstants.SPRING_PROFILE_TEST)
-public class TimelineServiceH2dbTest {
+public class TimelineServiceDbTest {
 
     @Autowired
     private TimelineService timelineService;
@@ -39,7 +39,8 @@ public class TimelineServiceH2dbTest {
     public void testTimelineH2db() {
         timelineService.insertTimelines(createTestTimeline());
 
-        Assertions.assertThat(timelineService.getTimelines(MS_NAME,
+        Assertions.assertThat(timelineService.getTimelines(
+            MS_NAME,
             USER_KEY,
             ENTITY_ID_LONG.toString(),
             DATE.minus(1,

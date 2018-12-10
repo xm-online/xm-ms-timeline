@@ -49,6 +49,7 @@ spring:
 
 liquibase:
     contexts: test
+    enabled: false
 
 security:
     basic:
