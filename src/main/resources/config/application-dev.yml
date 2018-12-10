@@ -37,6 +37,9 @@ spring:
             contactPoints: localhost
             protocolVersion: V4
             compression: LZ4
+        jpa:
+         repositories:
+            enabled: false
     mail:
         host: localhost
         port: 25
@@ -53,16 +56,23 @@ spring:
             discovery:
                 enabled: true
 #    datasource:
+#      type: none
 #        url: jdbc:postgresql:test
 #        driver-class-name: org.postgresql.Driver
 #        username: postgres
 #        password: postgres
     autoconfigure:
-        exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+        exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration, org.springframework.boot.actuate.autoconfigure.EndpointAutoConfiguration
 #    autoconfigure:
-#        exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+#        exclude: org.springframework.boot.devtools.autoconfigure.DevToolsDataSourceAutoConfiguration
 liquibase:
     enabled: false
+
+management:
+    health:
+        db:
+         enabled: false
+
 # ===================================================================
 # To enable SSL, generate a certificate using:
 # keytool -genkey -alias timeline -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650
