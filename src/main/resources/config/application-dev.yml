@@ -160,6 +160,6 @@ application:
     zookeeper:
         host: localhost:2181
     # =================================================
-    # options [cassandra, logger, db-h2, db-postgres]
+    # options [cassandra, logger, db]
     # =================================================
     timeline-service-impl: cassandra
