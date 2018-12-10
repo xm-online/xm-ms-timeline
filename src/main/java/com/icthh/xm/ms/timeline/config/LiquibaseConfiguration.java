@@ -6,6 +6,7 @@ import liquibase.integration.spring.SpringLiquibase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.task.TaskExecutor;
 
 import javax.sql.DataSource;
+
+import static com.icthh.xm.ms.timeline.config.Constants.DB_IMPL_PREFIX;
 
 @Configuration
 public class LiquibaseConfiguration {
@@ -26,6 +29,7 @@ public class LiquibaseConfiguration {
         this.env = env;
     }
 
+    @ConditionalOnProperty(name = "application.timeline-service-impl", prefix = DB_IMPL_PREFIX)
     @Bean
     public SpringLiquibase liquibase(@Qualifier("taskExecutor") TaskExecutor taskExecutor,
                                      DataSource dataSource, LiquibaseProperties liquibaseProperties) {

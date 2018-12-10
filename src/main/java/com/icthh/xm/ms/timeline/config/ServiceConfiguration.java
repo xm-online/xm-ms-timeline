@@ -4,23 +4,30 @@ import com.icthh.xm.commons.tenant.TenantContextHolder;
 import com.icthh.xm.ms.timeline.repository.cassandra.EntityMappingRepository;
 import com.icthh.xm.ms.timeline.repository.cassandra.TimelineCassandraRepository;
 import com.icthh.xm.ms.timeline.repository.jpa.TimelineJpaRepository;
-import com.icthh.xm.ms.timeline.service.timeline.*;
+
+import com.icthh.xm.ms.timeline.service.timeline.TimelineService;
+import com.icthh.xm.ms.timeline.service.timeline.TimelineServiceCassandraImpl;
+import com.icthh.xm.ms.timeline.service.timeline.TimelineServiceH2dbImpl;
+import com.icthh.xm.ms.timeline.service.timeline.TimelineServiceLoggerImpl;
+import com.icthh.xm.ms.timeline.service.timeline.TimelineServicePostgresDBImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static com.icthh.xm.ms.timeline.config.Constants.CASSANDRA_IMPL;
+import static com.icthh.xm.ms.timeline.config.Constants.H2DB_IMPL;
+import static com.icthh.xm.ms.timeline.config.Constants.LOGGER_IMPL;
+import static com.icthh.xm.ms.timeline.config.Constants.POSTGRES_IMPL;
+
 @Configuration
 public class ServiceConfiguration {
 
-    public static final String CASSANDRA_IMPL = "cassandra";
-    public static final String LOGGER_IMPL = "logger";
-    public static final String H2DB_IMPL = "h2db";
-    public static final String POSTGRES_IMPL = "postgresdb";
-
     @Bean(name = "timelineService")
     @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = CASSANDRA_IMPL)
-    public TimelineService cassandraTimelineService(TimelineCassandraRepository tr, EntityMappingRepository emr, TenantContextHolder tch) {
+    public TimelineService cassandraTimelineService(TimelineCassandraRepository tr,
+                                                    EntityMappingRepository emr,
+                                                    TenantContextHolder tch) {
         return new TimelineServiceCassandraImpl(tr, emr, tch);
     }
 
@@ -45,7 +52,9 @@ public class ServiceConfiguration {
     @Bean(name = "timelineService")
     @ConditionalOnProperty(name = "application.timeline-service-impl", matchIfMissing = true)
     @ConditionalOnMissingBean
-    public TimelineService defaultTimelineService(TimelineCassandraRepository tr, EntityMappingRepository emr, TenantContextHolder tch) {
+    public TimelineService defaultTimelineService(TimelineCassandraRepository tr,
+                                                  EntityMappingRepository emr,
+                                                  TenantContextHolder tch) {
         return new TimelineServiceCassandraImpl(tr, emr, tch);
     }
 }

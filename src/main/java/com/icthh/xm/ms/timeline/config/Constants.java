@@ -1,8 +1,11 @@
 package com.icthh.xm.ms.timeline.config;
 
+import lombok.experimental.UtilityClass;
+
 /**
  * Application constants.
  */
+@UtilityClass
 public final class Constants {
 
     //Regex for acceptable logins
@@ -29,6 +32,10 @@ public final class Constants {
 
     public static final String DEFAULT_CONFIG_PATH = "config/specs/default-timeline.yml";
 
-    private Constants() {
-    }
+    public static final String CASSANDRA_IMPL = "cassandra";
+    public static final String LOGGER_IMPL = "logger";
+    public static final String DB_IMPL_PREFIX = "db-";
+    public static final String H2DB_IMPL = DB_IMPL_PREFIX + "h2";
+    public static final String POSTGRES_IMPL = DB_IMPL_PREFIX + "postgres";
+
 }

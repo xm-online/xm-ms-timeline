@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
+//todo wtf remove
 @Configuration
 public class JpaRepositoriesConfig {
 
@@ -22,17 +23,17 @@ public class JpaRepositoriesConfig {
 //
 //    }
 
-    @Configuration
-    @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = ServiceConfiguration.H2DB_IMPL)
-    @EnableJpaRepositories("com.icthh.xm.ms.timeline.repository.jpa")
-    @EnableTransactionManagement
-    public static class H2dbConfiguration {
-
-        @Bean
-        public DataSource dataSource() {
-            EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
-            return builder.setType(EmbeddedDatabaseType.H2).build();
-        }
-    }
+//    @Configuration
+//    @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = ServiceConfiguration.H2DB_IMPL)
+//    @EnableJpaRepositories("com.icthh.xm.ms.timeline.repository.jpa")
+//    @EnableTransactionManagement
+//    public static class H2dbConfiguration {
+//
+//        @Bean
+//        public DataSource dataSource() {
+//            EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
+//            return builder.setType(EmbeddedDatabaseType.H2).build();
+//        }
+//    }
 
 }

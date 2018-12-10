@@ -52,10 +52,17 @@ spring:
         locator:
             discovery:
                 enabled: true
-    datasource:
-        url: jdbc:postgresql:test
-        driver-class-name: org.postgresql.Driver
-
+#    datasource:
+#        url: jdbc:postgresql:test
+#        driver-class-name: org.postgresql.Driver
+#        username: postgres
+#        password: postgres
+    autoconfigure:
+        exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+#    autoconfigure:
+#        exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+liquibase:
+    enabled: false
 # ===================================================================
 # To enable SSL, generate a certificate using:
 # keytool -genkey -alias timeline -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650
@@ -137,3 +144,4 @@ jhipster:
 application:
     zookeeper:
         host: localhost:2181
+    timeline-service-impl: cassandra

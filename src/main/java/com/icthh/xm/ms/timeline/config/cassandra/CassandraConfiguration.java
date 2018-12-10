@@ -1,7 +1,16 @@
 package com.icthh.xm.ms.timeline.config.cassandra;
 
+import static com.icthh.xm.ms.timeline.config.Constants.CASSANDRA_IMPL;
+
 import com.codahale.metrics.MetricRegistry;
-import com.datastax.driver.core.*;
+
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.DataType;
+import com.datastax.driver.core.ProtocolVersion;
+import com.datastax.driver.core.QueryOptions;
+import com.datastax.driver.core.Session;
+import com.datastax.driver.core.SocketOptions;
+import com.datastax.driver.core.TupleType;
 import com.datastax.driver.core.policies.LoadBalancingPolicy;
 import com.datastax.driver.core.policies.ReconnectionPolicy;
 import com.datastax.driver.core.policies.RetryPolicy;
@@ -9,7 +18,6 @@ import com.datastax.driver.extras.codecs.jdk8.InstantCodec;
 import com.datastax.driver.extras.codecs.jdk8.LocalDateCodec;
 import com.datastax.driver.extras.codecs.jdk8.ZonedDateTimeCodec;
 import com.icthh.xm.commons.tenant.TenantContextHolder;
-import com.icthh.xm.ms.timeline.config.ServiceConfiguration;
 import com.icthh.xm.ms.timeline.repository.cassandra.EntityMappingRepository;
 import com.icthh.xm.ms.timeline.repository.cassandra.TimelineCassandraRepository;
 import com.icthh.xm.ms.timeline.service.TenantPropertiesService;
@@ -28,7 +36,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.util.StringUtils;
 
 @Configuration
-@ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = ServiceConfiguration.CASSANDRA_IMPL)
+@ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = CASSANDRA_IMPL)
 @EnableConfigurationProperties(CassandraProperties.class)
 @Profile({JHipsterConstants.SPRING_PROFILE_DEVELOPMENT, JHipsterConstants.SPRING_PROFILE_PRODUCTION})
 public class CassandraConfiguration {
@@ -44,9 +52,9 @@ public class CassandraConfiguration {
     @Bean
     public Cluster cluster(CassandraProperties properties) {
         Cluster.Builder builder = Cluster.builder()
-                .withClusterName(properties.getClusterName())
-                .withProtocolVersion(protocolVersion)
-                .withPort(getPort(properties));
+            .withClusterName(properties.getClusterName())
+            .withProtocolVersion(protocolVersion)
+            .withPort(getPort(properties));
 
         if (properties.getUsername() != null) {
             builder.withCredentials(properties.getUsername(), properties.getPassword());
@@ -80,9 +88,9 @@ public class CassandraConfiguration {
             .newTupleType(DataType.timestamp(), DataType.varchar());
 
         cluster.getConfiguration().getCodecRegistry()
-                .register(LocalDateCodec.instance)
-                .register(InstantCodec.instance)
-                .register(new ZonedDateTimeCodec(tupleType));
+            .register(LocalDateCodec.instance)
+            .register(InstantCodec.instance)
+            .register(new ZonedDateTimeCodec(tupleType));
 
         if (metricRegistry != null) {
             cluster.init();

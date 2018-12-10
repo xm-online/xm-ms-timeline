@@ -1,6 +1,7 @@
 package com.icthh.xm.ms.timeline;
 
 import com.icthh.xm.commons.logging.util.MdcUtils;
+import com.icthh.xm.commons.permission.repository.PermittedRepository;
 import com.icthh.xm.ms.timeline.client.OAuth2InterceptedFeignConfiguration;
 import com.icthh.xm.ms.timeline.config.ApplicationProperties;
 import com.icthh.xm.ms.timeline.config.DefaultProfileUtil;
@@ -18,6 +19,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -33,6 +35,7 @@ import java.util.Collection;
 )
 @EnableAutoConfiguration(exclude = {MetricFilterAutoConfiguration.class, MetricRepositoryAutoConfiguration.class})
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
+@EnableJpaRepositories(basePackages = {"com.icthh.xm.ms.timeline.repository"})
 @EnableDiscoveryClient
 public class TimelineApp {
 
