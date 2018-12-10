@@ -1,34 +1,40 @@
 package com.icthh.xm.ms.timeline.service.logger;
 
+import static com.icthh.xm.ms.timeline.config.Constants.LOGGER_IMPL_CAPACITY;
+import static org.apache.commons.lang.StringUtils.isNotBlank;
+
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.domain.ext.IdOrKey;
 import com.icthh.xm.ms.timeline.service.TimelineService;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.stream.Collectors;
 
-import static org.apache.commons.lang.StringUtils.isNotBlank;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
+
 
 @Slf4j
 public class TimelineServiceLoggerImpl implements TimelineService {
 
-    private ArrayBlockingQueue<XmTimeline> timelines = new ArrayBlockingQueue(100);
-
-    private static boolean stringFilter(String filter, String value) {
-        return isNotBlank(filter) ? StringUtils.equalsIgnoreCase(filter, value) : true;
-    }
+    private static final ArrayBlockingQueue<XmTimeline> timelines = new ArrayBlockingQueue<>(LOGGER_IMPL_CAPACITY);
 
     @Override
-    public TimelinePageVM getTimelines(String msName, String userKey, String idOrKey, Instant dateFrom, Instant dateTo, String operation, String next, int limit) {
+    public TimelinePageVM getTimelines(String msName,
+                                       String userKey,
+                                       String idOrKey,
+                                       Instant dateFrom,
+                                       Instant dateTo,
+                                       String operation,
+                                       String next,
+                                       int limit) {
 
         // filter and return timelines from memory
 
-        List filteredTimelines = timelines.stream()
+        List<XmTimeline> filteredTimelines = timelines.stream()
             .filter(t -> stringFilter(msName, t.getMsName()))
             .filter(t -> stringFilter(userKey, t.getUserKey()))
             .filter(t -> stringFilter(operation, t.getOperationName()))
@@ -43,8 +49,8 @@ public class TimelineServiceLoggerImpl implements TimelineService {
 
                 return true;
             })
-            .filter(t -> dateFrom != null ? dateFrom.isBefore(t.getStartDate()) || dateFrom.equals(t.getStartDate()) : true)
-            .filter(t -> dateTo != null ? dateTo.isAfter(t.getStartDate()) || dateTo.equals(t.getStartDate()) : true)
+            .filter(t -> dateFrom == null || (dateFrom.isBefore(t.getStartDate()) || dateFrom.equals(t.getStartDate())))
+            .filter(t -> dateTo == null || (dateTo.isAfter(t.getStartDate()) || dateTo.equals(t.getStartDate())))
             .collect(Collectors.toList());
 
         return new TimelinePageVM(filteredTimelines, null);
@@ -54,5 +60,10 @@ public class TimelineServiceLoggerImpl implements TimelineService {
     public void insertTimelines(XmTimeline xmTimeline) {
         timelines.add(xmTimeline);
         log.info("Event {}", xmTimeline);
+    }
+
+
+    private static boolean stringFilter(String filter, String value) {
+        return !isNotBlank(filter) || StringUtils.equalsIgnoreCase(filter, value);
     }
 }
