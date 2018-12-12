@@ -82,6 +82,4 @@ public class TimelineServiceDbImpl implements TimelineService {
         return new TimelinePageVM(timelines.getContent(),
             timelines.hasNext() ? String.valueOf(page + ONE.intValue()) : null);
     }
-
-
 }
