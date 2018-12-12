@@ -194,7 +194,7 @@ liquibase {
         diffLog {
             driver ''
             url ''
-            username 'otp'
+            username 'timeline'
             password ''
             changeLogFile project.ext.diffChangelogFile
             referenceUrl 'hibernate:spring:com.icthh.xm.ms.timeline.domain?dialect=&amp;hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy'
