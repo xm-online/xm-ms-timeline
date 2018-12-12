@@ -36,6 +36,6 @@ public final class Constants {
     public static final String CASSANDRA_IMPL = "cassandra";
     public static final String LOGGER_IMPL = "logger";
     public static final int LOGGER_IMPL_CAPACITY = 100;
-    public static final String DB_IMPL = "db";
+    public static final String RDBMS_IMPL = "rdbms";
 
 }

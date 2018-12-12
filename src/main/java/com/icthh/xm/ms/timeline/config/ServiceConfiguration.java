@@ -1,7 +1,7 @@
 package com.icthh.xm.ms.timeline.config;
 
 import static com.icthh.xm.ms.timeline.config.Constants.CASSANDRA_IMPL;
-import static com.icthh.xm.ms.timeline.config.Constants.DB_IMPL;
+import static com.icthh.xm.ms.timeline.config.Constants.RDBMS_IMPL;
 import static com.icthh.xm.ms.timeline.config.Constants.LOGGER_IMPL;
 
 import com.icthh.xm.commons.tenant.TenantContextHolder;
@@ -36,7 +36,7 @@ public class ServiceConfiguration {
     }
 
     @Bean(name = "timelineService")
-    @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = DB_IMPL)
+    @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = RDBMS_IMPL)
     public TimelineService dbTimelineService(TimelineJpaRepository timelineJpaRepository) {
         return new TimelineServiceDbImpl(timelineJpaRepository);
     }

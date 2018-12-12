@@ -139,7 +139,7 @@ application:
     kafka-system-topic: system_topic
     kafka-system-queue: system_queue
     # =================================================
-    # options [cassandra, logger, db-h2, db-postgres]
+    # options [cassandra, logger, rdbms]
     # =================================================
     timeline-service-impl: cassandra
     retry:
