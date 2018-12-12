@@ -52,7 +52,13 @@ spring:
         locator:
             discovery:
                 enabled: true
-
+#liquibase:
+#    enabled: true
+#
+#management:
+#    health:
+#        db:
+#         enabled: true
 # ===================================================================
 # To enable SSL, generate a certificate using:
 # keytool -genkey -alias timeline -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650
@@ -134,3 +140,7 @@ jhipster:
 application:
     zookeeper:
         host: localhost:2181
+    # =================================================
+    # options [cassandra, logger, rdbms]
+    # =================================================
+    timeline-service-impl: cassandra

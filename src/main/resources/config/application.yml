@@ -32,6 +32,8 @@ management:
             enabled: false # When using the MailService, configure an SMTP server and set this to true
         binders:
             enabled: true
+        db:
+         enabled: false
 spring:
     application:
         name: timeline
@@ -59,6 +61,15 @@ spring:
         producer:
             key-serializer: org.apache.kafka.common.serialization.StringSerializer
             value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    data:
+        jpa:
+         repositories:
+            enabled: false
+    autoconfigure:
+        exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+
+liquibase:
+    enabled: false
 
 security:
     basic:
@@ -127,6 +138,10 @@ application:
     tenant-ignored-path-list: /v2/api-docs, /api/profile-info, /swagger-resources/configuration/ui, /management/health
     kafka-system-topic: system_topic
     kafka-system-queue: system_queue
+    # =================================================
+    # options [cassandra, logger, rdbms]
+    # =================================================
+    timeline-service-impl: cassandra
     retry:
         max-attempts: 3
         delay: 1000 #in milliseconds

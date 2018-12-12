@@ -1,8 +1,11 @@
 package com.icthh.xm.ms.timeline.config;
 
+import lombok.experimental.UtilityClass;
+
 /**
  * Application constants.
  */
+@UtilityClass
 public final class Constants {
 
     //Regex for acceptable logins
@@ -28,7 +31,11 @@ public final class Constants {
     public static final String EVENT_TENANT = "tenant";
 
     public static final String DEFAULT_CONFIG_PATH = "config/specs/default-timeline.yml";
+    public static final String CHANGE_LOG_PATH = "classpath:config/liquibase/master.xml";
 
-    private Constants() {
-    }
+    public static final String CASSANDRA_IMPL = "cassandra";
+    public static final String LOGGER_IMPL = "logger";
+    public static final int LOGGER_IMPL_CAPACITY = 100;
+    public static final String RDBMS_IMPL = "rdbms";
+
 }

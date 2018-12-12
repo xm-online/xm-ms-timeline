@@ -8,11 +8,7 @@ import com.datastax.driver.core.Session;
 import com.datastax.driver.core.querybuilder.Insert;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.querybuilder.Select;
-import org.springframework.stereotype.Service;
 
-
-
-@Service
 public class EntityMappingRepository {
 
     private static final String TABLE_KEY_ID = "entity_key_to_id";

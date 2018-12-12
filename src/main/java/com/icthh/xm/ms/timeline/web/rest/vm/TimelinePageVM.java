@@ -6,7 +6,6 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
@@ -23,9 +22,9 @@ public class TimelinePageVM {
 
     @Override
     public String toString() {
-        return "TimelinePageVM{" +
-               "timelines.size=" + (timelines == null ? 0 : timelines.size()) +
-               ", next='" + next + '\'' +
-               '}';
+        return "TimelinePageVM{"
+            + "timelines.size=" + (timelines == null ? 0 : timelines.size())
+            + ", next='" + next + '\''
+            + '}';
     }
 }

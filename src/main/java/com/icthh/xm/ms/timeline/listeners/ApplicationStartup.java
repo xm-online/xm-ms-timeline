@@ -1,5 +1,7 @@
 package com.icthh.xm.ms.timeline.listeners;
 
+import static com.icthh.xm.ms.timeline.config.Constants.CASSANDRA_IMPL;
+
 import com.builtamont.cassandra.migration.CassandraMigration;
 import com.builtamont.cassandra.migration.api.configuration.ClusterConfiguration;
 import com.builtamont.cassandra.migration.api.configuration.KeyspaceConfiguration;
@@ -12,8 +14,13 @@ import com.icthh.xm.ms.timeline.config.ApplicationProperties;
 import com.icthh.xm.ms.timeline.repository.kafka.SystemTopicConsumer;
 import com.icthh.xm.ms.timeline.repository.kafka.TimelineEventConsumer;
 import io.github.jhipster.config.JHipsterConstants;
+
+import java.util.Map;
+import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
@@ -26,9 +33,6 @@ import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.listener.MessageListener;
 import org.springframework.kafka.listener.config.ContainerProperties;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -50,7 +54,9 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
     public void onApplicationEvent(ApplicationReadyEvent event) {
         if (!env.acceptsProfiles(JHipsterConstants.SPRING_PROFILE_TEST)) {
             createKafkaConsumers();
-            migrateCassandra();
+            if (StringUtils.equalsIgnoreCase(properties.getTimelineServiceImpl(), CASSANDRA_IMPL)) {
+                migrateCassandra();
+            }
             privilegeInspector.readPrivileges(MdcUtils.getRid());
         } else {
             log.warn("WARNING! Privileges inspection is disabled by "
@@ -73,7 +79,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
                     KeyspaceConfiguration keyspaceConfiguration = new KeyspaceConfiguration();
                     keyspaceConfiguration.setName(tenantName.toLowerCase());
                     keyspaceConfiguration.setClusterConfig(clusterConfiguration);
-                    cm.setLocations(new String[] {properties.getCassandra().getMigrationFolder()});
+                    cm.setLocations(new String[]{properties.getCassandra().getMigrationFolder()});
                     cm.setKeyspaceConfig(keyspaceConfiguration);
                     cm.migrate();
                     log.info("Stop cassandra migration for tenant {}", tenantName);

@@ -11,7 +11,8 @@ import com.icthh.xm.commons.tenant.TenantContextHolder;
 import com.icthh.xm.commons.tenant.TenantKey;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.repository.cassandra.EntityMappingRepository;
-import com.icthh.xm.ms.timeline.repository.cassandra.TimelineRepository;
+import com.icthh.xm.ms.timeline.repository.cassandra.TimelineCassandraRepository;
+import com.icthh.xm.ms.timeline.service.cassandra.TimelineServiceCassandraImpl;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 
 import org.junit.Before;
@@ -21,7 +22,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class TimelineServiceUnitTest {
+public class TimelineServiceCassandraUnitTest {
 
     private static final String MS_NAME = "test";
     private static final String USER_KEY = "test";
@@ -33,19 +34,19 @@ public class TimelineServiceUnitTest {
     private static final int LIMIT = 10;
     private static final String TENANT = "xm";
 
-    private TimelineRepository timelineRepository;
+    private TimelineCassandraRepository timelineRepository;
     private EntityMappingRepository entityMappingRepository;
     private TenantContextHolder tenantContextHolder;
-    private TimelineService timelineService;
+    private TimelineServiceCassandraImpl timelineService;
     private TenantContext tenantContext;
 
     @Before
     public void init() {
 
-        timelineRepository = mock(TimelineRepository.class);
+        timelineRepository = mock(TimelineCassandraRepository.class);
         entityMappingRepository = mock(EntityMappingRepository.class);
         tenantContextHolder = mock(TenantContextHolder.class);
-        timelineService = new TimelineService(timelineRepository, entityMappingRepository,
+        timelineService = new TimelineServiceCassandraImpl(timelineRepository, entityMappingRepository,
                         tenantContextHolder);
         tenantContext = mock(TenantContext.class);
         when(tenantContext.getTenantKey()).thenReturn(Optional.of(TenantKey.valueOf(TENANT)));

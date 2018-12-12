@@ -1,15 +1,20 @@
 package com.icthh.xm.ms.timeline.config.metrics;
+
+import static com.icthh.xm.ms.timeline.config.Constants.CASSANDRA_IMPL;
+
 import com.datastax.driver.core.Session;
 import org.springframework.boot.actuate.health.HealthIndicator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class JHipsterHealthIndicatorConfiguration {
+@ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = CASSANDRA_IMPL)
+public class CassandraHealthIndicatorConfiguration {
 
     private final Session session;
 
-    public JHipsterHealthIndicatorConfiguration(Session session) {
+    public CassandraHealthIndicatorConfiguration(Session session) {
         this.session = session;
     }
 
