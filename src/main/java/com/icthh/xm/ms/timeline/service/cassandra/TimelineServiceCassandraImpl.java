@@ -80,11 +80,14 @@ public class TimelineServiceCassandraImpl implements TimelineService {
     public void insertTimelines(XmTimeline xmTimeline) {
         insertIdAndKey(xmTimeline);
         if (StringUtils.isBlank(xmTimeline.getOperationName())) {
-            xmTimeline.setOperationName(xmTimeline.getMsName() + ":" + xmTimeline.getHttpMethod() + ":"
-                + xmTimeline.getOperationUrl());
+            xmTimeline.setOperationName(buildOperationName(xmTimeline));
         }
         insertUserKeyTimeline(xmTimeline);
         insertEntityTimeline(xmTimeline);
+    }
+
+    private String buildOperationName(XmTimeline xmTimeline) {
+        return xmTimeline.getMsName() + ":" + xmTimeline.getHttpMethod() + ":" + xmTimeline.getOperationUrl();
     }
 
     private void insertIdAndKey(XmTimeline xmTimeline) {
@@ -100,7 +103,6 @@ public class TimelineServiceCassandraImpl implements TimelineService {
             xmTimeline.setEntityId(id);
         }
     }
-
 
     private void insertUserKeyTimeline(XmTimeline xmTimeline) {
         if (StringUtils.isNotBlank(xmTimeline.getUserKey())) {
