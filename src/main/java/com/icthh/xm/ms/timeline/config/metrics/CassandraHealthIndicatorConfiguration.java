@@ -10,11 +10,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = CASSANDRA_IMPL)
-public class JHipsterHealthIndicatorConfiguration {
+public class CassandraHealthIndicatorConfiguration {
 
     private final Session session;
 
-    public JHipsterHealthIndicatorConfiguration(Session session) {
+    public CassandraHealthIndicatorConfiguration(Session session) {
         this.session = session;
     }
 

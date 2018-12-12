@@ -139,7 +139,9 @@ public class CassandraConfiguration {
     }
 
     @Bean
-    public TimelineCassandraRepository timelineRepository(TenantPropertiesService tenantPropertiesService, TenantContextHolder tenantContextHolder, Session session) {
+    public TimelineCassandraRepository timelineRepository(TenantPropertiesService tenantPropertiesService,
+                                                          TenantContextHolder tenantContextHolder,
+                                                          Session session) {
         return new TimelineCassandraRepository(tenantPropertiesService, tenantContextHolder, session);
     }
 }
