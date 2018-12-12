@@ -8,9 +8,10 @@ import com.icthh.xm.ms.timeline.repository.cassandra.EntityMappingRepository;
 import com.icthh.xm.ms.timeline.repository.cassandra.TimelineCassandraRepository;
 import com.icthh.xm.ms.timeline.service.TimelineService;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
-import org.apache.commons.lang3.StringUtils;
 
 import java.time.Instant;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class TimelineServiceCassandraImpl implements TimelineService {
     private TimelineCassandraRepository timelineRepository;
@@ -18,9 +19,9 @@ public class TimelineServiceCassandraImpl implements TimelineService {
     private TenantContextHolder tenantContextHolder;
 
     public TimelineServiceCassandraImpl(
-                    TimelineCassandraRepository timelineRepository,
-                    EntityMappingRepository entityMappingRepository,
-                    TenantContextHolder tenantContextHolder) {
+        TimelineCassandraRepository timelineRepository,
+        EntityMappingRepository entityMappingRepository,
+        TenantContextHolder tenantContextHolder) {
         this.timelineRepository = timelineRepository;
         this.entityMappingRepository = entityMappingRepository;
         this.tenantContextHolder = tenantContextHolder;
@@ -51,14 +52,9 @@ public class TimelineServiceCassandraImpl implements TimelineService {
         if (idOrKey != null) {
             IdOrKey idOrKeyObj = IdOrKey.of(idOrKey);
 
-            Long id;
-
-            if (idOrKeyObj.isId()) {
-                id = idOrKeyObj.getId();
-            } else {
-                id = entityMappingRepository.getIdByKey(idOrKeyObj.getKey(),
-                                TenantContextUtils.getRequiredTenantKeyValue(tenantContextHolder));
-            }
+            Long id = idOrKeyObj.isId() ? idOrKeyObj.getId() :
+                entityMappingRepository.getIdByKey(idOrKeyObj.getKey(),
+                    TenantContextUtils.getRequiredTenantKeyValue(tenantContextHolder));
 
             if (StringUtils.isNotBlank(operation)) {
                 return timelineRepository.getTimelinesByEntityAndOpAndDate(
@@ -70,14 +66,15 @@ public class TimelineServiceCassandraImpl implements TimelineService {
 
         if (StringUtils.isNotBlank(operation)) {
             return timelineRepository.getTimelinesByUserKeyAndOpAndDate(userKey, operation,
-                            dateFrom, dateTo, next, limit, msName);
+                dateFrom, dateTo, next, limit, msName);
         }
         return timelineRepository.getTimelinesByUserKeyAndDate(userKey, dateFrom, dateTo, next, limit, msName);
     }
 
     /**
      * Insert timelines.
-     * @param xmTimeline  the timeline
+     *
+     * @param xmTimeline the timeline
      */
     @Override
     public void insertTimelines(XmTimeline xmTimeline) {

@@ -6,7 +6,6 @@ import javax.persistence.AttributeConverter;
 
 public class InstantConverter implements AttributeConverter<Instant, Timestamp> {
 
-
     @Override
     public Timestamp convertToDatabaseColumn(Instant instant) {
         return new Timestamp(instant.toEpochMilli());
