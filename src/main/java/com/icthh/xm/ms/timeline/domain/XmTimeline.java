@@ -65,6 +65,9 @@ public class XmTimeline implements Serializable {
     @Column(name = "operation_url")
     private String operationUrl;
 
+    @Column(name = "operation_query_string")
+    private String operationQueryString;
+
     @Column(name = "http_method")
     private String httpMethod;
 

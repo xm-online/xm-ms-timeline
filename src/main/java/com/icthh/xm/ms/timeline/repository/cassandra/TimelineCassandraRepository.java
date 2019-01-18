@@ -49,6 +49,7 @@ public class TimelineCassandraRepository {
     private static final String ENTITY_KEY_COL = "entity_key";
     private static final String ENTITY_TYPE_KEY_COL = "entity_type_key";
     private static final String OPERATION_URL_COL = "operation_url";
+    private static final String OPERATION_QUERY_STRING_COL = "operation_query_string";
     private static final String HTTP_METHOD_COL = "http_method";
     private static final String REQUEST_BODY_COL = "request_body";
     private static final String REQUEST_LENGTH_COL = "request_length";
@@ -289,6 +290,7 @@ public class TimelineCassandraRepository {
             .value(ENTITY_KEY_COL, xmTimeline.getEntityKey())
             .value(ENTITY_TYPE_KEY_COL, xmTimeline.getEntityTypeKey())
             .value(OPERATION_URL_COL, xmTimeline.getOperationUrl())
+            .value(OPERATION_QUERY_STRING_COL, xmTimeline.getOperationQueryString())
             .value(HTTP_METHOD_COL, xmTimeline.getHttpMethod())
             .value(REQUEST_BODY_COL, xmTimeline.getRequestBody())
             .value(REQUEST_LENGTH_COL, xmTimeline.getRequestLength())
