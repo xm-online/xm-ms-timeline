@@ -143,4 +143,4 @@ application:
     # =================================================
     # options [cassandra, logger, rdbms]
     # =================================================
-    timeline-service-impl: cassandra
+    timeline-service-impl: rdbms
