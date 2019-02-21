@@ -1,21 +1,6 @@
-# ===================================================================
-# Spring Boot configuration for the "dev" profile.
-#
-# This configuration overrides the application.yml file.
-#
-# More information on profiles: https://jhipster.github.io/profiles/
-# More information on configuration properties: https://jhipster.github.io/common-application-properties/
-# ===================================================================
-
-# ===================================================================
-# Standard Spring Boot properties.
-# Full reference is available at:
-# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
-# ===================================================================
-
 spring:
     profiles:
-        active: dev
+        active: dbdev
         include: swagger
     devtools:
         restart:
@@ -30,11 +15,6 @@ spring:
                prefer-ip-address: true
             host: localhost
             port: 8500
-    data:
-        cassandra:
-            contactPoints: localhost
-            protocolVersion: V4
-            compression: LZ4
     mail:
         host: localhost
         port: 25
@@ -50,38 +30,47 @@ spring:
         locator:
             discovery:
                 enabled: true
-#liquibase:
-#    enabled: true
-#
-#management:
-#    health:
-#        db:
-#         enabled: true
-# ===================================================================
-# To enable SSL, generate a certificate using:
-# keytool -genkey -alias timeline -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650
-#
-# You can also use Let's Encrypt:
-# https://maximilian-boehm.com/hp2121/Create-a-Java-Keystore-JKS-from-Let-s-Encrypt-Certificates.htm
-#
-# Then, modify the server.ssl properties so your "server" configuration looks like:
-#
-# server:
-#    port: 8443
-#    ssl:
-#        key-store: keystore.p12
-#        key-store-password: <your-password>
-#        keyStoreType: PKCS12
-#        keyAlias: timeline
-# ===================================================================
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        url: jdbc:h2:mem:timeline;DB_CLOSE_DELAY=-1
+        username: timeline
+        password:
+    h2:
+        console:
+            enabled: true
+    jpa:
+        open-in-view: false
+        hibernate:
+            ddl-auto: none
+            naming:
+                physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+                implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        database-platform: io.github.jhipster.domain.util.FixedH2Dialect
+        database: H2
+        show-sql: true
+        properties:
+            hibernate.id.new_generator_mappings: true
+            hibernate.cache.use_second_level_cache: false
+            hibernate.cache.use_query_cache: false
+            hibernate.generate_statistics: true
+            hibernate.dialect: io.github.jhipster.domain.util.FixedH2Dialect
+            #hibernate.cache.region.factory_class: com.hazelcast.hibernate.HazelcastLocalCacheRegionFactory
+            #hibernate.cache.hazelcast.instance_name: entity
+            hibernate.cache.use_minimal_puts: true
+            #hibernate.cache.hazelcast.use_lite_member: true
+    data:
+      jpa:
+        repositories:
+          enabled: true
+
+liquibase:
+    default-schema: XM
+    enabled: true
+
 server:
     port: 8083
 
-# ===================================================================
-# JHipster specific properties
-#
-# Full reference is available at: https://jhipster.github.io/common-application-properties/
-# ===================================================================
+
 
 jhipster:
     http:
@@ -126,19 +115,10 @@ jhipster:
             enabled: false
             # edit spring.metrics.export.delay-millis to set report frequency
 
-# ===================================================================
-# Application specific properties
-# Add your own application properties here, see the ApplicationProperties class
-# to have type-safe configuration, like in the JHipsterProperties above
-#
-# More documentation is available at:
-# https://jhipster.github.io/common-application-properties/
-# ===================================================================
-
 application:
     zookeeper:
         host: localhost:2181
     # =================================================
     # options [cassandra, logger, rdbms]
     # =================================================
-    timeline-service-impl: logger
+    timeline-service-impl: rdbms

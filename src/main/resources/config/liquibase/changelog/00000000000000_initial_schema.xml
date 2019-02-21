@@ -9,6 +9,8 @@
     <property name="now" value="now()" dbms="h2"/>
     <property name="now" value="current_timestamp" dbms="postgresql"/>
     <property name="autoIncrement" value="true"/>
+    <property name="textType" value="varchar" dbms="postgresql, h2"/>
+    <property name="textType" value="text" dbms="oracle"/>
 
     <!--
         JHipster core tables.
@@ -33,9 +35,9 @@
             <column name="http_method" type="varchar(50)"/>
             <column name="http_status_code" type="varchar(50)"/>
             <column name="start_date" type="timestamp  without time zone "/>
-            <column name="request_body" type="text"/>
+            <column name="request_body" type="${textType}"/>
             <column name="request_length" type="bigint"/>
-            <column name="response_body" type="text"/>
+            <column name="response_body" type="${textType}"/>
             <column name="response_length" type="bigint"/>
             <column name="channel_type" type="varchar(50)"/>
             <column name="op_system" type="varchar(50)"/>
@@ -51,7 +53,7 @@
             <column name="timeline_id" type="bigint">
             </column>
             <column name="header_key" type="varchar(50)"/>
-            <column name="header_value" type="text"/>
+            <column name="header_value" type="${textType}"/>
         </createTable>
 
         <createTable tableName="timeline_request_headers">
@@ -61,7 +63,7 @@
             <column name="timeline_id" type="bigint">
             </column>
             <column name="header_key" type="varchar(50)"/>
-            <column name="header_value" type="text"/>
+            <column name="header_value" type="${textType}"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>

@@ -19,7 +19,6 @@ bootRun {
     args = []
 }
 
-
 processResources {
     filesMatching('**/logback-spring.xml') {
         filter {
