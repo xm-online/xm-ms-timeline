@@ -30,8 +30,6 @@ spring:
                prefer-ip-address: true
             host: localhost
             port: 8500
-    kafka:
-        bootstrap-servers: localhost:9093
     data:
         cassandra:
             contactPoints: localhost
@@ -143,4 +141,4 @@ application:
     # =================================================
     # options [cassandra, logger, rdbms]
     # =================================================
-    timeline-service-impl: rdbms
+    timeline-service-impl: logger

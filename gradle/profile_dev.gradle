@@ -10,7 +10,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-devtools"
 }
 
-def profiles = 'dev'
+def profiles = 'dbdev'
 if (project.hasProperty('no-liquibase')) {
     profiles += ',no-liquibase'
 }

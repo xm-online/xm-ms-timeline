@@ -1,7 +1,12 @@
 package com.icthh.xm.ms.timeline;
 
 import com.icthh.xm.commons.logging.util.MdcUtils;
+import com.icthh.xm.commons.permission.repository.CriteriaPermittedRepository;
 import com.icthh.xm.commons.permission.repository.PermittedRepository;
+import com.icthh.xm.commons.tenant.TenantContextHolder;
+import com.icthh.xm.commons.tenant.TenantContextUtils;
+import com.icthh.xm.commons.tenant.TenantKey;
+import com.icthh.xm.commons.tenant.spring.config.TenantContextConfiguration;
 import com.icthh.xm.ms.timeline.client.OAuth2InterceptedFeignConfiguration;
 import com.icthh.xm.ms.timeline.config.ApplicationProperties;
 import com.icthh.xm.ms.timeline.config.DefaultProfileUtil;
@@ -27,24 +32,34 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 
 @ComponentScan(
     value = "com.icthh.xm",
-    excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
-        classes = {OAuth2InterceptedFeignConfiguration.class, PermittedRepository.class})
+    excludeFilters = {
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
+                              classes = {OAuth2InterceptedFeignConfiguration.class,
+                                         PermittedRepository.class,
+                                         CriteriaPermittedRepository.class}),
+        @ComponentScan.Filter(type = FilterType.REGEX,
+                              pattern = "com\\.icthh\\.xm\\.commons\\.migration\\..*")
+    }
 )
-@EnableAutoConfiguration(exclude = {MetricFilterAutoConfiguration.class, MetricRepositoryAutoConfiguration.class})
+@EnableAutoConfiguration
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
 @EnableDiscoveryClient
+@Import( {TenantContextConfiguration.class})
 public class TimelineApp {
 
     private static final Logger log = LoggerFactory.getLogger(TimelineApp.class);
 
     private final Environment env;
+    private final TenantContextHolder tenantContextHolder;
 
-    public TimelineApp(Environment env) {
+    public TimelineApp(Environment env, TenantContextHolder tenantContextHolder) {
         this.env = env;
+        this.tenantContextHolder = tenantContextHolder;
     }
 
     /**
@@ -68,6 +83,14 @@ public class TimelineApp {
             log.error("You have misconfigured your application! It should not "
                 + "run with both the 'dev' and 'cloud' profiles at the same time.");
         }
+        initContexts();
+    }
+
+    private void initContexts() {
+        // init tenant context, by default this is XM super tenant
+        TenantContextUtils.setTenant(tenantContextHolder, TenantKey.SUPER);
+        // init logger MDC context
+        MdcUtils.putRid(MdcUtils.generateRid() + "::" + TenantKey.SUPER.getValue());
     }
 
     @PreDestroy
