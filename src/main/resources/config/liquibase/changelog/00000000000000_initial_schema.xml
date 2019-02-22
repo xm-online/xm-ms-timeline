@@ -34,7 +34,7 @@
             <column name="operation_url" type="varchar(50)"/>
             <column name="http_method" type="varchar(50)"/>
             <column name="http_status_code" type="varchar(50)"/>
-            <column name="start_date" type="timestamp  without time zone "/>
+            <column name="start_date" type="timestamp"/>
             <column name="request_body" type="${textType}"/>
             <column name="request_length" type="bigint"/>
             <column name="response_body" type="${textType}"/>
