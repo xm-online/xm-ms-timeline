@@ -38,6 +38,10 @@ spring:
     application:
         name: timeline
     cloud:
+        inetutils:
+            preferredNetworks:
+                - 192.168.
+                - 10.
         consul:
             discovery:
                 healthCheckPath: /management/health
@@ -156,3 +160,4 @@ application:
     cassandra:
         migration-folder: config/cql/changelog
         keyspace-create-cql: "CREATE KEYSPACE IF NOT EXISTS %s WITH REPLICATION = {'class':'SimpleStrategy','replication_factor':3} AND DURABLE_WRITES = true;"
+    db-schema-suffix:
