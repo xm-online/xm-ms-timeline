@@ -23,6 +23,7 @@ public class ApplicationProperties {
     private String tenantPropertiesPathPattern;
     private String tenantPropertiesName;
     private String timelineServiceImpl;
+    private String dbSchemaSuffix;
 
     @Getter
     @Setter
