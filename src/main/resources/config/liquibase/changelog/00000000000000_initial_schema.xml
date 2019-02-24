@@ -15,33 +15,33 @@
     <!--
         JHipster core tables.
         The initial schema has the '00000000000001' id, so that it is over-written if we re-generate it.
-    -->
+    --> 
     <changeSet id="00000000000000" author="jhipster">
 
         <createTable tableName="xmtimeline">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="rid" type="varchar(50)"/>
-            <column name="login" type="varchar(50)"/>
-            <column name="user_key" type="varchar(50)"/>
-            <column name="tenant" type="varchar(50)"/>
-            <column name="ms_name" type="varchar(50)"/>
-            <column name="operation_name" type="varchar(50)"/>
+            <column name="rid" type="varchar(255)"/>
+            <column name="login" type="varchar(255)"/>
+            <column name="user_key" type="varchar(255)"/>
+            <column name="tenant" type="varchar(255)"/>
+            <column name="ms_name" type="varchar(255)"/>
+            <column name="operation_name" type="varchar(255)"/>
             <column name="entity_id" type="bigint"/>
-            <column name="entity_key" type="varchar(50)"/>
-            <column name="entity_type_key" type="varchar(50)"/>
-            <column name="operation_url" type="varchar(50)"/>
-            <column name="http_method" type="varchar(50)"/>
-            <column name="http_status_code" type="varchar(50)"/>
+            <column name="entity_key" type="varchar(1024)"/>
+            <column name="entity_type_key" type="varchar(1024)"/>
+            <column name="operation_url" type="varchar(2048)"/>
+            <column name="http_method" type="varchar(255)"/>
+            <column name="http_status_code" type="varchar(255)"/>
             <column name="start_date" type="timestamp"/>
             <column name="request_body" type="${textType}"/>
             <column name="request_length" type="bigint"/>
             <column name="response_body" type="${textType}"/>
             <column name="response_length" type="bigint"/>
-            <column name="channel_type" type="varchar(50)"/>
-            <column name="op_system" type="varchar(50)"/>
-            <column name="browser" type="varchar(50)"/>
+            <column name="channel_type" type="varchar(255)"/>
+            <column name="op_system" type="varchar(255)"/>
+            <column name="browser" type="varchar(255)"/>
             <column name="exec_time" type="bigint"/>
         </createTable>
 
