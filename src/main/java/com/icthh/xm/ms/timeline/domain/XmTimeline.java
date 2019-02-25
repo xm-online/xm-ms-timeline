@@ -16,6 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -28,6 +30,11 @@ import lombok.ToString;
 @Setter
 @ToString(exclude = {"httpStatusCode", "startDate", "requestBody", "responseBody",
     "requestHeaders", "responseHeaders", "browser", "opSystem"})
+@NamedEntityGraph(name = "withHeaders",
+                  attributeNodes = {
+                      @NamedAttributeNode("requestHeaders"),
+                      @NamedAttributeNode("responseHeaders")
+                  })
 public class XmTimeline implements Serializable {
 
     @JsonIgnore
