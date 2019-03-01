@@ -1,10 +1,15 @@
 package com.icthh.xm.ms.timeline.service.tenant;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import com.icthh.xm.commons.config.client.repository.TenantConfigRepository;
 import com.icthh.xm.commons.config.client.repository.TenantListRepository;
 import com.icthh.xm.commons.logging.aop.IgnoreLogginAspect;
 import com.icthh.xm.ms.timeline.config.ApplicationProperties;
 import com.icthh.xm.ms.timeline.config.Constants;
+
+import java.io.InputStream;
+
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -12,10 +17,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-
-import java.io.InputStream;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -31,6 +32,7 @@ public class TenantService {
 
     /**
      * Create new tenant.
+     *
      * @param tenant the new tenant name
      */
     public void createTenant(String tenant) {
@@ -56,6 +58,7 @@ public class TenantService {
 
     /**
      * Delete tenant.
+     *
      * @param tenant the tenant name
      */
     public void deleteTenant(String tenant) {

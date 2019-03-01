@@ -8,7 +8,6 @@ import javax.persistence.criteria.Root;
 import lombok.experimental.UtilityClass;
 import org.springframework.data.jpa.domain.Specification;
 
-
 @UtilityClass
 public class JpaSpecUtil {
 

@@ -1,5 +1,7 @@
 package com.icthh.xm.ms.timeline.service.tenant;
 
+import static java.util.Collections.singletonMap;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -13,6 +15,11 @@ import com.icthh.xm.commons.tenant.TenantContextUtils;
 import com.icthh.xm.ms.timeline.config.ApplicationProperties;
 import com.icthh.xm.ms.timeline.config.Constants;
 import com.icthh.xm.ms.timeline.repository.kafka.TimelineEventConsumer;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
 import kafka.admin.AdminUtils;
 import kafka.admin.RackAwareMode;
 import kafka.utils.ZKStringSerializer$;
@@ -29,12 +36,6 @@ import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.listener.MessageListener;
 import org.springframework.kafka.listener.config.ContainerProperties;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
-import static java.util.Collections.singletonMap;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -56,6 +57,7 @@ public class KafkaService {
 
     /**
      * Create kafka topic.
+     *
      * @param tenant the topic name
      */
     public void createKafkaTopic(String tenant) {
@@ -92,6 +94,7 @@ public class KafkaService {
 
     /**
      * Delete kafka topic.
+     *
      * @param tenant the kafka topic
      */
     public void deleteKafkaTopic(String tenant) {
@@ -123,6 +126,7 @@ public class KafkaService {
 
     /**
      * Create topic consumer.
+     *
      * @param tenant the kafka topic
      */
     public void createKafkaConsumer(String tenant) {
@@ -152,6 +156,7 @@ public class KafkaService {
 
     /**
      * Delete topic consumer.
+     *
      * @param tenant the kafka topic
      */
     public void deleteKafkaConsumer(String tenant) {
@@ -172,7 +177,8 @@ public class KafkaService {
 
     /**
      * Send 'tenant management' command to system topic.
-     * @param tenant the tenant to manage
+     *
+     * @param tenant  the tenant to manage
      * @param command the command (e.g. CREATE, DELETE, ...)
      */
     public void sendCommand(String tenant, String command) {
