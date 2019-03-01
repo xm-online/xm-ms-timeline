@@ -1,5 +1,0 @@
-filter:
-    excludeMethod:
-        - 'GET'
-event:
-    hidePayload: true

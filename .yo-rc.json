@@ -1,18 +1,18 @@
 {
   "generator-jhipster": {
     "promptValues": {
-      "packageName": "com.icthh.xm.ms.timeline",
-      "nativeLanguage": "en"
+      "packageName": "com.icthh.xm.ms.timeline"
     },
-    "jhipsterVersion": "4.6.2",
+    "jhipsterVersion": "5.7.2",
+    "applicationType": "microservice",
     "baseName": "timeline",
     "packageName": "com.icthh.xm.ms.timeline",
     "packageFolder": "com/icthh/xm/ms/timeline",
     "serverPort": "8083",
     "authenticationType": "uaa",
     "uaaBaseName": "uaa",
-    "hibernateCache": "no",
-    "clusteredHttpSession": false,
+    "cacheProvider": "no",
+    "enableHibernateCache": false,
     "websocket": false,
     "databaseType": "cassandra",
     "devDatabaseType": "cassandra",
@@ -21,22 +21,17 @@
     "messageBroker": "kafka",
     "serviceDiscoveryType": "consul",
     "buildTool": "gradle",
-    "enableSocialSignIn": false,
-    "jwtSecretKey": "afa5b8981b4cd0d7cf06a7152ac3144effad109d",
-    "enableTranslation": true,
-    "applicationType": "microservice",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "YmUwYTY0NWZmZTlmNDRmZDYwYTAwNmU1ZmFkYWI3NjMzNjMxMjQxZTAyNDFjNDllNzI0Mzk4MmM3MGM3NWJiMDEwYTc0ZDk3OWU0NTgyNTdmZjY4Njk5NmFkYzZmODVjMWY1M2NhMzBiMWU0YmFkNmU5NTI4YTk2YjU0NDYyODY=",
     "testFrameworks": [
       "gatling",
       "cucumber"
     ],
     "jhiPrefix": "jhi",
+    "otherModules": [],
+    "enableTranslation": false,
+    "clientPackageManager": "npm",
     "skipClient": true,
-    "skipUserManagement": true,
-    "nativeLanguage": "en",
-    "languages": [
-      "en",
-      "ru"
-    ],
-    "clientPackageManager": "yarn"
+    "skipUserManagement": true
   }
 }
