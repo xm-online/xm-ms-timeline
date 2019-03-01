@@ -13,12 +13,6 @@
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
 
-logging:
-    level:
-        ROOT: INFO
-        com.icthh.xm.ms.timeline: INFO
-        io.github.jhipster: INFO
-
 spring:
     devtools:
         restart:
@@ -31,20 +25,11 @@ spring:
                prefer-ip-address: true
             host: localhost
             port: 8500
-        stream:
-            kafka:
-                binder:
-                    brokers: localhost
-                    zk-nodes: localhost
-            bindings:
-                output:
-                    destination: topic-jhipster
     data:
         cassandra:
             contactPoints: localhost
             protocolVersion: V4
             compression: LZ4
-            keyspaceName: timeline
     mail:
         host: localhost
         port: 25
@@ -52,9 +37,6 @@ spring:
         password:
     thymeleaf:
         cache: true
-    sleuth:
-        sampler:
-            probability: 1 # report 100% of traces
     zipkin: # Use the "zipkin" Maven profile to have the Spring Cloud Zipkin dependencies
         base-url: http://localhost:9411
         enabled: false
@@ -103,16 +85,21 @@ jhipster:
         client-authorization:
             access-token-uri: http://uaa/oauth/token
             token-service-id: uaa
-            client-id: internal
-            client-secret: internal
+            client-id:
+            client-secret:
     mail: # specific JHipster mail property, for standard properties see MailProperties
         from: timeline@localhost
         base-url: http://my-server-url-to-change # Modify according to your server's URL
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
-        jmx:
-            enabled: true
+        jmx.enabled: true
+        graphite:
+            enabled: false
+            host: localhost
+            port: 2003
+            prefix: timeline
         prometheus:
-            enabled: false #expose metrics via prometheus
+            enabled: false
+            endpoint: /prometheusMetrics
         logs: # Reports Dropwizard metrics in the logs
             enabled: false
             report-frequency: 60 # in seconds
@@ -122,17 +109,9 @@ jhipster:
             host: localhost
             port: 5000
             queue-size: 512
-oauth2:
-    signature-verification:
-        public-key-endpoint-uri: http://uaa/oauth/token_key
-        #ttl for public keys to verify JWT tokens (in ms)
-        ttl: 3600000
-        #max. rate at which public keys will be fetched (in ms)
-        public-key-refresh-rate-limit: 10000
-    web-client-configuration:
-        #change client secret in production, keep in sync with UAA configuration
-        client-id: web_app
-        secret: changeit
+        spectator-metrics: # Reports Spectator Circuit Breaker metrics in the logs
+            enabled: false
+            # edit spring.metrics.export.delay-millis to set report frequency
 
 # ===================================================================
 # Application specific properties
@@ -143,4 +122,4 @@ oauth2:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:
+application:

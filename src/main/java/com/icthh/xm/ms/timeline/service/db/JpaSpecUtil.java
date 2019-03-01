@@ -32,25 +32,25 @@ public class JpaSpecUtil {
     public static <T> Specification<T> combineEqualSpecifications(Specification<T> prevSpec,
                                                                   String filterValue,
                                                                   String propertyName) {
-        Specification<T> Specification = Specification.where(equalSpecification(filterValue, propertyName));
-        return prevSpec != null ? prevSpec.and(Specification) : Specification;
+        Specification<T> specification = Specification.where(equalSpecification(filterValue, propertyName));
+        return prevSpec != null ? prevSpec.and(specification) : specification;
     }
 
     public static <T> Specification<T> combineLessThanOrEqualToSpecifications(Specification<T> prevSpec,
                                                                               Instant filterValue,
                                                                               String propertyName) {
-        Specification<T> Specification = Specification.where(
+        Specification<T> specification = Specification.where(
             lessThanOrEqualToSpecification(filterValue, propertyName));
 
-        return prevSpec != null ? prevSpec.and(Specification) : Specification;
+        return prevSpec != null ? prevSpec.and(specification) : specification;
     }
 
     public static <T> Specification<T> combineGreaterThanOrEqualToSpecifications(Specification<T> prevSpec,
                                                                                  Instant filterValue,
                                                                                  String propertyName) {
-        Specification<T> Specification = Specification.where(
+        Specification<T> specification = Specification.where(
             greaterThanOrEqualToSpecification(filterValue, propertyName));
 
-        return prevSpec != null ? prevSpec.and(Specification) : Specification;
+        return prevSpec != null ? prevSpec.and(specification) : specification;
     }
 }
