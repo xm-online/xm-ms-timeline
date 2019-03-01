@@ -1,4 +1,4 @@
-package  com.icthh.xm.ms.timeline.config.metrics;
+package com.icthh.xm.ms.timeline.config.metrics;
 
 import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.ResultSet;
