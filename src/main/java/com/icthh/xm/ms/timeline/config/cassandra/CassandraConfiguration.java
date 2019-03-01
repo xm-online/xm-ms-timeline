@@ -46,20 +46,17 @@ public class CassandraConfiguration {
     @Value("${spring.data.cassandra.protocolVersion:V4}")
     private ProtocolVersion protocolVersion;
 
-    private MetricRegistry metricRegistry;
-
-    public CassandraConfiguration(@Autowired(required = false) MetricRegistry metricRegistry) {
-        this.metricRegistry = metricRegistry;
-    }
+    @Autowired(required = false)
+    MetricRegistry metricRegistry;
 
     private final Logger log = LoggerFactory.getLogger(CassandraConfiguration.class);
 
     @Bean
     public Cluster cluster(CassandraProperties properties) {
         Cluster.Builder builder = Cluster.builder()
-            .withClusterName(properties.getClusterName())
-            .withProtocolVersion(protocolVersion)
-            .withPort(getPort(properties));
+                .withClusterName(properties.getClusterName())
+                .withProtocolVersion(protocolVersion)
+                .withPort(getPort(properties));
 
         if (properties.getUsername() != null) {
             builder.withCredentials(properties.getUsername(), properties.getPassword());
