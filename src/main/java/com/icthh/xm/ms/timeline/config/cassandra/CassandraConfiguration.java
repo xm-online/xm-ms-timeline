@@ -54,9 +54,9 @@ public class CassandraConfiguration {
     @Bean
     public Cluster cluster(CassandraProperties properties) {
         Cluster.Builder builder = Cluster.builder()
-                .withClusterName(properties.getClusterName())
-                .withProtocolVersion(protocolVersion)
-                .withPort(getPort(properties));
+            .withClusterName(properties.getClusterName())
+            .withProtocolVersion(protocolVersion)
+            .withPort(getPort(properties));
 
         if (properties.getUsername() != null) {
             builder.withCredentials(properties.getUsername(), properties.getPassword());
@@ -123,8 +123,12 @@ public class CassandraConfiguration {
 
     private SocketOptions getSocketOptions(CassandraProperties properties) {
         SocketOptions options = new SocketOptions();
-        options.setConnectTimeoutMillis(toIntExact(properties.getConnectTimeout().toMillis()));
-        options.setReadTimeoutMillis(toIntExact(properties.getReadTimeout().toMillis()));
+        if (properties.getConnectTimeout() != null) {
+            options.setConnectTimeoutMillis(toIntExact(properties.getConnectTimeout().toMillis()));
+        }
+        if (properties.getReadTimeout() != null) {
+            options.setReadTimeoutMillis(toIntExact(properties.getReadTimeout().toMillis()));
+        }
         return options;
     }
 

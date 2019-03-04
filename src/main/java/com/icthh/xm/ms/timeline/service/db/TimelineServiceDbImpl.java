@@ -19,7 +19,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.data.jpa.domain.Specification;
 
 @AllArgsConstructor
@@ -75,8 +74,7 @@ public class TimelineServiceDbImpl implements TimelineService {
         }
 
         int page = next != null ? Integer.parseInt(next) : ZERO.intValue();
-        PageRequest pageRequest = PageRequest.of(page, limit);
-        PageRequest pageRequest = new PageRequest(page, limit, Sort.Direction.DESC, "startDate");
+        PageRequest pageRequest = PageRequest.of(page, limit, Sort.Direction.DESC, "startDate");
 
         Page<XmTimeline> timelines = specificationsForFiltering != null
             ? timelineRepository.findAll(specificationsForFiltering, pageRequest)

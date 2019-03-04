@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/xm-online/xm-ms-timeline.svg?branch=master)](https://travis-ci.org/xm-online/xm-ms-timeline) [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?&metric=sqale_index&branch=master&project=xm-online:xm-ms-timeline)](https://sonarcloud.io/dashboard/index/xm-online:xm-ms-timeline) [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?&metric=ncloc&branch=master&project=xm-online:xm-ms-timeline)](https://sonarcloud.io/dashboard/index/xm-online:xm-ms-timeline) [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?&metric=coverage&branch=master&project=xm-online:xm-ms-timeline)](https://sonarcloud.io/dashboard/index/xm-online:xm-ms-timeline)
+
 # timeline
 
 This application was generated using JHipster 5.7.2, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v5.7.2](https://www.jhipster.tech/documentation-archive/v5.7.2).
@@ -5,6 +7,10 @@ This application was generated using JHipster 5.7.2, you can find documentation 
 This is a "microservice" application intended to be part of a microservice architecture, please refer to the [Doing microservices with JHipster][] page of the documentation for more information.
 
 This application is configured for Service Discovery and Configuration with Consul. On launch, it will refuse to start if it is not able to connect to Consul at [http://localhost:8500](http://localhost:8500). For more information, read our documentation on [Service Discovery and Configuration with Consul][].
+
+**Note:** `gradle-local.properties` added to `.gitignore` and must never be committed into GIT project repository. 
+
+For details about gradle script properties substitution see Readme of [Gradle Properties Plugin][].
 
 ## Development
 
@@ -31,6 +37,11 @@ Refer to [Using JHipster in production][] for more details.
 To launch your application's tests, run:
 
     ./gradlew test
+### Other tests
+
+Performance tests are run by [Gatling][] and written in Scala. They're located in [src/test/gatling](src/test/gatling) and can be run with:
+
+    ./gradlew gatlingRun
 
 For more information, refer to the [Running tests page][].
 
