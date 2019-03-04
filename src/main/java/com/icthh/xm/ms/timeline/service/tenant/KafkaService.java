@@ -57,7 +57,6 @@ public class KafkaService {
 
     /**
      * Create kafka topic.
-     *
      * @param tenant the topic name
      */
     public void createKafkaTopic(String tenant) {
@@ -94,7 +93,6 @@ public class KafkaService {
 
     /**
      * Delete kafka topic.
-     *
      * @param tenant the kafka topic
      */
     public void deleteKafkaTopic(String tenant) {
@@ -126,7 +124,6 @@ public class KafkaService {
 
     /**
      * Create topic consumer.
-     *
      * @param tenant the kafka topic
      */
     public void createKafkaConsumer(String tenant) {
@@ -156,7 +153,6 @@ public class KafkaService {
 
     /**
      * Delete topic consumer.
-     *
      * @param tenant the kafka topic
      */
     public void deleteKafkaConsumer(String tenant) {
@@ -177,8 +173,7 @@ public class KafkaService {
 
     /**
      * Send 'tenant management' command to system topic.
-     *
-     * @param tenant  the tenant to manage
+     * @param tenant the tenant to manage
      * @param command the command (e.g. CREATE, DELETE, ...)
      */
     public void sendCommand(String tenant, String command) {
