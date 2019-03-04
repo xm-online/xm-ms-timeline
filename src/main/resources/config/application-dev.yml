@@ -94,15 +94,10 @@ jhipster:
         from: timeline@localhost
         base-url: http://127.0.0.1:8083
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
-        jmx.enabled: true
-        graphite: # Use the "graphite" Maven profile to have the Graphite dependencies
-            enabled: false
-            host: localhost
-            port: 2003
-            prefix: timeline
-        prometheus: # Use the "prometheus" Maven profile to have the Prometheus dependencies
-            enabled: false
-            endpoint: /prometheusMetrics
+        jmx:
+            enabled: true
+        prometheus:
+            enabled: false #expose metrics via prometheus
         logs: # Reports Dropwizard metrics in the logs
             enabled: false
             report-frequency: 60 # in seconds
@@ -112,9 +107,6 @@ jhipster:
             host: localhost
             port: 5000
             queue-size: 512
-        spectator-metrics: # Reports Spectator Circuit Breaker metrics in the logs
-            enabled: false
-            # edit spring.metrics.export.delay-millis to set report frequency
 
 # ===================================================================
 # Application specific properties
@@ -131,4 +123,4 @@ application:
     # =================================================
     # options [cassandra, logger, rdbms]
     # =================================================
-    timeline-service-impl: logger
+    timeline-service-impl: cassandra
