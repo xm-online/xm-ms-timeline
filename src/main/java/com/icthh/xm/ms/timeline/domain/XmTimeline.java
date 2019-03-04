@@ -31,10 +31,10 @@ import lombok.ToString;
 @ToString(exclude = {"httpStatusCode", "startDate", "requestBody", "responseBody",
     "requestHeaders", "responseHeaders", "browser", "opSystem"})
 @NamedEntityGraph(name = "withHeaders",
-    attributeNodes = {
-        @NamedAttributeNode("requestHeaders"),
-        @NamedAttributeNode("responseHeaders")
-    })
+                  attributeNodes = {
+                      @NamedAttributeNode("requestHeaders"),
+                      @NamedAttributeNode("responseHeaders")
+                  })
 public class XmTimeline implements Serializable {
 
     @JsonIgnore

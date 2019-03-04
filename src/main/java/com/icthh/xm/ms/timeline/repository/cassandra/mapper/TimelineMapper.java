@@ -2,11 +2,9 @@ package com.icthh.xm.ms.timeline.repository.cassandra.mapper;
 
 import com.datastax.driver.core.Row;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
-
 import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
-
 import lombok.experimental.UtilityClass;
 import net.sf.uadetector.ReadableUserAgent;
 import net.sf.uadetector.UserAgentStringParser;
@@ -22,7 +20,6 @@ public class TimelineMapper {
 
     /**
      * Convert cassandra row to timeline.
-     *
      * @param row the cassandra row
      * @return timeline object
      */

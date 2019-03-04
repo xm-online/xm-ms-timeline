@@ -14,7 +14,6 @@ import java.time.Instant;
 import org.apache.commons.lang3.StringUtils;
 
 public class TimelineServiceCassandraImpl implements TimelineService {
-
     private TimelineCassandraRepository timelineRepository;
     private EntityMappingRepository entityMappingRepository;
     private TenantContextHolder tenantContextHolder;

@@ -36,7 +36,7 @@ public class EntityMappingRepository {
         select.where(eq(ENTITY_KEY_COL, key));
         ResultSet resultSet = session.execute(select);
         Row row = resultSet.one();
-        return row == null ? null : row.getLong(ENTITY_ID_COL);
+        return  row == null ? null : row.getLong(ENTITY_ID_COL);
     }
 
     /**

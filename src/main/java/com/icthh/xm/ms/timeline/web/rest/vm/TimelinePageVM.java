@@ -1,10 +1,11 @@
 package com.icthh.xm.ms.timeline.web.rest.vm;
 
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter

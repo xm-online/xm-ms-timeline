@@ -1,5 +1,7 @@
 package com.icthh.xm.ms.timeline.web.rest;
 
+import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
+
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -21,8 +23,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
 @Api(value = "timelines")
 @RestController

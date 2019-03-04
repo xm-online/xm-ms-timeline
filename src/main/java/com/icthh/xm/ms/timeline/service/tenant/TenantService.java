@@ -7,9 +7,7 @@ import com.icthh.xm.commons.config.client.repository.TenantListRepository;
 import com.icthh.xm.commons.logging.aop.IgnoreLogginAspect;
 import com.icthh.xm.ms.timeline.config.ApplicationProperties;
 import com.icthh.xm.ms.timeline.config.Constants;
-
 import java.io.InputStream;
-
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +30,6 @@ public class TenantService {
 
     /**
      * Create new tenant.
-     *
      * @param tenant the new tenant name
      */
     public void createTenant(String tenant) {
@@ -58,7 +55,6 @@ public class TenantService {
 
     /**
      * Delete tenant.
-     *
      * @param tenant the tenant name
      */
     public void deleteTenant(String tenant) {

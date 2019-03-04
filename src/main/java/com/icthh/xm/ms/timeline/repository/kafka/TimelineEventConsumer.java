@@ -9,9 +9,7 @@ import com.icthh.xm.commons.tenant.TenantContextUtils;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.service.TenantPropertiesService;
 import com.icthh.xm.ms.timeline.service.TimelineService;
-
 import java.io.IOException;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -35,7 +33,7 @@ public class TimelineEventConsumer {
      *
      * @param message the timeline event message
      */
-    @Retryable(maxAttemptsExpression = "${application.retry.max-attempts}",
+    @Retryable (maxAttemptsExpression = "${application.retry.max-attempts}",
         backoff = @Backoff(delayExpression = "${application.retry.delay}",
             multiplierExpression = "${application.retry.multiplier}"))
     public void consumeEvent(ConsumerRecord<String, String> message) {

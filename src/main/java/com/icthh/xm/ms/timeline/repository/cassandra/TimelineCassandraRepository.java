@@ -98,8 +98,8 @@ public class TimelineCassandraRepository {
                                                        int limit,
                                                        String msName) {
         Select select = QueryBuilder.select(getFields()).from(
-            TenantContextUtils.getRequiredTenantKeyValue(tenantContextHolder),
-            TABLE_TIMELINE_BY_USER_AND_DATE);
+                        TenantContextUtils.getRequiredTenantKeyValue(tenantContextHolder),
+                        TABLE_TIMELINE_BY_USER_AND_DATE);
         select.where(eq(USER_KEY_COL, userKey));
         setFilterByMsNameIfPassed(select, msName);
         prepareWhereClause(select, null, dateFrom, dateTo, limit);
@@ -125,8 +125,8 @@ public class TimelineCassandraRepository {
                                                             int limit,
                                                             String msName) {
         Select select = QueryBuilder.select(getFields()).from(
-            TenantContextUtils.getRequiredTenantKeyValue(tenantContextHolder),
-            TABLE_TIMELINE_BY_USER_AND_OP_AND_DATE);
+                        TenantContextUtils.getRequiredTenantKeyValue(tenantContextHolder),
+                        TABLE_TIMELINE_BY_USER_AND_OP_AND_DATE);
         select.where(eq(USER_KEY_COL, userKey));
         setFilterByMsNameIfPassed(select, msName);
         prepareWhereClause(select, operation, dateFrom, dateTo, limit);
@@ -150,8 +150,8 @@ public class TimelineCassandraRepository {
                                                       int limit,
                                                       String msName) {
         Select select = QueryBuilder.select(getFields()).from(
-            TenantContextUtils.getRequiredTenantKeyValue(tenantContextHolder),
-            TABLE_TIMELINE_BY_ENTITY_AND_DATE);
+                        TenantContextUtils.getRequiredTenantKeyValue(tenantContextHolder),
+                        TABLE_TIMELINE_BY_ENTITY_AND_DATE);
         select.where(eq(ENTITY_ID_COL, id));
         setFilterByMsNameIfPassed(select, msName);
         prepareWhereClause(select, null, dateFrom, dateTo, limit);
@@ -177,8 +177,8 @@ public class TimelineCassandraRepository {
                                                            int limit,
                                                            String msName) {
         Select select = QueryBuilder.select(getFields()).from(
-            TenantContextUtils.getRequiredTenantKeyValue(tenantContextHolder),
-            TABLE_TIMELINE_BY_ENTITY_AND_OP_AND_DATE);
+                        TenantContextUtils.getRequiredTenantKeyValue(tenantContextHolder),
+                        TABLE_TIMELINE_BY_ENTITY_AND_OP_AND_DATE);
         select.where(eq(ENTITY_ID_COL, id));
         setFilterByMsNameIfPassed(select, msName);
         prepareWhereClause(select, operation, dateFrom, dateTo, limit);
@@ -313,7 +313,6 @@ public class TimelineCassandraRepository {
 
     /**
      * Hide request and response body if hide-payload parameter set to true.
-     *
      * @param column the column to filter
      * @return true if column passes payload condition
      */
@@ -324,7 +323,6 @@ public class TimelineCassandraRepository {
 
     /**
      * Sets microservice name to 'where' clause if it passed.
-     *
      * @param select select request builder object
      * @param msName microservice name
      */
