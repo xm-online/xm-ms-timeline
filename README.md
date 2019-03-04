@@ -20,6 +20,68 @@ To start your application in the dev profile, simply run:
 
 For further instructions on how to develop with JHipster, have a look at [Using JHipster in development][].
 
+## Enable RDBMS mode
+Open **application-<profile>.yml** config and add following configuration:
+
+1. Specify timeline service type. Possible values: cassandra, logger, rdbms
+```
+application:
+    timeline-service-impl: rdbms
+```
+
+2. Enable automatic repositories configuration
+```
+spring:
+    data:
+        jpa:
+         repositories:
+            enabled: true    
+```
+
+3. Add datasource configuration
+```
+spring:
+    jpa:
+        database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
+        database: POSTGRESQL
+        show-sql: false
+        properties:
+            hibernate.id.new_generator_mappings: true
+            hibernate.cache.use_second_level_cache: false
+            hibernate.cache.use_query_cache: false
+            hibernate.generate_statistics: false
+            hibernate.cache.use_minimal_puts: true
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        url: jdbc:postgresql:timeline
+        driver-class-name: org.postgresql.Driver
+        username: postgres
+        password: postgres
+```
+
+4. Enable liquibase
+```
+spring:
+    liquibase:
+        enabled: true
+```
+
+5. Enable health check
+```
+management:
+    health:
+        db:
+         enabled: true
+```
+
+Open **application.yml** and comments following configs
+```
+spring:
+    autoconfigure:
+        exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration, org.springframework.boot.actuate.autoconfigure.EndpointAutoConfiguration
+```
+
+
 ## Building for production
 
 To optimize the timeline application for production, run:
