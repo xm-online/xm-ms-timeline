@@ -1,0 +1,114 @@
+spring:
+    profiles:
+        active: dbdev
+        include: swagger
+    devtools:
+        restart:
+            enabled: true
+        livereload:
+            enabled: false # we use gulp + BrowserSync for livereload
+    jackson:
+        serialization.indent_output: true
+    cloud:
+        consul:
+            discovery:
+               prefer-ip-address: true
+            host: localhost
+            port: 8500
+    mail:
+        host: localhost
+        port: 25
+        username:
+        password:
+    messages:
+        cache-seconds: 1
+    thymeleaf:
+        cache: false
+    zipkin: # Use the "zipkin" Maven profile to have the Spring Cloud Zipkin dependencies
+        base-url: http://localhost:9411
+        enabled: false
+        locator:
+            discovery:
+                enabled: true
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        url: jdbc:h2:mem:timeline;DB_CLOSE_DELAY=-1
+        username: timeline
+        password:
+    h2:
+        console:
+            enabled: true
+    jpa:
+        open-in-view: false
+        hibernate:
+            ddl-auto: none
+            naming:
+                physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+                implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        database-platform: io.github.jhipster.domain.util.FixedH2Dialect
+        database: H2
+        show-sql: true
+        properties:
+            hibernate.id.new_generator_mappings: true
+            hibernate.cache.use_second_level_cache: false
+            hibernate.cache.use_query_cache: false
+            hibernate.generate_statistics: true
+            hibernate.dialect: io.github.jhipster.domain.util.FixedH2Dialect
+            #hibernate.cache.region.factory_class: com.hazelcast.hibernate.HazelcastLocalCacheRegionFactory
+            #hibernate.cache.hazelcast.instance_name: entity
+            hibernate.cache.use_minimal_puts: true
+            #hibernate.cache.hazelcast.use_lite_member: true
+    data:
+      jpa:
+        repositories:
+          enabled: true
+    liquibase:
+        default-schema: XM
+        enabled: true
+
+server:
+    port: 8083
+
+
+jhipster:
+    http:
+        version: V_1_1 # To use HTTP/2 you will need SSL support (see above the "server.ssl" configuration)
+    # CORS is only enabled by default with the "dev" profile, so BrowserSync can access the API
+    cors:
+        allowed-origins: "*"
+        allowed-methods: GET, PUT, POST, DELETE, OPTIONS
+        allowed-headers: "*"
+        exposed-headers:
+        allow-credentials: true
+        max-age: 1800
+    security:
+        client-authorization:
+            access-token-uri: http://uaa/oauth/token
+            token-service-id: uaa
+            client-id:
+            client-secret:
+    mail: # specific JHipster mail property, for standard properties see MailProperties
+        from: timeline@localhost
+        base-url: http://127.0.0.1:8083
+    metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
+        jmx:
+            enabled: true
+        prometheus:
+            enabled: false #expose metrics via prometheus
+        logs: # Reports Dropwizard metrics in the logs
+            enabled: false
+            report-frequency: 60 # in seconds
+    logging:
+        logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration
+            enabled: false
+            host: localhost
+            port: 5000
+            queue-size: 512
+
+application:
+    zookeeper:
+        host: localhost:2181
+    # =================================================
+    # options [cassandra, logger, rdbms]
+    # =================================================
+    timeline-service-impl: rdbms
