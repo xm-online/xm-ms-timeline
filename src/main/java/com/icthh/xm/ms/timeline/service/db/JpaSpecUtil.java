@@ -7,7 +7,6 @@ import javax.persistence.criteria.Root;
 
 import lombok.experimental.UtilityClass;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
 
 @UtilityClass
 public class JpaSpecUtil {
@@ -29,28 +28,28 @@ public class JpaSpecUtil {
             -> builder.greaterThanOrEqualTo(root.get(propertyName), filterValue);
     }
 
-    public static <T> Specifications<T> combineEqualSpecifications(Specifications<T> prevSpec,
-                                                                   String filterValue,
-                                                                   String propertyName) {
-        Specifications<T> specifications = Specifications.where(equalSpecification(filterValue, propertyName));
-        return prevSpec != null ? prevSpec.and(specifications) : specifications;
+    public static <T> Specification<T> combineEqualSpecifications(Specification<T> prevSpec,
+                                                                  String filterValue,
+                                                                  String propertyName) {
+        Specification<T> specification = Specification.where(equalSpecification(filterValue, propertyName));
+        return prevSpec != null ? prevSpec.and(specification) : specification;
     }
 
-    public static <T> Specifications<T> combineLessThanOrEqualToSpecifications(Specifications<T> prevSpec,
-                                                                               Instant filterValue,
-                                                                               String propertyName) {
-        Specifications<T> specifications = Specifications.where(
+    public static <T> Specification<T> combineLessThanOrEqualToSpecifications(Specification<T> prevSpec,
+                                                                              Instant filterValue,
+                                                                              String propertyName) {
+        Specification<T> specification = Specification.where(
             lessThanOrEqualToSpecification(filterValue, propertyName));
 
-        return prevSpec != null ? prevSpec.and(specifications) : specifications;
+        return prevSpec != null ? prevSpec.and(specification) : specification;
     }
 
-    public static <T> Specifications<T> combineGreaterThanOrEqualToSpecifications(Specifications<T> prevSpec,
-                                                                                  Instant filterValue,
-                                                                                  String propertyName) {
-        Specifications<T> specifications = Specifications.where(
+    public static <T> Specification<T> combineGreaterThanOrEqualToSpecifications(Specification<T> prevSpec,
+                                                                                 Instant filterValue,
+                                                                                 String propertyName) {
+        Specification<T> specification = Specification.where(
             greaterThanOrEqualToSpecification(filterValue, propertyName));
 
-        return prevSpec != null ? prevSpec.and(specifications) : specifications;
+        return prevSpec != null ? prevSpec.and(specification) : specification;
     }
 }

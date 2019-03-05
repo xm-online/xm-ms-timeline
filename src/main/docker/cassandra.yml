@@ -1,7 +1,7 @@
 version: '2'
 services:
     timeline-cassandra:
-        image: cassandra:3.11
+        image: cassandra:3.9
         # volumes:
         #     - ~/volumes/jhipster/timeline/cassandra/:/var/lib/cassandra/data
         ports:

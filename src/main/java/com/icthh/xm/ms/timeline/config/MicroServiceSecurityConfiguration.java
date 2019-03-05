@@ -2,7 +2,15 @@ package com.icthh.xm.ms.timeline.config;
 
 import com.icthh.xm.commons.permission.constants.RoleConstant;
 import com.icthh.xm.ms.timeline.security.DomainJwtAccessTokenConverter;
-import io.github.jhipster.config.JHipsterProperties;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.security.PublicKey;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.Base64;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -15,7 +23,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.codec.Base64;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -23,26 +30,14 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.security.PublicKey;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
-
 @Configuration
 @EnableResourceServer
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-public class MicroserviceSecurityConfiguration extends ResourceServerConfigurerAdapter {
-
-    private final JHipsterProperties jHipsterProperties;
+public class MicroServiceSecurityConfiguration extends ResourceServerConfigurerAdapter {
 
     private final DiscoveryClient discoveryClient;
 
-    public MicroserviceSecurityConfiguration(JHipsterProperties jHipsterProperties,
-            DiscoveryClient discoveryClient) {
-
-        this.jHipsterProperties = jHipsterProperties;
+    public MicroServiceSecurityConfiguration(DiscoveryClient discoveryClient) {
         this.discoveryClient = discoveryClient;
     }
 
@@ -73,7 +68,7 @@ public class MicroserviceSecurityConfiguration extends ResourceServerConfigurerA
 
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter(
-            @Qualifier("loadBalancedRestTemplate") RestTemplate keyUriRestTemplate) throws CertificateException {
+        @Qualifier("loadBalancedRestTemplate") RestTemplate keyUriRestTemplate) throws CertificateException {
 
         DomainJwtAccessTokenConverter converter = new DomainJwtAccessTokenConverter();
         converter.setVerifierKey(getKeyFromConfigServer(keyUriRestTemplate));
@@ -90,7 +85,7 @@ public class MicroserviceSecurityConfiguration extends ResourceServerConfigurerA
     private String getKeyFromConfigServer(RestTemplate keyUriRestTemplate) throws CertificateException {
         // Load available UAA servers
         discoveryClient.getServices();
-        HttpEntity<Void> request = new HttpEntity<Void>(new HttpHeaders());
+        HttpEntity<Void> request = new HttpEntity<>(new HttpHeaders());
         String content = keyUriRestTemplate
             .exchange("http://config/api/token_key", HttpMethod.GET, request, String.class).getBody();
 
@@ -101,8 +96,8 @@ public class MicroserviceSecurityConfiguration extends ResourceServerConfigurerA
         InputStream fin = new ByteArrayInputStream(content.getBytes());
 
         CertificateFactory f = CertificateFactory.getInstance(Constants.CERTIFICATE);
-        X509Certificate certificate = (X509Certificate)f.generateCertificate(fin);
+        X509Certificate certificate = (X509Certificate) f.generateCertificate(fin);
         PublicKey pk = certificate.getPublicKey();
-        return String.format(Constants.PUBLIC_KEY, new String(Base64.encode(pk.getEncoded())));
+        return String.format(Constants.PUBLIC_KEY, new String(Base64.getEncoder().encode(pk.getEncoded())));
     }
 }

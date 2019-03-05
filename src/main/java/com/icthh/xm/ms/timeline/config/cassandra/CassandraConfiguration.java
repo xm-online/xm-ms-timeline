@@ -1,9 +1,9 @@
 package com.icthh.xm.ms.timeline.config.cassandra;
 
 import static com.icthh.xm.ms.timeline.config.Constants.CASSANDRA_IMPL;
+import static java.lang.Math.toIntExact;
 
 import com.codahale.metrics.MetricRegistry;
-
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.ProtocolVersion;
@@ -22,6 +22,9 @@ import com.icthh.xm.ms.timeline.repository.cassandra.EntityMappingRepository;
 import com.icthh.xm.ms.timeline.repository.cassandra.TimelineCassandraRepository;
 import com.icthh.xm.ms.timeline.service.TenantPropertiesService;
 import io.github.jhipster.config.JHipsterConstants;
+
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -33,7 +36,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.util.StringUtils;
 
 @Configuration
 @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = CASSANDRA_IMPL)
@@ -52,9 +54,9 @@ public class CassandraConfiguration {
     @Bean
     public Cluster cluster(CassandraProperties properties) {
         Cluster.Builder builder = Cluster.builder()
-                .withClusterName(properties.getClusterName())
-                .withProtocolVersion(protocolVersion)
-                .withPort(getPort(properties));
+            .withClusterName(properties.getClusterName())
+            .withProtocolVersion(protocolVersion)
+            .withPort(getPort(properties));
 
         if (properties.getUsername() != null) {
             builder.withCredentials(properties.getUsername(), properties.getPassword());
@@ -79,18 +81,17 @@ public class CassandraConfiguration {
         if (properties.isSsl()) {
             builder.withSSL();
         }
-        String points = properties.getContactPoints();
-        builder.addContactPoints(StringUtils.commaDelimitedListToStringArray(points));
-
+        List<String> points = properties.getContactPoints();
+        builder.addContactPoints(points.toArray(new String[points.size()]));
         Cluster cluster = builder.build();
 
         TupleType tupleType = cluster.getMetadata()
             .newTupleType(DataType.timestamp(), DataType.varchar());
 
         cluster.getConfiguration().getCodecRegistry()
-                .register(LocalDateCodec.instance)
-                .register(InstantCodec.instance)
-                .register(new ZonedDateTimeCodec(tupleType));
+            .register(LocalDateCodec.instance)
+            .register(InstantCodec.instance)
+            .register(new ZonedDateTimeCodec(tupleType));
 
         if (metricRegistry != null) {
             cluster.init();
@@ -122,8 +123,12 @@ public class CassandraConfiguration {
 
     private SocketOptions getSocketOptions(CassandraProperties properties) {
         SocketOptions options = new SocketOptions();
-        options.setConnectTimeoutMillis(properties.getConnectTimeoutMillis());
-        options.setReadTimeoutMillis(properties.getReadTimeoutMillis());
+        if (properties.getConnectTimeout() != null) {
+            options.setConnectTimeoutMillis(toIntExact(properties.getConnectTimeout().toMillis()));
+        }
+        if (properties.getReadTimeout() != null) {
+            options.setReadTimeoutMillis(toIntExact(properties.getReadTimeout().toMillis()));
+        }
         return options;
     }
 

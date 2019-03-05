@@ -1,14 +1,13 @@
 package com.icthh.xm.ms.timeline.config;
 
 import static com.icthh.xm.ms.timeline.config.Constants.CASSANDRA_IMPL;
-import static com.icthh.xm.ms.timeline.config.Constants.RDBMS_IMPL;
 import static com.icthh.xm.ms.timeline.config.Constants.LOGGER_IMPL;
+import static com.icthh.xm.ms.timeline.config.Constants.RDBMS_IMPL;
 
 import com.icthh.xm.commons.tenant.TenantContextHolder;
 import com.icthh.xm.ms.timeline.repository.cassandra.EntityMappingRepository;
 import com.icthh.xm.ms.timeline.repository.cassandra.TimelineCassandraRepository;
 import com.icthh.xm.ms.timeline.repository.jpa.TimelineJpaRepository;
-
 import com.icthh.xm.ms.timeline.service.TimelineService;
 import com.icthh.xm.ms.timeline.service.cassandra.TimelineServiceCassandraImpl;
 import com.icthh.xm.ms.timeline.service.db.TimelineServiceDbImpl;

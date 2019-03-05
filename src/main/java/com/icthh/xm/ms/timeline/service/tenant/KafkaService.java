@@ -15,6 +15,11 @@ import com.icthh.xm.commons.tenant.TenantContextUtils;
 import com.icthh.xm.ms.timeline.config.ApplicationProperties;
 import com.icthh.xm.ms.timeline.config.Constants;
 import com.icthh.xm.ms.timeline.repository.kafka.TimelineEventConsumer;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
 import kafka.admin.AdminUtils;
 import kafka.admin.RackAwareMode;
 import kafka.utils.ZKStringSerializer$;
@@ -31,10 +36,6 @@ import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.listener.MessageListener;
 import org.springframework.kafka.listener.config.ContainerProperties;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 
 @Slf4j
 @RequiredArgsConstructor

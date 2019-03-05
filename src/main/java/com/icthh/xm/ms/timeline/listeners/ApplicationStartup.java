@@ -37,7 +37,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-@SuppressWarnings("unused")
 public class ApplicationStartup implements ApplicationListener<ApplicationReadyEvent> {
 
     private final ApplicationProperties properties;
@@ -66,10 +65,12 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 
     private void migrateCassandra() {
         ClusterConfiguration clusterConfiguration = new ClusterConfiguration();
-        clusterConfiguration.setContactpoints(new String[]{cassandraProperties.getContactPoints()});
+        String[] contactPoints = cassandraProperties.getContactPoints()
+            .toArray(new String[cassandraProperties.getContactPoints().size()]);
+        clusterConfiguration.setContactpoints(contactPoints);
         CassandraMigration cm = new CassandraMigration();
 
-        try (Cluster cluster = Cluster.builder().addContactPoints(cassandraProperties.getContactPoints()).build();
+        try (Cluster cluster = Cluster.builder().addContactPoints(contactPoints).build();
              Session session = cluster.connect()) {
 
             tenantListRepository.getTenants().forEach(tenantName -> {

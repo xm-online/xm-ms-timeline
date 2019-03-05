@@ -1,17 +1,17 @@
 package com.icthh.xm.ms.timeline.security;
 
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.icthh.xm.ms.timeline.config.Constants.AUTH_TENANT_KEY;
 import static com.icthh.xm.ms.timeline.config.Constants.AUTH_USER_KEY;
 import static com.icthh.xm.ms.timeline.config.Constants.AUTH_XM_COOKIE_KEY;
 import static com.icthh.xm.ms.timeline.config.Constants.AUTH_XM_LOCALE;
 import static com.icthh.xm.ms.timeline.config.Constants.AUTH_XM_TOKEN_KEY;
 import static com.icthh.xm.ms.timeline.config.Constants.AUTH_XM_USERID_KEY;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 /**
  * Overrides to get token tenant.

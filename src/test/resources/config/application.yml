@@ -3,8 +3,8 @@
 #
 # This configuration is used for unit/integration tests.
 #
-# More information on profiles: https://jhipster.github.io/profiles/
-# More information on configuration properties: https://jhipster.github.io/common-application-properties/
+# More information on profiles: https://www.jhipster.tech/profiles/
+# More information on configuration properties: https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
 # ===================================================================
@@ -37,6 +37,7 @@ spring:
             protocolVersion: V4
             compression: NONE
             keyspaceName: cassandra_unit_keyspace
+
     mail:
         host: localhost
     messages:
@@ -47,12 +48,8 @@ spring:
     thymeleaf:
         mode: XHTML
 
-liquibase:
-    contexts: test
-    enabled: false
-
-security:
-    basic:
+    liquibase:
+        contexts: test
         enabled: false
 
 server:
@@ -62,7 +59,7 @@ server:
 # ===================================================================
 # JHipster specific properties
 #
-# Full reference is available at: https://jhipster.github.io/common-application-properties/
+# Full reference is available at: https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
 jhipster:
@@ -100,15 +97,18 @@ jhipster:
 # to have type-safe configuration, like in the JHipsterProperties above
 #
 # More documentation is available at:
-# https://jhipster.github.io/common-application-properties/
+# https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
 xm-config:
     enabled: false
 
 application:
-    cassandra-migration-folder: config/cql/changelog
+    cassandra:
+        migration-folder: config/cql/changelog
+        keyspace-create-cql: "CREATE KEYSPACE IF NOT EXISTS %s WITH REPLICATION = {'class':'SimpleStrategy','replication_factor':3} AND DURABLE_WRITES = true;"
     tenant-properties-path-pattern: /config/tenants/{tenantName}/timeline/${tenant-properties-name}
     tenant-properties-name: timeline.yml
     kafka-system-queue: system_queue
     timeline-service-impl: cassandra
+

@@ -7,15 +7,16 @@ import com.icthh.xm.commons.messaging.event.system.SystemEvent;
 import com.icthh.xm.commons.messaging.event.system.SystemEventType;
 import com.icthh.xm.ms.timeline.config.Constants;
 import com.icthh.xm.ms.timeline.service.tenant.KafkaService;
+
+import java.io.IOException;
+import java.util.Objects;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,6 +27,7 @@ public class SystemTopicConsumer {
 
     /**
      * Consume tenant command event message.
+     *
      * @param message the tenant command event message
      */
     @Retryable(maxAttemptsExpression = "${application.retry.max-attempts}",

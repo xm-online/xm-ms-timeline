@@ -61,7 +61,6 @@ public class TimelineServiceLoggerImpl implements TimelineService {
         log.info("Event {}", xmTimeline);
     }
 
-
     private static boolean stringFilter(String filter, String value) {
         return !isNotBlank(filter) || StringUtils.equalsIgnoreCase(filter, value);
     }

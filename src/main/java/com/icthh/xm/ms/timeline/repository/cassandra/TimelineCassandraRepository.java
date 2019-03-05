@@ -19,9 +19,6 @@ import com.icthh.xm.ms.timeline.repository.cassandra.mapper.TimelineMapper;
 import com.icthh.xm.ms.timeline.service.TenantPropertiesService;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,6 +26,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class TimelineCassandraRepository {
 
