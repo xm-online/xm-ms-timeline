@@ -34,7 +34,7 @@ public class TimelineServiceDbImpl implements TimelineService {
 
     @Override
     public void insertTimelines(XmTimeline timeline) {
-        timelineRepository.save(timeline);
+        timelineRepository.saveAndFlush(timeline);
     }
 
     @Override
