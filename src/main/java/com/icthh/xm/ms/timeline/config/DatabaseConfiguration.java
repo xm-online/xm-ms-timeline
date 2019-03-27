@@ -17,6 +17,7 @@ import io.github.jhipster.config.JHipsterConstants;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import liquibase.integration.spring.MultiTenantSpringLiquibase;
@@ -41,6 +42,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -151,6 +153,11 @@ public class DatabaseConfiguration {
         em.setJpaVendorAdapter(jpaVendorAdapter());
         em.setJpaPropertyMap(properties);
         return em;
+    }
+
+    @Bean
+    public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+        return new JpaTransactionManager(entityManagerFactory);
     }
 
 }

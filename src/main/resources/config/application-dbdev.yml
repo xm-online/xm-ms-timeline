@@ -1,3 +1,8 @@
+management:
+    health:
+        db:
+            enabled: true
+
 spring:
     profiles:
         active: dbdev
