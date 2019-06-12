@@ -1,5 +1,7 @@
 package com.icthh.xm.ms.timeline.service.tenant;
 
+import static com.icthh.xm.commons.tenant.TenantContextUtils.assertTenantKeyValid;
+
 import com.builtamont.cassandra.migration.CassandraMigration;
 import com.builtamont.cassandra.migration.api.configuration.ClusterConfiguration;
 import com.builtamont.cassandra.migration.api.configuration.KeyspaceConfiguration;
@@ -31,6 +33,7 @@ public class CassandraService {
         StopWatch stopWatch = StopWatch.createStarted();
         try {
             log.info("START - SETUP:CreateTenant:cassandra keyspace tenantKey: {}", tenant);
+            assertTenantKeyValid(tenant);
             Cluster.builder().addContactPoints(getContactPoints())
                 .build().connect().execute(String.format(properties.getCassandra().getKeyspaceCreateCql(), tenant));
             log.info("STOP  - SETUP:CreateTenant:cassandra keyspace tenantKey: {}, result: OK, time = {} ms",
@@ -52,6 +55,7 @@ public class CassandraService {
         StopWatch stopWatch = StopWatch.createStarted();
         try {
             log.info("START - SETUP:DeleteTenant:cassandra keyspace tenantKey: {}", tenant);
+            assertTenantKeyValid(tenant);
             Cluster.builder().addContactPoints(getContactPoints())
                 .build().connect().execute(String.format(Constants.CASSANDRA_DROP_KEYSPACE, tenant));
             log.info("STOP  - SETUP:DeleteTenant:cassandra keyspace tenantKey: {}, result: OK, time = {} ms",
@@ -72,6 +76,7 @@ public class CassandraService {
         StopWatch stopWatch = StopWatch.createStarted();
         try {
             log.info("START - SETUP:CreateTenant:cassandra migration tenantKey: {}", tenant);
+            assertTenantKeyValid(tenant);
             ClusterConfiguration clusterConfiguration = new ClusterConfiguration();
             clusterConfiguration.setContactpoints(getContactPoints());
 
