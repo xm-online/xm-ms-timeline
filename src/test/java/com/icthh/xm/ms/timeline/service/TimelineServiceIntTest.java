@@ -20,9 +20,9 @@ import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {TimelineApp.class, SecurityBeanOverrideConfiguration.class})
-@TestPropertySource(properties = {"application.timeline-service-impl = db"})
+@TestPropertySource(properties = {"application.timeline-service-impl = rdbms"})
 @ActiveProfiles(JHipsterConstants.SPRING_PROFILE_TEST)
-public class TimelineServiceDbTest {
+public class TimelineServiceIntTest {
 
     @Autowired
     private TimelineService timelineService;

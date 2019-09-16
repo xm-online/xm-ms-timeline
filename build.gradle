@@ -127,6 +127,11 @@ test {
     // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
     // ignoreFailures true
     reports.html.enabled = false
+    testLogging {
+        events = ["passed", "failed", "skipped"]
+        showStandardStreams = false
+        exceptionFormat = 'full'
+    }
 }
 
 task cucumberTest(type: Test) {
