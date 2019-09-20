@@ -12,12 +12,8 @@ import com.icthh.xm.commons.logging.util.MdcUtils;
 import com.icthh.xm.commons.permission.inspector.PrivilegeInspector;
 import com.icthh.xm.ms.timeline.config.ApplicationProperties;
 import com.icthh.xm.ms.timeline.repository.kafka.SystemTopicConsumer;
-import com.icthh.xm.ms.timeline.repository.kafka.TimelineEventConsumer;
+import com.icthh.xm.ms.timeline.service.kafka.TimelineEventConsumerHolder;
 import io.github.jhipster.config.JHipsterConstants;
-
-import java.util.Map;
-import java.util.UUID;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -34,14 +30,17 @@ import org.springframework.kafka.listener.MessageListener;
 import org.springframework.kafka.listener.config.ContainerProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class ApplicationStartup implements ApplicationListener<ApplicationReadyEvent> {
 
     private final ApplicationProperties properties;
-    private final ConsumerFactory<String, String> consumerFactory;
-    private final TimelineEventConsumer timelineConsumer;
+    private final TimelineEventConsumerHolder timelineConsumerHolder;
     private final SystemTopicConsumer commandConsumer;
     private final CassandraProperties cassandraProperties;
     private final Environment env;
@@ -63,10 +62,11 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
         }
     }
 
+    // TODO review and move to single source of truth with
+    //  com.icthh.xm.ms.timeline.service.tenant.provisioner.TenantCassandraStorageProvisioner.migrateCassandra
     private void migrateCassandra() {
         ClusterConfiguration clusterConfiguration = new ClusterConfiguration();
-        String[] contactPoints = cassandraProperties.getContactPoints()
-            .toArray(new String[cassandraProperties.getContactPoints().size()]);
+        String[] contactPoints = cassandraProperties.getContactPoints().toArray(new String[0]);
         clusterConfiguration.setContactpoints(contactPoints);
         CassandraMigration cm = new CassandraMigration();
 
@@ -93,22 +93,14 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
     }
 
     private void createKafkaConsumers() {
-        tenantListRepository.getTenants().stream().map(String::toUpperCase).forEach(this::createConsumer);
-        createCommandConsumer(properties.getKafkaSystemTopic());
-    }
+        Set<String> tenants = tenantListRepository.getTenants();
 
-    private void createConsumer(String name) {
-        log.info("Creating kafka consumer for tenant {}", name);
-        try {
-            ContainerProperties containerProps = new ContainerProperties(name);
-            ConcurrentMessageListenerContainer<String, String> container =
-                new ConcurrentMessageListenerContainer<>(consumerFactory, containerProps);
-            container.setupMessageListener((MessageListener<String, String>) timelineConsumer::consumeEvent);
-            container.start();
-            log.info("Successfully created kafka consumer for tenant {}", name);
-        } catch (Exception e) {
-            log.error("Kafka consumer creation failed for tenant {}, error: {}", name, e.getMessage(), e);
-        }
+        log.info("Create timeline consumers for [{}] active tenants", tenants.size());
+        tenants.stream()
+               .map(String::toUpperCase)
+               .forEach(timelineConsumerHolder::createConsumer);
+
+        createCommandConsumer(properties.getKafkaSystemTopic());
     }
 
     private void createCommandConsumer(String name) {

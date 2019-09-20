@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class KafkaConsumerService {
+public class TimelineEventConsumerHolder {
 
     private final ConsumerFactory<String, String> consumerFactory;
     private final TimelineEventConsumer consumer;
@@ -27,10 +27,12 @@ public class KafkaConsumerService {
      *
      * @param tenant the kafka topic
      */
-    public void createKafkaConsumer(String tenant) {
+    public void createConsumer(String tenant) {
         ConcurrentMessageListenerContainer<String, String> container = consumers.get(tenant);
         if (container != null) {
+            log.info("Consumer was already created: {}", tenant);
             if (!container.isRunning()) {
+                log.warn("Consumer was already created byt not started: {}. trying to start...", tenant);
                 container.start();
             }
         } else {
@@ -48,10 +50,12 @@ public class KafkaConsumerService {
      *
      * @param tenant the kafka topic
      */
-    public void deleteKafkaConsumer(String tenant) {
+    public void deleteConsumer(String tenant) {
         if (consumers.get(tenant) != null) {
             consumers.get(tenant).stop();
             consumers.remove(tenant);
+        } else {
+            log.warn("Consumer not found for deletion: {}", tenant);
         }
     }
 
