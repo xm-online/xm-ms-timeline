@@ -1,10 +1,12 @@
 package com.icthh.xm.ms.timeline.service.tenant.provisioner;
 
+import static java.util.Collections.singleton;
 import static java.util.Collections.singletonMap;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.common.collect.Maps;
 import com.icthh.xm.commons.exceptions.BusinessException;
 import com.icthh.xm.commons.gen.model.Tenant;
 import com.icthh.xm.commons.logging.util.MdcUtils;
@@ -15,25 +17,37 @@ import com.icthh.xm.commons.tenant.TenantContextUtils;
 import com.icthh.xm.commons.tenantendpoint.provisioner.TenantProvisioner;
 import com.icthh.xm.ms.timeline.config.ApplicationProperties;
 import com.icthh.xm.ms.timeline.config.Constants;
-import kafka.admin.AdminUtils;
-import kafka.admin.RackAwareMode;
-import kafka.utils.ZKStringSerializer$;
-import kafka.utils.ZkUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.I0Itec.zkclient.ZkClient;
-import org.I0Itec.zkclient.ZkConnection;
 import org.apache.commons.lang3.time.StopWatch;
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.ConsumerGroupDescription;
+import org.apache.kafka.clients.admin.CreateTopicsOptions;
+import org.apache.kafka.clients.admin.CreateTopicsResult;
+import org.apache.kafka.clients.admin.DeleteTopicsOptions;
+import org.apache.kafka.clients.admin.DeleteTopicsResult;
+import org.apache.kafka.clients.admin.DescribeConsumerGroupsResult;
+import org.apache.kafka.clients.admin.KafkaAdminClient;
+import org.apache.kafka.clients.admin.MemberAssignment;
+import org.apache.kafka.clients.admin.MemberDescription;
+import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.common.TopicPartition;
+import org.apache.kafka.common.errors.TopicExistsException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Properties;
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class TenantKafkaProvisioner implements TenantProvisioner {
+
+    private static final String TIMELINE_CONSUMER_GROUP = "timeline";
+    private static final Long WAIT_DISCONNECT_MS = 1000L;
 
     private final ApplicationProperties properties;
     private final KafkaTemplate<String, String> template;
@@ -43,10 +57,13 @@ public class TenantKafkaProvisioner implements TenantProvisioner {
     @Value("${spring.application.name}")
     private String appName;
 
+    @Value("${spring.kafka.bootstrap-servers}")
+    private String kafkaBootstrapServers;
+
     @Override
     public void createTenant(final Tenant tenant) {
         String formattedTenantKey = formatTenantKey(tenant.getTenantKey());
-        createKafkaTopic(formattedTenantKey);
+        createTopic(formattedTenantKey);
         sendCommand(formattedTenantKey, Constants.CREATE_COMMAND);
     }
 
@@ -58,37 +75,41 @@ public class TenantKafkaProvisioner implements TenantProvisioner {
     @Override
     public void deleteTenant(final String tenantKey) {
         String formattedTenantKey = formatTenantKey(tenantKey);
-        deleteKafkaTopic(formattedTenantKey);
         sendCommand(formattedTenantKey, Constants.DELETE_COMMAND);
+        deleteTopic(formattedTenantKey);
+    }
+
+    String getAppName() {
+        return appName;
+    }
+
+    String getKafkaBootstrapServers() {
+        return kafkaBootstrapServers;
     }
 
     /**
-     * Create kafka topic.
+     * Creates a topic in Kafka. If the topic already exists this does nothing.
      *
-     * @param tenant the topic name
+     * @param topicName - the namespace name to create.
      */
-    //TODO - refactor to use AdminClient
-    public void createKafkaTopic(String tenant) {
-        ZkClient zkClient = null;
+    private void createTopic(final String topicName) {
         StopWatch stopWatch = StopWatch.createStarted();
-        try {
-            zkClient = new ZkClient(properties.getZookeeper().getHost(),
-                                    properties.getZookeeper().getSessionTimeout(),
-                                    properties.getZookeeper().getConnectionTimeout(),
-                                    ZKStringSerializer$.MODULE$);
+        try (final AdminClient adminClient = KafkaAdminClient.create(buildDefaultClientConfig())) {
+            try {
+                int partitions = properties.getZookeeper().getPartitions();
+                short replications = properties.getZookeeper().getReplication();
+                int timeout = properties.getZookeeper().getConnectionTimeout();
 
-            ZkUtils zkUtils = new ZkUtils(zkClient, new ZkConnection(properties.getZookeeper().getHost()), false);
-
-            if (!AdminUtils.topicExists(zkUtils, tenant)) {
-                AdminUtils.createTopic(zkUtils, tenant,
-                                       properties.getZookeeper().getPartitions(),
-                                       properties.getZookeeper().getReplication(),
-                                       new Properties(), RackAwareMode.Enforced$.MODULE$);
-            }
-            log.info("Kafka topic created for tenantKey: {}, time = {} ms", tenant, stopWatch.getTime());
-        } finally {
-            if (zkClient != null) {
-                zkClient.close();
+                NewTopic newTopic = new NewTopic(topicName, partitions, replications);
+                CreateTopicsResult createTopicsResult = adminClient
+                    .createTopics(singleton(newTopic), new CreateTopicsOptions().timeoutMs(timeout));
+                // Since the call is Async, Lets wait for it to complete.
+                createTopicsResult.values().get(topicName).get();
+                log.info("Kafka topic created for tenantKey: {}, time = {} ms", topicName, stopWatch.getTime());
+            } catch (InterruptedException | ExecutionException e) {
+                if (!(e.getCause() instanceof TopicExistsException)) {
+                    throw new RuntimeException(e.getMessage(), e);
+                }
             }
         }
     }
@@ -96,30 +117,55 @@ public class TenantKafkaProvisioner implements TenantProvisioner {
     /**
      * Delete kafka topic.
      *
-     * @param tenant the kafka topic
+     * @param topicName the kafka topic
      */
-    //TODO - refactor to use AdminClient
-    public void deleteKafkaTopic(String tenant) {
-        ZkClient zkClient = null;
+    private void deleteTopic(final String topicName) {
         StopWatch stopWatch = StopWatch.createStarted();
-        try {
-            zkClient = new ZkClient(properties.getZookeeper().getHost(),
-                                    properties.getZookeeper().getSessionTimeout(),
-                                    properties.getZookeeper().getConnectionTimeout(),
-                                    ZKStringSerializer$.MODULE$);
+        try (final AdminClient adminClient = KafkaAdminClient.create(buildDefaultClientConfig())) {
+            try {
+                assertTopicDisconnected(topicName, adminClient);
 
-            ZkUtils zkUtils = new ZkUtils(zkClient, new ZkConnection(properties.getZookeeper().getHost()), false);
+                int timeout = properties.getZookeeper().getConnectionTimeout();
 
-            if (AdminUtils.topicExists(zkUtils, tenant)) {
-                AdminUtils.deleteTopic(zkUtils, tenant);
-            }
-            log.info("Kafka topic deleted for tenantKey: {}, time = {} ms", tenant, stopWatch.getTime());
-
-        } finally {
-            if (zkClient != null) {
-                zkClient.close();
+                DeleteTopicsResult createTopicsResult =
+                    adminClient.deleteTopics(singleton(topicName), new DeleteTopicsOptions().timeoutMs(timeout));
+                // Since the call is Async, Lets wait for it to complete.
+                createTopicsResult.values().get(topicName).get();
+                log.info("Kafka topic deleted for tenantKey: {}, time = {} ms", topicName, stopWatch.getTime());
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e.getMessage(), e);
             }
         }
+    }
+
+    private Map<String, Object> buildDefaultClientConfig() {
+        Map<String, Object> defaultClientConfig = Maps.newHashMap();
+        defaultClientConfig.put("bootstrap.servers", getKafkaBootstrapServers());
+        return defaultClientConfig;
+    }
+
+    private void assertTopicDisconnected(String topicName, AdminClient adminClient)
+    throws InterruptedException, ExecutionException {
+        if (hasConsumers(topicName, adminClient)) {
+            log.warn("sleep for {} ms to wait for topic [{}] disconnection", WAIT_DISCONNECT_MS, topicName);
+            Thread.sleep(WAIT_DISCONNECT_MS); // just wait while SystemTopicConsumer disconnect from topic
+            if (hasConsumers(topicName, adminClient)) {
+                throw new BusinessException("can not delete topic " + topicName + " as it has active consumers");
+            }
+        }
+    }
+
+    private boolean hasConsumers(final String topicName, final AdminClient adminClient)
+    throws InterruptedException, ExecutionException {
+        DescribeConsumerGroupsResult result = adminClient.describeConsumerGroups(singleton(TIMELINE_CONSUMER_GROUP));
+        ConsumerGroupDescription timeline = result.all().get().get(TIMELINE_CONSUMER_GROUP);
+        return timeline.members()
+                       .stream()
+                       .map(MemberDescription::assignment)
+                       .map(MemberAssignment::topicPartitions)
+                       .flatMap(Collection::stream)
+                       .map(TopicPartition::topic)
+                       .anyMatch(topicName::equals);
     }
 
     /**
@@ -128,7 +174,7 @@ public class TenantKafkaProvisioner implements TenantProvisioner {
      * @param tenant  the tenant to manage
      * @param command the command (e.g. CREATE, DELETE, ...)
      */
-    public void sendCommand(String tenant, String command) {
+    private void sendCommand(String tenant, String command) {
         StopWatch stopWatch = StopWatch.createStarted();
         try {
             template.send(properties.getKafkaSystemTopic(), tenant, createSystemEvent(tenant, command));
@@ -144,7 +190,7 @@ public class TenantKafkaProvisioner implements TenantProvisioner {
         event.setEventType(command);
         event.setTenantKey(TenantContextUtils.getRequiredTenantKeyValue(tenantContextHolder));
         event.setUserLogin(authContextHolder.getContext().getRequiredLogin());
-        event.setMessageSource(appName);
+        event.setMessageSource(getAppName());
         //TODO make SystemEvent.data Map by default, check if used everywhere
         event.setData(singletonMap(Constants.EVENT_TENANT, tenant));
         ObjectMapper mapper = new ObjectMapper();
