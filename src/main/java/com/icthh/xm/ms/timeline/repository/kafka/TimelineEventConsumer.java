@@ -9,7 +9,6 @@ import com.icthh.xm.commons.tenant.TenantContextUtils;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.service.TenantPropertiesService;
 import com.icthh.xm.ms.timeline.service.TimelineService;
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -18,6 +17,10 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.function.Consumer;
 
 @Service
 @RequiredArgsConstructor
@@ -37,30 +40,43 @@ public class TimelineEventConsumer {
         backoff = @Backoff(delayExpression = "${application.retry.delay}",
             multiplierExpression = "${application.retry.multiplier}"))
     public void consumeEvent(ConsumerRecord<String, String> message) {
-        MdcUtils.putRid();
+        String rid = MdcUtils.generateRid();
+        MdcUtils.putRid(rid);
         try {
             log.info("Consume event from topic [{}]", message.topic());
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
             try {
                 XmTimeline xmTimeline = mapper.readValue(message.value(), XmTimeline.class);
-                TenantContextUtils.setTenant(tenantContextHolder, xmTimeline.getTenant());
-                if (CollectionUtils.isNotEmpty(tenantPropertiesService.getTenantProps().getFilter().getExcludeMethod())
-                    && tenantPropertiesService.getTenantProps().getFilter().getExcludeMethod()
-                    .contains(xmTimeline.getHttpMethod())) {
-                    log.debug("Message '{}' was excluded by http method", xmTimeline);
-                    return;
-                }
                 if (StringUtils.isBlank(xmTimeline.getTenant())) {
                     xmTimeline.setTenant(message.topic());
                 }
-                timelineService.insertTimelines(xmTimeline);
+                MdcUtils.putRid(rid + ":" + xmTimeline.getTenant());
+                tenantContextHolder.getPrivilegedContext()
+                                   .execute(TenantContextUtils.buildTenant(xmTimeline.getTenant()),
+                                            buildExclusionAwareTimelineAdder(), xmTimeline);
             } catch (IOException e) {
                 log.error("Timeline message has incorrect format: '{}'", message.value(), e);
             }
         } finally {
-            tenantContextHolder.getPrivilegedContext().destroyCurrentContext();
-            MdcUtils.removeRid();
+            MdcUtils.clear();
         }
+    }
+
+    private Consumer<XmTimeline> buildExclusionAwareTimelineAdder() {
+        return (xmTimeline) -> {
+            List<String> excludeMethods = tenantPropertiesService.getTenantProps().getFilter().getExcludeMethod();
+            if (CollectionUtils.isNotEmpty(excludeMethods) && excludeMethods.contains(xmTimeline.getHttpMethod())) {
+                log.debug(
+                    "Message with [rid={},operationUrl={},msName={},httpStatus={}] was excluded by http method: [{}]",
+                    xmTimeline.getRid(),
+                    xmTimeline.getOperationUrl(),
+                    xmTimeline.getMsName(),
+                    xmTimeline.getHttpStatusCode(),
+                    xmTimeline.getHttpMethod());
+                return;
+            }
+            timelineService.insertTimelines(xmTimeline);
+        };
     }
 }
