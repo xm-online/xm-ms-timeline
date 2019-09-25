@@ -2,7 +2,7 @@ package com.icthh.xm.ms.timeline.web.rest;
 
 import com.icthh.xm.commons.gen.api.TenantsApiDelegate;
 import com.icthh.xm.commons.gen.model.Tenant;
-import com.icthh.xm.ms.timeline.service.tenant.TenantService;
+import com.icthh.xm.commons.tenantendpoint.TenantManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,19 +17,19 @@ import java.util.List;
 @Component
 public class TenantResource implements TenantsApiDelegate {
 
-    private final TenantService service;
+    private final TenantManager tenantManager;
 
     @Override
     @PreAuthorize("hasPermission({'tenant':#tenant}, 'TIMELINE.TENANT.CREATE')")
     public ResponseEntity<Void> addTenant(Tenant tenant) {
-        service.createTenant(tenant.getTenantKey());
+        tenantManager.createTenant(tenant);
         return ResponseEntity.ok().build();
     }
 
     @Override
     @PreAuthorize("hasPermission({'tenantKey':#tenantKey}, 'TIMELINE.TENANT.DELETE')")
     public ResponseEntity<Void> deleteTenant(String tenantKey) {
-        service.deleteTenant(tenantKey);
+        tenantManager.deleteTenant(tenantKey);
         return ResponseEntity.ok().build();
     }
 
@@ -48,7 +48,7 @@ public class TenantResource implements TenantsApiDelegate {
     @Override
     @PreAuthorize("hasPermission({'tenant':#tenant, 'status':#status}, 'TIMELINE.TENANT.UPDATE')")
     public ResponseEntity<Void> manageTenant(String tenant, String status) {
-        service.manageTenant(tenant, status);
+        tenantManager.manageTenant(tenant, status);
         return ResponseEntity.ok().build();
     }
 }

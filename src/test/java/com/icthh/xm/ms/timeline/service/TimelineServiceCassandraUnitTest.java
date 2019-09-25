@@ -1,7 +1,7 @@
 package com.icthh.xm.ms.timeline.service;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,19 +36,18 @@ public class TimelineServiceCassandraUnitTest {
 
     private TimelineCassandraRepository timelineRepository;
     private EntityMappingRepository entityMappingRepository;
-    private TenantContextHolder tenantContextHolder;
     private TimelineServiceCassandraImpl timelineService;
-    private TenantContext tenantContext;
 
     @Before
     public void init() {
 
         timelineRepository = mock(TimelineCassandraRepository.class);
         entityMappingRepository = mock(EntityMappingRepository.class);
-        tenantContextHolder = mock(TenantContextHolder.class);
-        timelineService = new TimelineServiceCassandraImpl(timelineRepository, entityMappingRepository,
-                        tenantContextHolder);
-        tenantContext = mock(TenantContext.class);
+        TenantContextHolder tenantContextHolder = mock(TenantContextHolder.class);
+        timelineService = new TimelineServiceCassandraImpl(timelineRepository,
+                                                           entityMappingRepository,
+                                                           tenantContextHolder);
+        TenantContext tenantContext = mock(TenantContext.class);
         when(tenantContext.getTenantKey()).thenReturn(Optional.of(TenantKey.valueOf(TENANT)));
         when(tenantContextHolder.getContext()).thenReturn(tenantContext);
     }

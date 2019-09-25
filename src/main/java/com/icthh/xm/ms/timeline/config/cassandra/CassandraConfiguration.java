@@ -82,7 +82,7 @@ public class CassandraConfiguration {
             builder.withSSL();
         }
         List<String> points = properties.getContactPoints();
-        builder.addContactPoints(points.toArray(new String[points.size()]));
+        builder.addContactPoints(points.toArray(new String[0]));
         Cluster cluster = builder.build();
 
         TupleType tupleType = cluster.getMetadata()
@@ -105,8 +105,8 @@ public class CassandraConfiguration {
         return properties.getPort();
     }
 
-    public static <T> T instantiate(Class<T> type) {
-        return BeanUtils.instantiate(type);
+    private static <T> T instantiate(Class<T> type) {
+        return BeanUtils.instantiateClass(type);
     }
 
     private QueryOptions getQueryOptions(CassandraProperties properties) {

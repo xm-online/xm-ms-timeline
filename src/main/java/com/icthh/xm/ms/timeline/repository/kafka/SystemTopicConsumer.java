@@ -6,11 +6,7 @@ import com.icthh.xm.commons.logging.util.MdcUtils;
 import com.icthh.xm.commons.messaging.event.system.SystemEvent;
 import com.icthh.xm.commons.messaging.event.system.SystemEventType;
 import com.icthh.xm.ms.timeline.config.Constants;
-import com.icthh.xm.ms.timeline.service.tenant.KafkaService;
-
-import java.io.IOException;
-import java.util.Objects;
-
+import com.icthh.xm.ms.timeline.service.kafka.TimelineEventConsumerHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -18,12 +14,15 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.Objects;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class SystemTopicConsumer {
 
-    private final KafkaService kafkaService;
+    private final TimelineEventConsumerHolder timelineConsumerHolder;
 
     /**
      * Consume tenant command event message.
@@ -49,10 +48,10 @@ public class SystemTopicConsumer {
                 String command = event.getEventType();
                 switch (command.toUpperCase()) {
                     case SystemEventType.CREATE_COMMAND:
-                        kafkaService.createKafkaConsumer(tenant);
+                        timelineConsumerHolder.createConsumer(tenant);
                         break;
                     case SystemEventType.DELETE_COMMAND:
-                        kafkaService.deleteKafkaConsumer(tenant);
+                        timelineConsumerHolder.deleteConsumer(tenant);
                         break;
                     default:
                         log.info("Event ignored with type='{}', source='{}', event_id='{}'",

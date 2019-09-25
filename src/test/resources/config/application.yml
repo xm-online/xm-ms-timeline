@@ -51,6 +51,8 @@ spring:
     liquibase:
         contexts: test
         enabled: false
+    kafka:
+        bootstrap-servers: localhost:9092
 
 server:
     port: 10344

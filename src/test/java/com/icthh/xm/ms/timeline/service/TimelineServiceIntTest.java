@@ -1,5 +1,6 @@
 package com.icthh.xm.ms.timeline.service;
 
+import com.icthh.xm.commons.migration.db.tenant.DropSchemaResolver;
 import com.icthh.xm.ms.timeline.TimelineApp;
 import com.icthh.xm.ms.timeline.config.SecurityBeanOverrideConfiguration;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
@@ -19,10 +20,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {TimelineApp.class, SecurityBeanOverrideConfiguration.class})
-@TestPropertySource(properties = {"application.timeline-service-impl = db"})
+@SpringBootTest(classes = {TimelineApp.class, SecurityBeanOverrideConfiguration.class, DropSchemaResolver.class})
+@TestPropertySource(properties = {"application.timeline-service-impl = rdbms"})
 @ActiveProfiles(JHipsterConstants.SPRING_PROFILE_TEST)
-public class TimelineServiceDbTest {
+public class TimelineServiceIntTest {
 
     @Autowired
     private TimelineService timelineService;

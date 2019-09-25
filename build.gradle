@@ -127,6 +127,11 @@ test {
     // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
     // ignoreFailures true
     reports.html.enabled = false
+    testLogging {
+        events = ["passed", "failed", "skipped"]
+        showStandardStreams = false
+        exceptionFormat = 'full'
+    }
 }
 
 task cucumberTest(type: Test) {
@@ -266,9 +271,8 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-jpa") {
         exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
     }
-    compile "org.springframework.cloud:spring-cloud-stream"
-    compile "org.springframework.cloud:spring-cloud-stream-binder-kafka"
     compile "org.springframework.kafka:spring-kafka"
+    compile "org.apache.kafka:kafka-clients:${kafka_clients_version}"
     compile "org.apache.kafka:kafka_2.12:${kafka_version}"
     compile "org.springframework.boot:spring-boot-starter-security"
     compile("org.springframework.boot:spring-boot-starter-web") {

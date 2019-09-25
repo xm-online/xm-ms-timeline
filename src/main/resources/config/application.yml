@@ -87,6 +87,8 @@ spring:
         producer:
             key-serializer: org.apache.kafka.common.serialization.StringSerializer
             value-serializer: org.apache.kafka.common.serialization.StringSerializer
+            properties:
+                max.block.ms: 5000
         bootstrap-servers: localhost:9092
     data:
         jpa:
@@ -97,6 +99,7 @@ spring:
 
     liquibase:
         enabled: false
+        change-log: classpath:config/liquibase/master.xml
 
 security:
     oauth2:

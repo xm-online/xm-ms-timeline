@@ -54,7 +54,7 @@ public class ApplicationProperties {
     public static class Zookeeper {
         private String host;
         private int partitions;
-        private int replication;
+        private short replication;
         private int sessionTimeout;
         private int connectionTimeout;
     }
