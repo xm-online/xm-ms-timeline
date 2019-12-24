@@ -3,7 +3,6 @@ package com.icthh.xm.ms.timeline.listeners;
 import static com.icthh.xm.ms.timeline.config.Constants.CASSANDRA_IMPL;
 
 import com.icthh.xm.commons.config.client.repository.TenantListRepository;
-import com.icthh.xm.commons.gen.model.Tenant;
 import com.icthh.xm.commons.logging.util.MdcUtils;
 import com.icthh.xm.commons.permission.inspector.PrivilegeInspector;
 import com.icthh.xm.ms.timeline.config.ApplicationProperties;
@@ -15,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
@@ -40,7 +38,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
     private final ApplicationProperties properties;
     private final TimelineEventConsumerHolder timelineConsumerHolder;
     private final SystemTopicConsumer commandConsumer;
-    private final CassandraProperties cassandraProperties;
     private final Environment env;
     private final KafkaProperties kafkaProperties;
     private final TenantListRepository tenantListRepository;
@@ -79,8 +76,8 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 
         log.info("Create timeline consumers for [{}] active tenants", tenants.size());
         tenants.stream()
-            .map(String::toUpperCase)
-            .forEach(timelineConsumerHolder::createConsumer);
+               .map(String::toUpperCase)
+               .forEach(timelineConsumerHolder::createConsumer);
 
         createCommandConsumer(properties.getKafkaSystemTopic());
     }
