@@ -56,6 +56,8 @@ management:
 spring:
     application:
         name: timeline
+    main:
+        allow-bean-definition-overriding: true
     cloud:
         inetutils:
             preferredNetworks:
@@ -190,4 +192,5 @@ application:
     cassandra:
         migration-folder: config/cql/changelog
         keyspace-create-cql: "CREATE KEYSPACE IF NOT EXISTS %s WITH REPLICATION = {'class':'SimpleStrategy','replication_factor':3} AND DURABLE_WRITES = true;"
+        keyspace-to-use: "USE %s"
     db-schema-suffix:

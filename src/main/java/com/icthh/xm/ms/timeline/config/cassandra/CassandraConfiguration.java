@@ -56,7 +56,8 @@ public class CassandraConfiguration {
         Cluster.Builder builder = Cluster.builder()
             .withClusterName(properties.getClusterName())
             .withProtocolVersion(protocolVersion)
-            .withPort(getPort(properties));
+            .withPort(getPort(properties))
+            .withoutJMXReporting();
 
         if (properties.getUsername() != null) {
             builder.withCredentials(properties.getUsername(), properties.getPassword());

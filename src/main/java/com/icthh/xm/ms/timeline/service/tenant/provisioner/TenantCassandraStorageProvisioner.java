@@ -4,9 +4,8 @@ import static com.icthh.xm.commons.tenant.TenantContextUtils.assertTenantKeyVali
 
 import com.builtamont.cassandra.migration.CassandraMigration;
 import com.builtamont.cassandra.migration.api.configuration.ClusterConfiguration;
-import com.builtamont.cassandra.migration.api.configuration.KeyspaceConfiguration;
 import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.SocketOptions;
+import com.datastax.driver.core.Session;
 import com.icthh.xm.commons.gen.model.Tenant;
 import com.icthh.xm.commons.tenantendpoint.provisioner.TenantProvisioner;
 import com.icthh.xm.ms.timeline.config.ApplicationProperties;
@@ -17,11 +16,13 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.stereotype.Service;
 
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class TenantCassandraStorageProvisioner implements TenantProvisioner {
 
+    private final Cluster cluster;
     private final CassandraProperties cassandraProperties;
     private final ApplicationProperties applicationProperties;
 
@@ -29,7 +30,7 @@ public class TenantCassandraStorageProvisioner implements TenantProvisioner {
     public void createTenant(final Tenant tenant) {
         String tenantKeyFormatted = formatTenantKey(tenant.getTenantKey());
         assertTenantKeyValid(tenantKeyFormatted);
-        createCassandraKeyspace(tenantKeyFormatted);
+        createCassandraKeyspaceIfNotExist(tenantKeyFormatted);
         migrateCassandra(tenantKeyFormatted);
     }
 
@@ -50,14 +51,11 @@ public class TenantCassandraStorageProvisioner implements TenantProvisioner {
      *
      * @param tenant the keyspace name
      */
-    private void createCassandraKeyspace(String tenant) {
+    public void createCassandraKeyspaceIfNotExist(String tenant) {
         StopWatch stopWatch = StopWatch.createStarted();
 
-        Cluster.builder()
-               .addContactPoints(getContactPoints())
-               .build()
-               .connect()
-               .execute(String.format(applicationProperties.getCassandra().getKeyspaceCreateCql(), tenant));
+        cluster.connect()
+            .execute(String.format(applicationProperties.getCassandra().getKeyspaceCreateCql(), tenant));
         log.info("Cassandra keyspace created for tenantKey: {}, time = {} ms", tenant, stopWatch.getTime());
     }
 
@@ -68,12 +66,7 @@ public class TenantCassandraStorageProvisioner implements TenantProvisioner {
      */
     private void dropCassandraKeyspace(String tenant) {
         StopWatch stopWatch = StopWatch.createStarted();
-        Cluster.builder()
-               .withSocketOptions(new SocketOptions().setReadTimeoutMillis(60 * 1000))
-               .addContactPoints(getContactPoints())
-               .build()
-               .connect()
-               .execute(String.format(Constants.CASSANDRA_DROP_KEYSPACE, tenant));
+        cluster.connect().execute(String.format(Constants.CASSANDRA_DROP_KEYSPACE, tenant));
         log.info("Cassandra keyspace dropped for tenantKey: {}, time = {} ms", tenant, stopWatch.getTime());
     }
 
@@ -82,19 +75,21 @@ public class TenantCassandraStorageProvisioner implements TenantProvisioner {
      *
      * @param tenant the keyspace name
      */
-    private void migrateCassandra(String tenant) {
+    public void migrateCassandra(String tenant) {
         StopWatch stopWatch = StopWatch.createStarted();
-        ClusterConfiguration clusterConfiguration = new ClusterConfiguration();
-        clusterConfiguration.setContactpoints(getContactPoints());
+        log.info("Start cassandra migration for tenant {}", tenant);
+        String keyspace = tenant.toLowerCase();
 
-        KeyspaceConfiguration keyspaceConfiguration = new KeyspaceConfiguration();
-        keyspaceConfiguration.setName(tenant.toLowerCase());
-        keyspaceConfiguration.setClusterConfig(clusterConfiguration);
+        try (Session session = cluster.connect()) {
+            ClusterConfiguration clusterConfiguration = new ClusterConfiguration();
+            clusterConfiguration.setContactpoints(getContactPoints());
 
-        CassandraMigration cm = new CassandraMigration();
-        cm.setLocations(new String[]{applicationProperties.getCassandra().getMigrationFolder()});
-        cm.setKeyspaceConfig(keyspaceConfiguration);
-        cm.migrate();
+            session.execute(String.format(applicationProperties.getCassandra().getKeyspaceToUse(), keyspace));
+
+            CassandraMigration cm = new CassandraMigration();
+            cm.setLocations(new String[]{applicationProperties.getCassandra().getMigrationFolder()});
+            cm.migrate(session);
+        }
         log.info("Cassandra keyspace migrated for tenantKey: {}, time = {} ms", tenant, stopWatch.getTime());
     }
 
@@ -105,5 +100,4 @@ public class TenantCassandraStorageProvisioner implements TenantProvisioner {
     private String formatTenantKey(String tenantKey) {
         return tenantKey.toLowerCase();
     }
-
 }

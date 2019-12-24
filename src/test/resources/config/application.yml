@@ -17,11 +17,19 @@
 spring:
     application:
         name: timeline
+    main:
+        allow-bean-definition-overriding: true
     jackson:
         serialization.write_dates_as_timestamps: false
     cache:
         type: none
     cloud:
+        bus:
+            enabled: false
+        discovery:
+            enabled: false
+        consul:
+            enabled: false
         stream:
             kafka:
                 binder:
@@ -87,11 +95,9 @@ jhipster:
             token-service-id: uaa
             client-id:
             client-secret:
-    metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
-        jmx.enabled: true
-        logs: # Reports Dropwizard metrics in the logs
-            enabled: true
-            report-frequency: 60 # in seconds
+    metrics:
+        logs:
+            enabled: false
 
 # ===================================================================
 # Application specific properties
