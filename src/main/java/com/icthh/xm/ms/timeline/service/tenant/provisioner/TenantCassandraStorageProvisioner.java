@@ -84,7 +84,7 @@ public class TenantCassandraStorageProvisioner implements TenantProvisioner {
             ClusterConfiguration clusterConfiguration = new ClusterConfiguration();
             clusterConfiguration.setContactpoints(getContactPoints());
 
-            session.execute(String.format(applicationProperties.getCassandra().getKeyspaceToUse(), keyspace));
+            session.execute(String.format(applicationProperties.getCassandra().getKeyspaceSwitchCql(), keyspace));
 
             CassandraMigration cm = new CassandraMigration();
             cm.setLocations(new String[]{applicationProperties.getCassandra().getMigrationFolder()});

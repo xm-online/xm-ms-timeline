@@ -47,7 +47,7 @@ public class ApplicationProperties {
     public static class Cassandra {
         private String migrationFolder;
         private String keyspaceCreateCql;
-        private String keyspaceToUse;
+        private String keyspaceSwitchCql;
     }
 
     @Getter
