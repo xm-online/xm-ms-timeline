@@ -81,7 +81,7 @@ if (OperatingSystem.current().isWindows()) {
     task classpathJar(type: Jar) {
         inputs.files sourceSets.main.runtimeClasspath
 
-        archiveName = "runboot-classpath.jar"
+        archiveFileName = "runboot-classpath.jar"
         doFirst {
             manifest {
                 def classpath = sourceSets.main.runtimeClasspath.files
@@ -150,7 +150,7 @@ task cucumberTestReport(type: TestReport) {
 
 
 checkstyle {
-    toolVersion = "7.6.1"
+    toolVersion = "${checkstyle_tool_version}"
     ignoreFailures = true
     configFile = rootProject.file('./qa/checkstyle.xml')
 }
@@ -161,7 +161,7 @@ spotbugs {
 
 pmd {
     rulePriority = 3
-    toolVersion = '5.5.4'
+    toolVersion = "${pmd_tool_version}"
     ignoreFailures = true
     ruleSetFiles = files("./qa/pmd.xml")
 }
