@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.icthh.xm.commons.permission.annotation.PrivilegeDescription;
 import com.icthh.xm.ms.timeline.domain.properties.TenantProperties;
 import com.icthh.xm.ms.timeline.service.TenantPropertiesService;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimeLineValidationVM;
@@ -43,6 +44,7 @@ public class TimelinePropertiesResource {
     @SneakyThrows
     @Timed
     @PreAuthorize("hasPermission(null, 'TIMELINE.TENANT.PROPERTIES.VALIDATE')")
+    @PrivilegeDescription("Privilege to validate timeline yml")
     public TimeLineValidationVM validate(@RequestBody String timelineYml) {
         try {
             mapper.readValue(timelineYml, TenantProperties.class);
@@ -61,6 +63,7 @@ public class TimelinePropertiesResource {
     @SneakyThrows
     @Timed
     @PreAuthorize("hasPermission({'timelineYml': #timelineYml}, 'TIMELINE.TENANT.PROPERTIES.UPDATE')")
+    @PrivilegeDescription("Privilege to update timeline yml")
     public ResponseEntity<Void> updateTimelineProperties(@RequestBody String timelineYml) {
         tenantPropertiesService.updateTenantProps(timelineYml);
         return ResponseEntity.ok().build();
