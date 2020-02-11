@@ -360,3 +360,9 @@ bootWar.dependsOn war
 compileJava.dependsOn processResources
 processResources.dependsOn cleanResources, bootBuildInfo
 bootBuildInfo.mustRunAfter cleanResources
+
+task getProjectVersion {
+    doLast {
+        println project.version
+    }
+}
