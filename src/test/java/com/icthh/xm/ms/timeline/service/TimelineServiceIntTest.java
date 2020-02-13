@@ -1,5 +1,6 @@
 package com.icthh.xm.ms.timeline.service;
 
+import com.datastax.driver.core.Cluster;
 import com.icthh.xm.commons.migration.db.tenant.DropSchemaResolver;
 import com.icthh.xm.ms.timeline.TimelineApp;
 import com.icthh.xm.ms.timeline.config.SecurityBeanOverrideConfiguration;
@@ -9,7 +10,9 @@ import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -21,12 +24,19 @@ import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {TimelineApp.class, SecurityBeanOverrideConfiguration.class, DropSchemaResolver.class})
-@TestPropertySource(properties = {"application.timeline-service-impl = rdbms"})
+@TestPropertySource(properties = {"application.timeline-service-impl = rdbms",
+    "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.cassandra.CassandraAutoConfiguration"})
 @ActiveProfiles(JHipsterConstants.SPRING_PROFILE_TEST)
 public class TimelineServiceIntTest {
 
     @Autowired
     private TimelineService timelineService;
+
+    @MockBean
+    private CassandraProperties cassandraProperties;
+
+    @MockBean
+    private Cluster cluster;
 
     private static final Long ID = 1L;
     private static final String MS_NAME = "test_ms_name";

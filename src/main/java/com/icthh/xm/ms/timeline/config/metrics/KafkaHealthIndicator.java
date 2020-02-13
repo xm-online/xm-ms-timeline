@@ -47,7 +47,7 @@ public class KafkaHealthIndicator extends AbstractHealthIndicator {
                        .withDetail("clusterId", describeCluster.clusterId().get())
                        .withDetail("nodeCount", nodes)
                        .build();
-                log.info("Run kafka health check. Result: OK");
+                log.debug("Run kafka health check. Result: OK");
             } catch (InterruptedException | ExecutionException e) {
                 builder.down().withException(e).build();
             }

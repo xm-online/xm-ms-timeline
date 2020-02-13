@@ -6,6 +6,7 @@ import static com.icthh.xm.ms.timeline.config.Constants.LOGGER_IMPL;
 import static com.icthh.xm.ms.timeline.config.Constants.RDBMS_IMPL;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import com.datastax.driver.core.Cluster;
 import com.icthh.xm.commons.config.client.repository.TenantConfigRepository;
 import com.icthh.xm.commons.migration.db.tenant.DropSchemaResolver;
 import com.icthh.xm.commons.migration.db.tenant.provisioner.TenantDatabaseProvisioner;
@@ -81,9 +82,10 @@ public class TenantManagerConfiguration {
 
     @Bean("storageTenantProvisioner")
     @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = CASSANDRA_IMPL, matchIfMissing = true)
-    public TenantProvisioner cassandraTenantProvisioner(CassandraProperties cassandraProperties,
+    public TenantProvisioner cassandraTenantProvisioner(Cluster cluster,
+                                                        CassandraProperties cassandraProperties,
                                                         ApplicationProperties applicationProperties) {
-        return new TenantCassandraStorageProvisioner(cassandraProperties, applicationProperties);
+        return new TenantCassandraStorageProvisioner(cluster, cassandraProperties, applicationProperties);
     }
 
     @Bean("storageTenantProvisioner")

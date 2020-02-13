@@ -1,6 +1,7 @@
 package com.icthh.xm.ms.timeline.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.icthh.xm.commons.permission.annotation.PrivilegeDescription;
 import com.icthh.xm.ms.timeline.service.TimelineService;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 import io.swagger.annotations.Api;
@@ -53,6 +54,7 @@ public class XmTimelineResource {
         @ApiResponse(code = 500, message = "Internal server error")})
     @PreAuthorize("hasPermission({'userKey':#userKey, 'idOrKey': #idOrKey, 'dateFrom': #dateFrom, 'dateTo': #dateTo, "
         + "'operation': #operation}, 'TIMELINE.GET_LIST')")
+    @PrivilegeDescription("Privilege to get all the timelines")
     public ResponseEntity<TimelinePageVM> getTimelines(
         @ApiParam(name = "msName", value = "Microservices name for timeline filter")
         @RequestParam(value = "msName", required = false) String msName,

@@ -2,32 +2,28 @@ package com.icthh.xm.ms.timeline.listeners;
 
 import static com.icthh.xm.ms.timeline.config.Constants.CASSANDRA_IMPL;
 
-import com.builtamont.cassandra.migration.CassandraMigration;
-import com.builtamont.cassandra.migration.api.configuration.ClusterConfiguration;
-import com.builtamont.cassandra.migration.api.configuration.KeyspaceConfiguration;
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.Session;
 import com.icthh.xm.commons.config.client.repository.TenantListRepository;
 import com.icthh.xm.commons.logging.util.MdcUtils;
 import com.icthh.xm.commons.permission.inspector.PrivilegeInspector;
 import com.icthh.xm.ms.timeline.config.ApplicationProperties;
 import com.icthh.xm.ms.timeline.repository.kafka.SystemTopicConsumer;
 import com.icthh.xm.ms.timeline.service.kafka.TimelineEventConsumerHolder;
+import com.icthh.xm.ms.timeline.service.tenant.provisioner.TenantCassandraStorageProvisioner;
 import io.github.jhipster.config.JHipsterConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.listener.MessageListener;
-import org.springframework.kafka.listener.config.ContainerProperties;
+import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -42,15 +38,15 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
     private final ApplicationProperties properties;
     private final TimelineEventConsumerHolder timelineConsumerHolder;
     private final SystemTopicConsumer commandConsumer;
-    private final CassandraProperties cassandraProperties;
     private final Environment env;
     private final KafkaProperties kafkaProperties;
     private final TenantListRepository tenantListRepository;
     private final PrivilegeInspector privilegeInspector;
+    private final TenantCassandraStorageProvisioner tenantCassandraStorageProvisioner;
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
-        if (!env.acceptsProfiles(JHipsterConstants.SPRING_PROFILE_TEST)) {
+        if (!env.acceptsProfiles(Profiles.of(JHipsterConstants.SPRING_PROFILE_TEST))) {
             createKafkaConsumers();
             if (StringUtils.equalsIgnoreCase(properties.getTimelineServiceImpl(), CASSANDRA_IMPL)) {
                 migrateCassandra();
@@ -62,34 +58,17 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
         }
     }
 
-    // TODO review and move to single source of truth with
-    //  com.icthh.xm.ms.timeline.service.tenant.provisioner.TenantCassandraStorageProvisioner.migrateCassandra
     private void migrateCassandra() {
-        ClusterConfiguration clusterConfiguration = new ClusterConfiguration();
-        String[] contactPoints = cassandraProperties.getContactPoints().toArray(new String[0]);
-        clusterConfiguration.setContactpoints(contactPoints);
-        CassandraMigration cm = new CassandraMigration();
-
-        try (Cluster cluster = Cluster.builder().addContactPoints(contactPoints).build();
-             Session session = cluster.connect()) {
-
-            tenantListRepository.getTenants().forEach(tenantName -> {
-                log.info("Start cassandra migration for tenant {}", tenantName);
-                try {
-                    session.execute(String.format(properties.getCassandra().getKeyspaceCreateCql(), tenantName));
-                    KeyspaceConfiguration keyspaceConfiguration = new KeyspaceConfiguration();
-                    keyspaceConfiguration.setName(tenantName.toLowerCase());
-                    keyspaceConfiguration.setClusterConfig(clusterConfiguration);
-                    cm.setLocations(new String[]{properties.getCassandra().getMigrationFolder()});
-                    cm.setKeyspaceConfig(keyspaceConfiguration);
-                    cm.migrate();
-                    log.info("Stop cassandra migration for tenant {}", tenantName);
-                } catch (Exception e) {
-                    log.error("Cassandra migration failed for tenant {}, error: {}",
-                        tenantName, e.getMessage(), e);
-                }
-            });
-        }
+        tenantListRepository.getTenants().forEach(tenantName -> {
+            log.info("Start cassandra migration for tenant {}", tenantName);
+            try {
+                tenantCassandraStorageProvisioner.createCassandraKeyspaceIfNotExist(tenantName);
+                tenantCassandraStorageProvisioner.migrateCassandra(tenantName);
+            } catch (Exception e) {
+                log.error("Cassandra migration failed for tenant {}, error: {}",
+                    tenantName, e.getMessage(), e);
+            }
+        });
     }
 
     private void createKafkaConsumers() {

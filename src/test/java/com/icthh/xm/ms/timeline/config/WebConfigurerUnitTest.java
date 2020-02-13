@@ -10,6 +10,7 @@ import io.undertow.Undertow.Builder;
 import io.undertow.UndertowOptions;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mock.env.MockEnvironment;
@@ -62,6 +63,8 @@ public class WebConfigurerUnitTest {
 
     private JHipsterProperties props;
 
+    private ServerProperties serverProperties;
+
     private MetricRegistry metricRegistry;
 
     @Before
@@ -74,14 +77,15 @@ public class WebConfigurerUnitTest {
 
         env = new MockEnvironment();
         props = new JHipsterProperties();
+        serverProperties = new ServerProperties();
 
-        webConfigurer = new WebConfigurer(env, props);
+        webConfigurer = new WebConfigurer(env, serverProperties, props);
         metricRegistry = new MetricRegistry();
         webConfigurer.setMetricRegistry(metricRegistry);
     }
 
     @Test
-    public void testStartUpProdServletContext() throws ServletException {
+    public void testStartUpProdServletContext() {
         env.setActiveProfiles(JHipsterConstants.SPRING_PROFILE_PRODUCTION);
         webConfigurer.onStartup(servletContext);
 
@@ -92,7 +96,7 @@ public class WebConfigurerUnitTest {
     }
 
     @Test
-    public void testStartUpDevServletContext() throws ServletException {
+    public void testStartUpDevServletContext() {
         env.setActiveProfiles(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT);
         webConfigurer.onStartup(servletContext);
 
@@ -120,7 +124,7 @@ public class WebConfigurerUnitTest {
 
     @Test
     public void testUndertowHttp2Enabled() {
-        props.getHttp().setVersion(JHipsterProperties.Http.Version.V_2_0);
+        serverProperties.getHttp2().setEnabled(true);
         UndertowServletWebServerFactory container = new UndertowServletWebServerFactory();
         webConfigurer.customize(container);
         Builder builder = Undertow.builder();

@@ -17,6 +17,7 @@ import javax.servlet.ServletRegistration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory;
 import org.springframework.boot.web.server.MimeMappings;
 import org.springframework.boot.web.server.WebServerFactory;
@@ -40,12 +41,13 @@ import org.springframework.web.filter.CorsFilter;
 public class WebConfigurer implements ServletContextInitializer, WebServerFactoryCustomizer<WebServerFactory> {
 
     private final Environment env;
+    private final ServerProperties serverProperties;
     private final JHipsterProperties jhipsterProperties;
 
     private MetricRegistry metricRegistry;
 
     @Override
-    public void onStartup(ServletContext servletContext) throws ServletException {
+    public void onStartup(ServletContext servletContext) {
         if (env.getActiveProfiles().length != 0) {
             log.info("Web application configuration, using profiles: {}", (Object[]) env.getActiveProfiles());
         }
@@ -64,11 +66,10 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
         /*
          * Enable HTTP/2 for Undertow - https://twitter.com/ankinson/status/829256167700492288
          * HTTP/2 requires HTTPS, so HTTP requests will fallback to HTTP/1.1.
-         * See the JHipsterProperties class and your application-*.yml configuration files
+         * See the ServerProperties class and your application-*.yml configuration files
          * for more information.
          */
-        if (jhipsterProperties.getHttp().getVersion().equals(JHipsterProperties.Http.Version.V_2_0)
-            && server instanceof UndertowServletWebServerFactory) {
+        if (serverProperties.getHttp2().isEnabled() && server instanceof UndertowServletWebServerFactory) {
 
             ((UndertowServletWebServerFactory) server)
                 .addBuilderCustomizers(builder ->
