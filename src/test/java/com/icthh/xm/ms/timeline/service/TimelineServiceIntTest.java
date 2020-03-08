@@ -5,8 +5,10 @@ import com.icthh.xm.commons.migration.db.tenant.DropSchemaResolver;
 import com.icthh.xm.ms.timeline.TimelineApp;
 import com.icthh.xm.ms.timeline.config.SecurityBeanOverrideConfiguration;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
+import com.icthh.xm.ms.timeline.domain.properties.TenantProperties;
+import com.icthh.xm.ms.timeline.repository.jpa.TimelineJpaRepository;
+import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 import io.github.jhipster.config.JHipsterConstants;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {TimelineApp.class, SecurityBeanOverrideConfiguration.class, DropSchemaResolver.class})
 @TestPropertySource(properties = {"application.timeline-service-impl = rdbms",
@@ -32,8 +37,14 @@ public class TimelineServiceIntTest {
     @Autowired
     private TimelineService timelineService;
 
+    @Autowired
+    private TimelineJpaRepository timelineJpaRepository;
+
     @MockBean
     private CassandraProperties cassandraProperties;
+
+    @MockBean
+    private TenantPropertiesService tenantPropertiesService;
 
     @MockBean
     private Cluster cluster;
@@ -45,12 +56,14 @@ public class TimelineServiceIntTest {
     private static final String OPERATION = "test_operation";
     private static final Long ENTITY_ID_LONG = 111L;
     private static final String ENTITY_KEY = "test_entity_key";
+    private static final String TEST_PAYLOAD = "test payload body";
 
     @Test
     public void testTimelineH2db() {
-        timelineService.insertTimelines(createTestTimeline());
+        mockHidePayloadProp(false);
+        timelineJpaRepository.save(createTestTimeline());
 
-        Assertions.assertThat(timelineService.getTimelines(
+        TimelinePageVM pageVM = timelineService.getTimelines(
             MS_NAME,
             USER_KEY,
             ENTITY_ID_LONG.toString(),
@@ -60,21 +73,24 @@ public class TimelineServiceIntTest {
                 ChronoUnit.DAYS),
             OPERATION,
             null,
+            20);
+        assertThat(pageVM.getTimelines()).hasSize(1);
+        XmTimeline xmTimeline = pageVM.getTimelines().iterator().next();
+        assertThat(xmTimeline.getResponseBody()).isNotNull();
+        assertThat(xmTimeline.getRequestBody()).isNotNull();
+
+        assertThat(timelineService.getTimelines(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
             20)
             .getTimelines()).hasSize(1);
 
-        Assertions.assertThat(timelineService.getTimelines(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            20)
-            .getTimelines()).hasSize(1);
-
-        Assertions.assertThat(timelineService.getTimelines(
+        assertThat(timelineService.getTimelines(
             "WRONG_MS_NAME",
             USER_KEY,
             ENTITY_ID_LONG.toString(),
@@ -84,6 +100,32 @@ public class TimelineServiceIntTest {
             null,
             20)
             .getTimelines()).hasSize(0);
+
+        timelineJpaRepository.deleteAll();
+    }
+
+    @Test
+    public void testTimelineH2dbWithHidePayload() {
+        mockHidePayloadProp(true);
+        timelineJpaRepository.save(createTestTimeline());
+
+        TimelinePageVM pageVM = timelineService.getTimelines(
+            MS_NAME,
+            USER_KEY,
+            ENTITY_ID_LONG.toString(),
+            DATE.minus(1,
+                ChronoUnit.DAYS),
+            DATE.plus(1,
+                ChronoUnit.DAYS),
+            OPERATION,
+            null,
+            20);
+        assertThat(pageVM.getTimelines()).hasSize(1);
+        XmTimeline xmTimeline = pageVM.getTimelines().iterator().next();
+        assertThat(xmTimeline.getResponseBody()).isNull();
+        assertThat(xmTimeline.getRequestBody()).isNull();
+
+        timelineJpaRepository.deleteAll();
     }
 
     private XmTimeline createTestTimeline() {
@@ -96,6 +138,8 @@ public class TimelineServiceIntTest {
         timeline.setEntityKey(ENTITY_KEY);
         timeline.setStartDate(DATE);
         timeline.setOperationName(OPERATION);
+        timeline.setRequestBody(TEST_PAYLOAD);
+        timeline.setResponseBody(TEST_PAYLOAD);
 
         Map<String, String> mapRequestHeaders = new HashMap<>();
         mapRequestHeaders.put("request_header_key_1", "request_header_value_1");
@@ -108,5 +152,13 @@ public class TimelineServiceIntTest {
         timeline.setResponseHeaders(mapResponseHeaders);
 
         return timeline;
+    }
+
+    private void mockHidePayloadProp(Boolean hide) {
+        TenantProperties tenantProperties = new TenantProperties();
+        TenantProperties.Event event = new TenantProperties.Event();
+        event.setHidePayload(hide);
+        tenantProperties.setEvent(event);
+        when(tenantPropertiesService.getTenantProps()).thenReturn(tenantProperties);
     }
 }

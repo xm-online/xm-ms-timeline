@@ -7,12 +7,16 @@ import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
+import com.icthh.xm.ms.timeline.domain.properties.TenantProperties;
 import com.icthh.xm.ms.timeline.repository.jpa.TimelineJpaRepository;
+import com.icthh.xm.ms.timeline.service.TenantPropertiesService;
 import com.icthh.xm.ms.timeline.service.TimelineService;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +29,7 @@ import org.springframework.data.jpa.domain.Specification;
 public class TimelineServiceDbImpl implements TimelineService {
 
     private TimelineJpaRepository timelineRepository;
+    private TenantPropertiesService tenantPropertiesService;
 
     private static final String FIELD_START_DATE = "startDate";
     private static final String FIELD_MS_NAME = "msName";
@@ -80,7 +85,41 @@ public class TimelineServiceDbImpl implements TimelineService {
             ? timelineRepository.findAll(specificationsForFiltering, pageRequest)
             : timelineRepository.findAll(pageRequest);
 
-        return new TimelinePageVM(timelines.getContent(),
-            timelines.hasNext() ? String.valueOf(page + ONE.intValue()) : null);
+        List<XmTimeline> content = filterResult(timelines);
+
+        return new TimelinePageVM(content, timelines.hasNext() ? String.valueOf(page + ONE.intValue()) : null);
+    }
+
+    /**
+     * TODO temporary solution, best way to handle this case: redesign of database.
+     * All @Lob fields should be moved to separate tables.
+     * Than Lazy load + NamedEntityGraph should be used
+     *
+     * @param timelines result of timeline search query
+     * @return filtered result
+     */
+    private List<XmTimeline> filterResult(Page<XmTimeline> timelines) {
+        List<XmTimeline> content = timelines.getContent();
+
+        if (hidePayload()) {
+            content.forEach(xmTimeline -> {
+                xmTimeline.setResponseBody(null);
+                xmTimeline.setRequestBody(null);
+            });
+        }
+
+        return content;
+    }
+
+    /**
+     * Hide response body if hide-payload parameter set to true.
+     *
+     * @return true if passes payload condition
+     */
+    private boolean hidePayload() {
+        return Optional.ofNullable(tenantPropertiesService.getTenantProps())
+            .map(TenantProperties::getEvent)
+            .map(TenantProperties.Event::getHidePayload)
+            .orElse(Boolean.TRUE);
     }
 }
