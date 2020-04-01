@@ -6,6 +6,9 @@ services:
             - xm2
         env_file:
             - ./env/timeline-app.env
+        secrets:
+            - source: TIMELINE_SPRING_DATASOURCE_PASSWORD
+              target: SPRING_DATASOURCE_PASSWORD
         deploy:
             mode: replicated
             replicas: 1
@@ -20,3 +23,6 @@ services:
 networks:
     xm2:
         driver: overlay
+secrets:    
+    TIMELINE_SPRING_DATASOURCE_PASSWORD:
+        external: true
