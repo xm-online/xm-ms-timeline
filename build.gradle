@@ -53,7 +53,6 @@ dependencyManagement {
 defaultTasks 'bootRun'
 
 group = 'com.icthh.xm.ms.timeline'
-version = '0.0.1-SNAPSHOT'
 
 description = ''
 
@@ -172,7 +171,6 @@ if (project.hasProperty('zipkin')) {
 }
 
 group = 'com.icthh.xm.ms.timeline'
-version = '0.0.1-SNAPSHOT'
 
 description = ''
 
