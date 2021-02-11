@@ -2,6 +2,7 @@ package com.icthh.xm.ms.timeline.service.logger;
 
 import static com.icthh.xm.ms.timeline.config.Constants.LOGGER_IMPL_CAPACITY;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
+import static org.apache.commons.lang.StringUtils.removeStart;
 
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.domain.ext.IdOrKey;
@@ -30,10 +31,24 @@ public class TimelineServiceLoggerImpl implements TimelineService {
                                        String operation,
                                        String next,
                                        int limit) {
+        return getTimelines(msName, userKey, idOrKey, dateFrom, dateTo, operation, next, limit);
+    }
+
+    @Override
+    public TimelinePageVM getTimelines(String msName,
+                                       String userKey,
+                                       String idOrKey,
+                                       Instant dateFrom,
+                                       Instant dateTo,
+                                       String operation,
+                                       String next,
+                                       int limit,
+                                       boolean withHeaders) {
 
         // filter and return timelines from memory
 
         List<XmTimeline> filteredTimelines = timelines.stream()
+            .map(t -> withHeaders ? t : t.withRequestHeaders(null).withResponseHeaders(null))
             .filter(t -> stringFilter(msName, t.getMsName()))
             .filter(t -> stringFilter(userKey, t.getUserKey()))
             .filter(t -> stringFilter(operation, t.getOperationName()))

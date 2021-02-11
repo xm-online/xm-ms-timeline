@@ -51,6 +51,20 @@ public class TimelineServiceDbImpl implements TimelineService {
                                        String operation,
                                        String next,
                                        int limit) {
+        return getTimelines(msName, userKey, idOrKey, dateFrom, dateTo, operation, next, limit, true);
+    }
+
+
+    @Override
+    public TimelinePageVM getTimelines(String msName,
+                                       String userKey,
+                                       String idOrKey,
+                                       Instant dateFrom,
+                                       Instant dateTo,
+                                       String operation,
+                                       String next,
+                                       int limit,
+                                       boolean withHeaders) {
         Specification<XmTimeline> specificationsForFiltering = null;
 
         if (StringUtils.isNotBlank(msName)) {
@@ -78,12 +92,23 @@ public class TimelineServiceDbImpl implements TimelineService {
                 combineEqualSpecifications(specificationsForFiltering, idOrKey, FIELD_ENTITY_ID);
         }
 
+
         int page = next != null ? Integer.parseInt(next) : ZERO.intValue();
         PageRequest pageRequest = PageRequest.of(page, limit, Sort.Direction.DESC, "startDate");
 
-        Page<XmTimeline> timelines = specificationsForFiltering != null
-            ? timelineRepository.findAll(specificationsForFiltering, pageRequest)
-            : timelineRepository.findAll(pageRequest);
+        Page<XmTimeline> timelines;
+
+        if (withHeaders) {
+            timelines = specificationsForFiltering != null
+                ? timelineRepository.findAll(specificationsForFiltering, pageRequest)
+                : timelineRepository.findAll(pageRequest);
+
+        } else {
+                return null;
+//            timelines = specificationsForFiltering != null
+//                ? timelineRepository.findAllWithoutHeaders(specificationsForFiltering, pageRequest)
+//                : timelineRepository.findAllWithoutHeaders(pageRequest);
+        }
 
         List<XmTimeline> content = filterResult(timelines);
 

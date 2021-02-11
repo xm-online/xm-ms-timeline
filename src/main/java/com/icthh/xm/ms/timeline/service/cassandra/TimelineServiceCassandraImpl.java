@@ -47,7 +47,8 @@ public class TimelineServiceCassandraImpl implements TimelineService {
                                        Instant dateTo,
                                        String operation,
                                        String next,
-                                       int limit) {
+                                       int limit,
+                                       boolean withHeaders) {
 
         if (idOrKey != null) {
             IdOrKey idOrKeyObj = IdOrKey.of(idOrKey);
@@ -57,18 +58,43 @@ public class TimelineServiceCassandraImpl implements TimelineService {
                     TenantContextUtils.getRequiredTenantKeyValue(tenantContextHolder));
 
             if (StringUtils.isNotBlank(operation)) {
-                return timelineRepository.getTimelinesByEntityAndOpAndDate(
-                    id, operation, dateFrom, dateTo, next, limit, msName);
+                return cutHeadersIfNecessary(
+                    timelineRepository.getTimelinesByEntityAndOpAndDate(
+                        id, operation, dateFrom, dateTo, next, limit, msName), withHeaders);
             }
-            return timelineRepository.getTimelinesByEntityAndDate(id, dateFrom, dateTo, next, limit, msName);
+            return cutHeadersIfNecessary(
+                timelineRepository.getTimelinesByEntityAndDate(id, dateFrom, dateTo, next, limit, msName), withHeaders);
 
         }
 
         if (StringUtils.isNotBlank(operation)) {
-            return timelineRepository.getTimelinesByUserKeyAndOpAndDate(userKey, operation,
-                dateFrom, dateTo, next, limit, msName);
+            return cutHeadersIfNecessary(
+                timelineRepository.getTimelinesByUserKeyAndOpAndDate(userKey, operation,
+                    dateFrom, dateTo, next, limit, msName), withHeaders);
         }
-        return timelineRepository.getTimelinesByUserKeyAndDate(userKey, dateFrom, dateTo, next, limit, msName);
+        return cutHeadersIfNecessary(timelineRepository.getTimelinesByUserKeyAndDate(userKey, dateFrom, dateTo, next, limit, msName), withHeaders);
+    }
+
+    TimelinePageVM cutHeadersIfNecessary(TimelinePageVM pageVM, boolean withHeaders) {
+        if (!withHeaders) {
+            pageVM.getTimelines().forEach(xmTimeline -> {
+                xmTimeline.setRequestHeaders(null);
+                xmTimeline.setResponseHeaders(null);
+            });
+        }
+        return pageVM;
+    }
+
+    @Override
+    public TimelinePageVM getTimelines(String msName,
+                                       String userKey,
+                                       String idOrKey,
+                                       Instant dateFrom,
+                                       Instant dateTo,
+                                       String operation,
+                                       String next,
+                                       int limit) {
+        return getTimelines(msName, userKey, idOrKey, dateFrom, dateTo, operation, next, limit, true);
     }
 
     /**
