@@ -24,7 +24,7 @@ public interface TimelineService {
                                 String operation,
                                 String next,
                                 int limit,
-                                boolean withoutHeaders);
+                                boolean withHeaders);
 
     void insertTimelines(XmTimeline xmTimeline);
 }
