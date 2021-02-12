@@ -153,6 +153,31 @@ public class TimelineServiceIntTest {
         timelineJpaRepository.deleteAll();
     }
 
+    @Test
+    public void testTimelineH2dbWithHeaders() {
+        mockHidePayloadProp(true);
+        timelineJpaRepository.save(createTestTimeline());
+
+        TimelinePageVM pageVM = timelineService.getTimelines(
+            MS_NAME,
+            USER_KEY,
+            ENTITY_ID_LONG.toString(),
+            DATE.minus(1,
+                ChronoUnit.DAYS),
+            DATE.plus(1,
+                ChronoUnit.DAYS),
+            OPERATION,
+            null,
+            20,
+            true);
+        assertThat(pageVM.getTimelines()).hasSize(1);
+        XmTimeline xmTimeline = pageVM.getTimelines().iterator().next();
+        assertThat(xmTimeline.getRequestHeaders()).isNotNull();
+        assertThat(xmTimeline.getResponseHeaders()).isNotNull();
+
+        timelineJpaRepository.deleteAll();
+    }
+
     private XmTimeline createTestTimeline() {
         XmTimeline timeline = new XmTimeline();
 
