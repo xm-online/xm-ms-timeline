@@ -143,7 +143,8 @@ public class TimelineServiceIntTest {
                 ChronoUnit.DAYS),
             OPERATION,
             null,
-            20);
+            20,
+            false);
         assertThat(pageVM.getTimelines()).hasSize(1);
         XmTimeline xmTimeline = pageVM.getTimelines().iterator().next();
         assertThat(xmTimeline.getRequestHeaders()).isNull();
