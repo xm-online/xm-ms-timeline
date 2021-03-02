@@ -58,21 +58,21 @@ public class TimelineServiceCassandraImpl implements TimelineService {
                     TenantContextUtils.getRequiredTenantKeyValue(tenantContextHolder));
 
             if (StringUtils.isNotBlank(operation)) {
-                return cutHeadersIfNecessary(
-                    timelineRepository.getTimelinesByEntityAndOpAndDate(
-                        id, operation, dateFrom, dateTo, next, limit, msName), withHeaders);
+                TimelinePageVM timelinesPage = timelineRepository.getTimelinesByEntityAndOpAndDate(
+                    id, operation, dateFrom, dateTo, next, limit, msName);
+                return cutHeadersIfNecessary(timelinesPage, withHeaders);
             }
-            return cutHeadersIfNecessary(
-                timelineRepository.getTimelinesByEntityAndDate(id, dateFrom, dateTo, next, limit, msName), withHeaders);
+            TimelinePageVM timelinePage = timelineRepository.getTimelinesByEntityAndDate(id, dateFrom, dateTo, next, limit, msName);
+            return cutHeadersIfNecessary(timelinePage, withHeaders);
 
         }
 
         if (StringUtils.isNotBlank(operation)) {
-            return cutHeadersIfNecessary(
-                timelineRepository.getTimelinesByUserKeyAndOpAndDate(userKey, operation,
-                    dateFrom, dateTo, next, limit, msName), withHeaders);
+            TimelinePageVM timelinePage = timelineRepository.getTimelinesByUserKeyAndOpAndDate(userKey, operation, dateFrom, dateTo, next, limit, msName);
+            return cutHeadersIfNecessary(timelinePage, withHeaders);
         }
-        return cutHeadersIfNecessary(timelineRepository.getTimelinesByUserKeyAndDate(userKey, dateFrom, dateTo, next, limit, msName), withHeaders);
+        TimelinePageVM timelinePage = timelineRepository.getTimelinesByUserKeyAndDate(userKey, dateFrom, dateTo, next, limit, msName);
+        return cutHeadersIfNecessary(timelinePage, withHeaders);
     }
 
     TimelinePageVM cutHeadersIfNecessary(TimelinePageVM pageVM, boolean withHeaders) {

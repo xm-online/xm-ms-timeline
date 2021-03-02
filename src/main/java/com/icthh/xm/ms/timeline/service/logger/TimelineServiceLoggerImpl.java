@@ -2,7 +2,6 @@ package com.icthh.xm.ms.timeline.service.logger;
 
 import static com.icthh.xm.ms.timeline.config.Constants.LOGGER_IMPL_CAPACITY;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
-import static org.apache.commons.lang.StringUtils.removeStart;
 
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.domain.ext.IdOrKey;
@@ -31,7 +30,7 @@ public class TimelineServiceLoggerImpl implements TimelineService {
                                        String operation,
                                        String next,
                                        int limit) {
-        return getTimelines(msName, userKey, idOrKey, dateFrom, dateTo, operation, next, limit);
+        return getTimelines(msName, userKey, idOrKey, dateFrom, dateTo, operation, next, limit, true);
     }
 
     @Override

@@ -73,7 +73,7 @@ public class XmTimelineResource {
         @ApiParam(name = "limit", value = "Limit of timelines on page", required = true)
         @RequestParam(value = "limit") int limit,
         @ApiParam(name = "includeHeaders", value = "Should request/response headers be returned", required = true, defaultValue = "true")
-        @RequestParam(value = "includeHeaders") boolean includeHeaders
+        @RequestParam(value = "includeHeaders", required = false) boolean includeHeaders
     ) {
 
         return new ResponseEntity<>(
