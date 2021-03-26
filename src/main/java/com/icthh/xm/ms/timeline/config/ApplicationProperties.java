@@ -3,6 +3,7 @@ package com.icthh.xm.ms.timeline.config;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.ArrayList;
@@ -65,6 +66,7 @@ public class ApplicationProperties {
 
     @Data
     public static class GeneralFilters {
+        @Value("${general-filters.include-entity-type-keys:null}")
         private Set<String> includeEntityTypeKeys = null;
     }
 
