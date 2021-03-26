@@ -20,6 +20,7 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -69,8 +70,10 @@ public class TimelineEventConsumer {
         return (xmTimeline) -> {
             List<String> excludeMethods = tenantPropertiesService.getTenantProps().getFilter().getExcludeMethod();
 
-            if (applicationProperties.getGeneralFilters() != null) {
-                if (applicationProperties.getGeneralFilters().getIncludeEntityTypeKeys() != null) {
+            if (applicationProperties.getGeneralFilters() != null && StringUtils.isNotBlank(applicationProperties.getGeneralFilters().getIncludeEntityTypeKeys())) {
+                List<String> includedTypeKeys = Arrays.asList(applicationProperties.getGeneralFilters().getIncludeEntityTypeKeys().split(","));
+
+                if (!includedTypeKeys.contains(xmTimeline.getEntityTypeKey())) {
                     log.debug(
                         "Message with [rid={},operationUrl={},msName={},httpStatus={}] was excluded by entity type key: [{}]",
                         xmTimeline.getRid(),

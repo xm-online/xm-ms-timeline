@@ -66,8 +66,7 @@ public class ApplicationProperties {
 
     @Data
     public static class GeneralFilters {
-        @Value("${general-filters.include-entity-type-keys:null}")
-        private Set<String> includeEntityTypeKeys = null;
+        private String includeEntityTypeKeys;
     }
 
 }
