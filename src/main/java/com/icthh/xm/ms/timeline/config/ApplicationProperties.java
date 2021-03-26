@@ -66,6 +66,7 @@ public class ApplicationProperties {
     @Data
     public static class GeneralFilters {
         private Set<String> includeEntityTypeKeys;
+        private String someProperty;
     }
 
 }
