@@ -20,7 +20,6 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -39,7 +38,7 @@ public class TimelineEventConsumer {
      *
      * @param message the timeline event message
      */
-    @Retryable(maxAttemptsExpression = "${application.retry.max-attempts}",
+    @Retryable (maxAttemptsExpression = "${application.retry.max-attempts}",
         backoff = @Backoff(delayExpression = "${application.retry.delay}",
             multiplierExpression = "${application.retry.multiplier}"))
     public void consumeEvent(ConsumerRecord<String, String> message) {
@@ -56,8 +55,8 @@ public class TimelineEventConsumer {
                 }
                 MdcUtils.putRid(rid + ":" + xmTimeline.getTenant());
                 tenantContextHolder.getPrivilegedContext()
-                    .execute(TenantContextUtils.buildTenant(xmTimeline.getTenant()),
-                        buildExclusionAwareTimelineAdder(), xmTimeline);
+                                   .execute(TenantContextUtils.buildTenant(xmTimeline.getTenant()),
+                                            buildExclusionAwareTimelineAdder(), xmTimeline);
             } catch (IOException e) {
                 log.error("Timeline message has incorrect format: '{}'", message.value(), e);
             }
