@@ -10,7 +10,4 @@ import java.util.List;
 public class Filter {
     @JsonProperty("excludeMethod")
     private List<String> excludeMethod = new ArrayList<>();
-
-    @JsonProperty("includeEntityTypeKeys")
-    private List<String> includeEntityTypeKeys;
 }
