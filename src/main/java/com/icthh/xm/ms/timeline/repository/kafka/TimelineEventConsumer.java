@@ -70,10 +70,10 @@ public class TimelineEventConsumer {
         return (xmTimeline) -> {
             List<String> excludeMethods = tenantPropertiesService.getTenantProps().getFilter().getExcludeMethod();
 
-            if (applicationProperties.getGeneralFilters() != null && StringUtils.isNotBlank(applicationProperties.getGeneralFilters().getIncludeEntityTypeKeys())) {
-                List<String> includedTypeKeys = Arrays.asList(applicationProperties.getGeneralFilters().getIncludeEntityTypeKeys().split(","));
+            if (applicationProperties.getGeneralFilters() != null && applicationProperties.getGeneralFilters().getIncludeEntityTypeRegex() != null) {
+                String regex = applicationProperties.getGeneralFilters().getIncludeEntityTypeRegex();
 
-                if (!includedTypeKeys.contains(xmTimeline.getEntityTypeKey())) {
+                if (!xmTimeline.getEntityTypeKey().matches(regex)) {
                     log.debug(
                         "Message with [rid={},operationUrl={},msName={},httpStatus={}] was excluded by entity type key: [{}]",
                         xmTimeline.getRid(),

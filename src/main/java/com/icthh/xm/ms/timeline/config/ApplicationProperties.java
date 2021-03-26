@@ -8,6 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -66,7 +67,7 @@ public class ApplicationProperties {
 
     @Data
     public static class GeneralFilters {
-        private String includeEntityTypeKeys;
+        private String includeEntityTypeRegex;
     }
 
 }
