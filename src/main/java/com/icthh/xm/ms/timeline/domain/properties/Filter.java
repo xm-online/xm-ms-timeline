@@ -12,5 +12,5 @@ public class Filter {
     private List<String> excludeMethod = new ArrayList<>();
 
     @JsonProperty("includeEntityTypeKeys")
-    private List<String> includeEntityTypeKeys = new ArrayList<>();
+    private List<String> includeEntityTypeKeys;
 }
