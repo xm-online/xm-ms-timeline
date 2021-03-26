@@ -7,6 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Properties specific to JHipster.
@@ -26,7 +27,7 @@ public class ApplicationProperties {
     private String tenantPropertiesName;
     private String timelineServiceImpl;
     private String dbSchemaSuffix;
-    private GeneralFilters generalFilters;
+    private GeneralFilters generalFilters = new GeneralFilters();
 
     private final KafkaHealthCheck kafkaHealthCheck = new KafkaHealthCheck();
 
@@ -63,8 +64,8 @@ public class ApplicationProperties {
     }
 
     @Data
-    public class GeneralFilters {
-        private List<String> includeEntityTypeKeys;
+    public static class GeneralFilters {
+        private Set<String> includeEntityTypeKeys;
     }
 
 }
