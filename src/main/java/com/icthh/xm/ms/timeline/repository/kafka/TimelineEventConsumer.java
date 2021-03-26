@@ -66,6 +66,19 @@ public class TimelineEventConsumer {
     private Consumer<XmTimeline> buildExclusionAwareTimelineAdder() {
         return (xmTimeline) -> {
             List<String> excludeMethods = tenantPropertiesService.getTenantProps().getFilter().getExcludeMethod();
+            List<String> includedEntityTypeKeys = tenantPropertiesService.getTenantProps().getFilter().getIncludeEntityTypeKeys();
+
+            if (includedEntityTypeKeys != null && !includedEntityTypeKeys.contains(xmTimeline.getEntityTypeKey())) {
+                log.debug(
+                    "Message with [rid={},operationUrl={},msName={},httpStatus={}] was excluded by entity type key: [{}]",
+                    xmTimeline.getRid(),
+                    xmTimeline.getOperationUrl(),
+                    xmTimeline.getMsName(),
+                    xmTimeline.getHttpStatusCode(),
+                    xmTimeline.getEntityTypeKey());
+                return;
+            }
+
             if (CollectionUtils.isNotEmpty(excludeMethods) && excludeMethods.contains(xmTimeline.getHttpMethod())) {
                 log.debug(
                     "Message with [rid={},operationUrl={},msName={},httpStatus={}] was excluded by http method: [{}]",
