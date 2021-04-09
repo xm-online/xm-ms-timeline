@@ -94,7 +94,6 @@ public class TimelineServiceDbImpl implements TimelineService {
                 combineEqualSpecifications(specificationsForFiltering, idOrKey, FIELD_ENTITY_ID);
         }
 
-
         int page = next != null ? Integer.parseInt(next) : ZERO.intValue();
         PageRequest pageRequest = PageRequest.of(page, limit, Sort.Direction.DESC, "startDate");
 
