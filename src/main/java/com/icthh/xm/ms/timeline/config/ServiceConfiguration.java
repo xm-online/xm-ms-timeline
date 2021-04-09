@@ -7,7 +7,6 @@ import static com.icthh.xm.ms.timeline.config.Constants.RDBMS_IMPL;
 import com.icthh.xm.commons.tenant.TenantContextHolder;
 import com.icthh.xm.ms.timeline.repository.cassandra.EntityMappingRepository;
 import com.icthh.xm.ms.timeline.repository.cassandra.TimelineCassandraRepository;
-import com.icthh.xm.ms.timeline.repository.jpa.LazyLoadTimelineJpaRepository;
 import com.icthh.xm.ms.timeline.repository.jpa.TimelineJpaRepository;
 import com.icthh.xm.ms.timeline.service.TenantPropertiesService;
 import com.icthh.xm.ms.timeline.service.TimelineService;
@@ -42,10 +41,8 @@ public class ServiceConfiguration {
 
     @Bean(name = "timelineService")
     @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = RDBMS_IMPL)
-    public TimelineService dbTimelineService(
-        TimelineJpaRepository timelineJpaRepository,
-        LazyLoadTimelineJpaRepository lazyLoadTimelineJpaRepository) {
-        return new TimelineServiceDbImpl(lazyLoadTimelineJpaRepository, timelineJpaRepository, tenantPropertiesService);
+    public TimelineService dbTimelineService(TimelineJpaRepository timelineJpaRepository) {
+        return new TimelineServiceDbImpl(timelineJpaRepository, tenantPropertiesService);
     }
 
     @Bean(name = "timelineService")

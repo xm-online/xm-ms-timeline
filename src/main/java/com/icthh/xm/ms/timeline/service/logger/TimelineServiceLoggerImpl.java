@@ -30,24 +30,10 @@ public class TimelineServiceLoggerImpl implements TimelineService {
                                        String operation,
                                        String next,
                                        int limit) {
-        return getTimelines(msName, userKey, idOrKey, dateFrom, dateTo, operation, next, limit, true);
-    }
-
-    @Override
-    public TimelinePageVM getTimelines(String msName,
-                                       String userKey,
-                                       String idOrKey,
-                                       Instant dateFrom,
-                                       Instant dateTo,
-                                       String operation,
-                                       String next,
-                                       int limit,
-                                       boolean withHeaders) {
 
         // filter and return timelines from memory
 
         List<XmTimeline> filteredTimelines = timelines.stream()
-            .map(t -> withHeaders ? t : t.withRequestHeaders(null).withResponseHeaders(null))
             .filter(t -> stringFilter(msName, t.getMsName()))
             .filter(t -> stringFilter(userKey, t.getUserKey()))
             .filter(t -> stringFilter(operation, t.getOperationName()))

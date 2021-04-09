@@ -203,5 +203,3 @@ application:
         keyspace-create-cql: "CREATE KEYSPACE IF NOT EXISTS %s WITH REPLICATION = {'class':'SimpleStrategy','replication_factor':3} AND DURABLE_WRITES = true;"
         keyspace-switch-cql: "USE %s"
     db-schema-suffix:
-    general-filters:
-        include-entity-type-regex: .*

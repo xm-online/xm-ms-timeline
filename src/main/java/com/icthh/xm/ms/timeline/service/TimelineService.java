@@ -16,15 +16,5 @@ public interface TimelineService {
                                 String next,
                                 int limit);
 
-    TimelinePageVM getTimelines(String msName,
-                                String userKey,
-                                String idOrKey,
-                                Instant dateFrom,
-                                Instant dateTo,
-                                String operation,
-                                String next,
-                                int limit,
-                                boolean withHeaders);
-
     void insertTimelines(XmTimeline xmTimeline);
 }

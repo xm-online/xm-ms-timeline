@@ -8,7 +8,6 @@ import static java.math.BigInteger.ZERO;
 
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.domain.properties.TenantProperties;
-import com.icthh.xm.ms.timeline.repository.jpa.LazyLoadTimelineJpaRepository;
 import com.icthh.xm.ms.timeline.repository.jpa.TimelineJpaRepository;
 import com.icthh.xm.ms.timeline.service.TenantPropertiesService;
 import com.icthh.xm.ms.timeline.service.TimelineService;
@@ -29,7 +28,6 @@ import org.springframework.data.jpa.domain.Specification;
 @AllArgsConstructor
 public class TimelineServiceDbImpl implements TimelineService {
 
-    private LazyLoadTimelineJpaRepository lazyLoadTimelineJpaRepository;
     private TimelineJpaRepository timelineRepository;
     private TenantPropertiesService tenantPropertiesService;
 
@@ -53,20 +51,6 @@ public class TimelineServiceDbImpl implements TimelineService {
                                        String operation,
                                        String next,
                                        int limit) {
-        return getTimelines(msName, userKey, idOrKey, dateFrom, dateTo, operation, next, limit, true);
-    }
-
-
-    @Override
-    public TimelinePageVM getTimelines(String msName,
-                                       String userKey,
-                                       String idOrKey,
-                                       Instant dateFrom,
-                                       Instant dateTo,
-                                       String operation,
-                                       String next,
-                                       int limit,
-                                       boolean withHeaders) {
         Specification<XmTimeline> specificationsForFiltering = null;
 
         if (StringUtils.isNotBlank(msName)) {
@@ -94,36 +78,16 @@ public class TimelineServiceDbImpl implements TimelineService {
                 combineEqualSpecifications(specificationsForFiltering, idOrKey, FIELD_ENTITY_ID);
         }
 
-
         int page = next != null ? Integer.parseInt(next) : ZERO.intValue();
         PageRequest pageRequest = PageRequest.of(page, limit, Sort.Direction.DESC, "startDate");
 
-        Page<XmTimeline> timelines;
+        Page<XmTimeline> timelines = specificationsForFiltering != null
+            ? timelineRepository.findAll(specificationsForFiltering, pageRequest)
+            : timelineRepository.findAll(pageRequest);
 
-        if (withHeaders) {
-            timelines = specificationsForFiltering != null
-                ? timelineRepository.findAll(specificationsForFiltering, pageRequest)
-                : timelineRepository.findAll(pageRequest);
-
-        } else {
-            timelines = specificationsForFiltering != null
-                ? lazyLoadTimelineJpaRepository.findAll(specificationsForFiltering, pageRequest)
-                : lazyLoadTimelineJpaRepository.findAll(pageRequest);
-        }
-
-        List<XmTimeline> content = cutHeadersIfNecessary(filterResult(timelines), withHeaders);
+        List<XmTimeline> content = filterResult(timelines);
 
         return new TimelinePageVM(content, timelines.hasNext() ? String.valueOf(page + ONE.intValue()) : null);
-    }
-
-    List<XmTimeline> cutHeadersIfNecessary(List<XmTimeline> timelines, boolean withHeaders) {
-        if (!withHeaders) {
-            timelines.forEach(xmTimeline -> {
-                xmTimeline.setRequestHeaders(null);
-                xmTimeline.setResponseHeaders(null);
-            });
-        }
-        return timelines;
     }
 
     /**
