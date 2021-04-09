@@ -71,11 +71,13 @@ public class XmTimelineResource {
         @ApiParam(name = "next", value = "Next value for definition next page in cassandra")
         @RequestParam(value = "next", required = false) String next,
         @ApiParam(name = "limit", value = "Limit of timelines on page", required = true)
-        @RequestParam(value = "limit") int limit
+        @RequestParam(value = "limit") int limit,
+        @ApiParam(name = "includeHeaders", value = "Should request/response headers be returned", required = true, defaultValue = "true")
+        @RequestParam(value = "includeHeaders", required = false) boolean includeHeaders
     ) {
 
         return new ResponseEntity<>(
-            service.getTimelines(msName, userKey, idOrKey, dateFrom, dateTo, operation, next, limit), HttpStatus.OK);
+            service.getTimelines(msName, userKey, idOrKey, dateFrom, dateTo, operation, next, limit, includeHeaders), HttpStatus.OK);
     }
 
 }
