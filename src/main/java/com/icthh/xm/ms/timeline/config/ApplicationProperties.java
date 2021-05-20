@@ -1,11 +1,12 @@
 package com.icthh.xm.ms.timeline.config;
 
-import java.util.ArrayList;
-import java.util.List;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Properties specific to JHipster.
@@ -25,6 +26,7 @@ public class ApplicationProperties {
     private String tenantPropertiesName;
     private String timelineServiceImpl;
     private String dbSchemaSuffix;
+    private GeneralFilters generalFilters = new GeneralFilters();
 
     private final KafkaHealthCheck kafkaHealthCheck = new KafkaHealthCheck();
 
@@ -59,4 +61,10 @@ public class ApplicationProperties {
         private int sessionTimeout;
         private int connectionTimeout;
     }
+
+    @Data
+    public static class GeneralFilters {
+        private String includeEntityTypeRegex;
+    }
+
 }

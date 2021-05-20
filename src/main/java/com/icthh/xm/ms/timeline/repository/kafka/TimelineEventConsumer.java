@@ -6,6 +6,7 @@ import com.icthh.xm.commons.logging.aop.IgnoreLogginAspect;
 import com.icthh.xm.commons.logging.util.MdcUtils;
 import com.icthh.xm.commons.tenant.TenantContextHolder;
 import com.icthh.xm.commons.tenant.TenantContextUtils;
+import com.icthh.xm.ms.timeline.config.ApplicationProperties;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.service.TenantPropertiesService;
 import com.icthh.xm.ms.timeline.service.TimelineService;
@@ -30,6 +31,7 @@ public class TimelineEventConsumer {
     private final TimelineService timelineService;
     private final TenantPropertiesService tenantPropertiesService;
     private final TenantContextHolder tenantContextHolder;
+    private final ApplicationProperties applicationProperties;
 
     /**
      * Consume timeline event message.
@@ -66,6 +68,22 @@ public class TimelineEventConsumer {
     private Consumer<XmTimeline> buildExclusionAwareTimelineAdder() {
         return (xmTimeline) -> {
             List<String> excludeMethods = tenantPropertiesService.getTenantProps().getFilter().getExcludeMethod();
+
+            if (applicationProperties.getGeneralFilters() != null && applicationProperties.getGeneralFilters().getIncludeEntityTypeRegex() != null) {
+                String regex = applicationProperties.getGeneralFilters().getIncludeEntityTypeRegex();
+
+                if (!xmTimeline.getEntityTypeKey().matches(regex)) {
+                    log.debug(
+                        "Message with [rid={},operationUrl={},msName={},httpStatus={}] was excluded by entity type key: [{}]",
+                        xmTimeline.getRid(),
+                        xmTimeline.getOperationUrl(),
+                        xmTimeline.getMsName(),
+                        xmTimeline.getHttpStatusCode(),
+                        xmTimeline.getEntityTypeKey());
+                    return;
+                }
+            }
+
             if (CollectionUtils.isNotEmpty(excludeMethods) && excludeMethods.contains(xmTimeline.getHttpMethod())) {
                 log.debug(
                     "Message with [rid={},operationUrl={},msName={},httpStatus={}] was excluded by http method: [{}]",
