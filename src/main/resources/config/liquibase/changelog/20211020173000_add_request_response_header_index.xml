@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="20211020173000" author="dtsarenko">
+        <createIndex tableName="timeline_request_headers" indexName="idx_timeline_request_headers_timeline_id">
+            <column name="timeline_id" />
+        </createIndex>
+
+        <createIndex tableName="timeline_response_headers" indexName="idx_timeline_response_headers_timeline_id">
+            <column name="timeline_id" />
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
