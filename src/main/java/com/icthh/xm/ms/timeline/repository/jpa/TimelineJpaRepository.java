@@ -19,7 +19,7 @@ public interface TimelineJpaRepository extends JpaRepository<XmTimeline, Long>, 
     /**
      * Used 2 sql queries to avoid pagination in memory:
      * HHH000104: firstResult/maxResults specified with collection fetch; applying in memory!
-     * more detail: https://vladmihalcea.com/fix-hibernate-hhh000104-entity-fetch-pagination-warning-message/
+     * more details: https://vladmihalcea.com/fix-hibernate-hhh000104-entity-fetch-pagination-warning-message/
      */
     default Page<XmTimeline> findAllWithHeaders(Specification spec, Pageable pageable) {
         Page<XmTimeline> timelines = findAll(spec, pageable);
