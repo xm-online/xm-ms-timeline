@@ -24,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Transactional;
 
 @AllArgsConstructor
 public class TimelineServiceDbImpl implements TimelineService {
@@ -42,6 +43,7 @@ public class TimelineServiceDbImpl implements TimelineService {
         timelineRepository.save(timeline);
     }
 
+    @Transactional
     @Override
     public TimelinePageVM getTimelines(String msName,
                                        String userKey,
@@ -82,8 +84,8 @@ public class TimelineServiceDbImpl implements TimelineService {
         PageRequest pageRequest = PageRequest.of(page, limit, Sort.Direction.DESC, "startDate");
 
         Page<XmTimeline> timelines = specificationsForFiltering != null
-            ? timelineRepository.findAll(specificationsForFiltering, pageRequest)
-            : timelineRepository.findAll(pageRequest);
+            ? timelineRepository.findAllWithHeaders(specificationsForFiltering, pageRequest)
+            : timelineRepository.findAllWithHeaders(pageRequest);
 
         List<XmTimeline> content = filterResult(timelines);
 
