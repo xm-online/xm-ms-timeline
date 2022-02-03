@@ -9,6 +9,7 @@ addons:
       secure: gofjsVj712X09z1KLzurW3PFLLZ6djkr7PiWeZc5gXKu9StP1g3jQfAeGVT9VD/ZIxm9Kh5uk9Tr+EMifTda7b0K/WayRXB0JyuJiSf0o3ZYBd84vfgGrCT0PLb0Y5zYoqsSFM1BPyDYGtKQbEmrrnFMcEFCdrKgzfDYHt9RiAM5TSp+7pg54J2nx0Udumc+9G/8HdEnHPLSnfpd3A+l7w+YlX1JOdpwDlCEoS5NVAR/FE9DVi1hegKmXXscY/3XlhADQKZp49ggTOIpg2f8s3GXdIHynUw0MSn1kvR9yNxCPZD8XnJ1tgo5Dl0a8E5ZyMs0/pXIgk+lQlVxFpBy0lGZi3d1PzwGPOOWY556qWf8PjEeqEKMl2FXkcTWi3Y2WPsQc0fbRWtxR3B/SKWlophbxA44yjaEIPorah1PxGC5Xq2EOMFKvM7+8lY/a2EwAUwwdT5Hkw8imYbmwThnF+LD46VzFeQK1uI8CGV+jVYwgPrukfFCMSbjO5jHudh1fr4H31Gu/RxIRGvhH8KQ2xwINX6ogBb6UKs7K1PhLfNAs907E2y++NOKFsf5/GpCCdn7m74HAWRDG/OmfvOSuYxiZWZ3FAYNnwSXTo+82ZMRs+zPIJ9FC7I2LfJxS7uYsSzdfbCqvCocbtmOkxx0H9h3vqqVJilG4pKnAsMKRaI=
     branches:
     - master
+    - main
 
 script:
   - set -e
@@ -18,15 +19,13 @@ script:
   - export DOCKER_REPO=$(echo  -n $TRAVIS_REPO_SLUG | sed -e 's/^xm-online\//xmonline\//g')
   - export IMAGE_BRANCH=$(echo -n $TRAVIS_BRANCH | sed -e 's/\//-/g')
   - export PROJECT_VERSION="$IMAGE_BRANCH"
-  - if [ "$IMAGE_BRANCH" == "master" ]; 
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; 
     then 
         PROJECT_VERSION=$(./gradlew -q  getProjectVersion);
         export SONAR_PK=$(echo  -n $TRAVIS_REPO_SLUG | sed -e 's/\//:/g');
         ./gradlew -x test --no-daemon sonarqube -Dsonar.projectKey="$SONAR_PK"
         -Dsonar.projectName="$SONAR_PK" -Dsonar.java.binaries="." -Dsonar.projectVersion="$IMAGE_BRANCH";
         TAGS="$PROJECT_VERSION $PROJECT_VERSION-$TRAVIS_BUILD_NUMBER $(echo $PROJECT_VERSION | awk -F '.' '{printf $1"."$2" "$1}') latest";
-    else
-        TAGS="$IMAGE_BRANCH $IMAGE_BRANCH-$TRAVIS_BUILD_NUMBER";
     fi
   - docker build -t app-docker-img --label commit_id="$TRAVIS_COMMIT" --label version="$PROJECT_VERSION" --label build_number="$TRAVIS_BUILD_NUMBER" --label build_url="$TRAVIS_BUILD_WEB_URL" --label git_url="$TRAVIS_REPO_SLUG" --label commit_message="$TRAVIS_COMMIT_MESSAGE" -f src/main/docker/Dockerfile .
   - for TAG in $TAGS;
@@ -47,3 +46,7 @@ notifications:
   slack:
     rooms:
       secure: F+tGaP9dDehjGRsqw7jNOpM0J573y+Gip1k9gVO0PEXw9yuWKFOm9ZQDPqgi/LAI6b1t2wOLfulaRRQY6Kn3HcnYSA41SFbG+ESF6Q3E4gt56hc2T3s+RsK0bXyC82a50G6PLtwTq+90yQoftHr2CQRGt4CNFfJ52CbhY5FaqM+Sm58zKs1BiFw9h81B1QVEvAAjPbp5HU08VsZHQiT+Lj0dshM19c9fJ9ZgNIrh2L/JDugzJ9A68leEHEmnioaFk5Od1I3b+inVIXjh1AN1SF0m7i0Pvj3e5teTgrEpa6vDBzFE1croxuaf20OK/u6fdov3fZdxCZdUwvbaLZL4g+IKyqxFt0f0WvwuEs4HhusvWBMZJILBuGdT3OiZwviQH06nhQvmG6Lu/QqK5yXlL6dtZOIyVskN9wi9mWvcYMnx5jHkqzD9gCvDBdramHDe5OqxTHwp/mtcLQa32NbgxcgVt/XuDeGlxIXT9IlsRp8mKOIEKIOFU5PaHB8j9tvdeKu34bU+xRD1O8EhjAPKuJ+6t0efEMeeb3nAHEKkc/7bo+97bgfxtWIIkQvxDNO25VE53DbdRx2XGm7c50Lv+jWDurphsBNBBcV8XX9S2i+bckFAsY+bB5GVRYZetkw1LTrO5FfIzV+GXQ2Z9D3zttS6HZgDEZ2eohhkXgaKzeM=
+branches:
+      only:
+        - master
+        - main
