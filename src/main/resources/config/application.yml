@@ -105,13 +105,22 @@ spring:
         jpa:
          repositories:
             enabled: false
+    jpa:
+        hibernate:
+            properties:
+                show_sql: true
+                format_sql: true
+
     autoconfigure:
         exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
 
     liquibase:
         enabled: false
         change-log: classpath:config/liquibase/master.xml
-
+logging:
+    level:
+        org:
+            hibernate: info
 security:
     oauth2:
         resource:
