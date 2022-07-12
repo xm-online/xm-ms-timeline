@@ -106,8 +106,7 @@ spring:
          repositories:
             enabled: false
     jpa:
-        hibernate:
-            properties:
+        properties:
                 show_sql: true
                 format_sql: true
 
@@ -120,6 +119,7 @@ spring:
 logging:
     level:
         org:
+            jpa: info
             hibernate: info
 security:
     oauth2:
