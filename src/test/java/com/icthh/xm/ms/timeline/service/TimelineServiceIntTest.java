@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -73,7 +74,8 @@ public class TimelineServiceIntTest {
                 ChronoUnit.DAYS),
             OPERATION,
             null,
-            20);
+            20,
+            Sort.by(Sort.Direction.DESC, "startDate"));
         assertThat(pageVM.getTimelines()).hasSize(1);
         XmTimeline xmTimeline = pageVM.getTimelines().iterator().next();
         assertThat(xmTimeline.getResponseBody()).isNotNull();
@@ -87,7 +89,8 @@ public class TimelineServiceIntTest {
             null,
             null,
             null,
-            20)
+            20,
+                Sort.by(Sort.Direction.DESC, "startDate"))
             .getTimelines()).hasSize(1);
 
         assertThat(timelineService.getTimelines(
@@ -98,7 +101,8 @@ public class TimelineServiceIntTest {
             DATE,
             OPERATION,
             null,
-            20)
+            20,
+                Sort.by(Sort.Direction.DESC, "startDate"))
             .getTimelines()).hasSize(0);
 
         timelineJpaRepository.deleteAll();
@@ -119,7 +123,8 @@ public class TimelineServiceIntTest {
                 ChronoUnit.DAYS),
             OPERATION,
             null,
-            20);
+            20,
+            Sort.by(Sort.Direction.DESC, "startDate"));
         assertThat(pageVM.getTimelines()).hasSize(1);
         XmTimeline xmTimeline = pageVM.getTimelines().iterator().next();
         assertThat(xmTimeline.getResponseBody()).isNull();
