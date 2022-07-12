@@ -52,7 +52,8 @@ public class TimelineServiceDbImpl implements TimelineService {
                                        Instant dateTo,
                                        String operation,
                                        String next,
-                                       int limit) {
+                                       int limit,
+                                       Sort sort) {
         Specification<XmTimeline> specificationsForFiltering = null;
 
         if (StringUtils.isNotBlank(msName)) {
@@ -81,7 +82,7 @@ public class TimelineServiceDbImpl implements TimelineService {
         }
 
         int page = next != null ? Integer.parseInt(next) : ZERO.intValue();
-        PageRequest pageRequest = PageRequest.of(page, limit, Sort.Direction.DESC, "startDate");
+        PageRequest pageRequest = PageRequest.of(page, limit, sort);
 
         Page<XmTimeline> timelines = specificationsForFiltering != null
             ? timelineRepository.findAllWithHeaders(specificationsForFiltering, pageRequest)

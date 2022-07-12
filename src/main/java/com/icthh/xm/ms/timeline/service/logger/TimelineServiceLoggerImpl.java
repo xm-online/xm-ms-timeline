@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.data.domain.Sort;
 
 @Slf4j
 public class TimelineServiceLoggerImpl implements TimelineService {
@@ -29,7 +30,8 @@ public class TimelineServiceLoggerImpl implements TimelineService {
                                        Instant dateTo,
                                        String operation,
                                        String next,
-                                       int limit) {
+                                       int limit,
+                                       Sort sort) {
 
         // filter and return timelines from memory
 

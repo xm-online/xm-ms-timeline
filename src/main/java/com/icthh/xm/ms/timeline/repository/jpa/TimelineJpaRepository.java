@@ -23,17 +23,17 @@ public interface TimelineJpaRepository extends JpaRepository<XmTimeline, Long>, 
      */
     default Page<XmTimeline> findAllWithHeaders(Specification spec, Pageable pageable) {
         Page<XmTimeline> timelines = findAll(spec, pageable);
-        List<XmTimeline> timeLinesWithHeaders = findByIdIn(timelines.map(XmTimeline::getId).getContent());
+        List<XmTimeline> timeLinesWithHeaders = findByIdIn(timelines.map(XmTimeline::getId).getContent(), pageable);
         return new PageImpl<>(timeLinesWithHeaders, pageable, timelines.getTotalElements());
     }
 
     default Page<XmTimeline> findAllWithHeaders(Pageable pageable) {
         Page<XmTimeline> timelines = findAll(pageable);
-        List<XmTimeline> timeLinesWithHeaders = findByIdIn(timelines.map(XmTimeline::getId).getContent());
+        List<XmTimeline> timeLinesWithHeaders = findByIdIn(timelines.map(XmTimeline::getId).getContent(), pageable);
         return new PageImpl<>(timeLinesWithHeaders, pageable, timelines.getTotalElements());
     }
 
     @EntityGraph(value = "withHeaders", type = EntityGraph.EntityGraphType.LOAD)
-    List<XmTimeline> findByIdIn(List<Long> userIds);
+    List<XmTimeline> findByIdIn(List<Long> userIds, Pageable pageable);
 
 }
