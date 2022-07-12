@@ -106,7 +106,9 @@ spring:
          repositories:
             enabled: false
     jpa:
+        show-sql: true
         properties:
+            hibernate:
                 show_sql: true
                 format_sql: true
 
@@ -118,9 +120,9 @@ spring:
         change-log: classpath:config/liquibase/master.xml
 logging:
     level:
-        org:
-            jpa: info
-            hibernate: info
+        org.hibernate.SQL: DEBUG
+        org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
 security:
     oauth2:
         resource:
