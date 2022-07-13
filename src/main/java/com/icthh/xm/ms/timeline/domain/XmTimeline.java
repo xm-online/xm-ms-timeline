@@ -37,35 +37,44 @@ import lombok.ToString;
                   })
 public class XmTimeline implements Serializable {
 
+    @Sorted
     @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Sorted
     @Column(name = "rid")
     private String rid;
 
+    @Sorted
     @Column(name = "login")
     private String login;
 
+    @Sorted
     @Column(name = "user_key")
     private String userKey;
 
     @Column(name = "tenant")
     private String tenant;
 
+    @Sorted
     @Column(name = "ms_name")
     private String msName;
 
+    @Sorted
     @Column(name = "operation_name")
     private String operationName;
 
+    @Sorted
     @Column(name = "entity_id")
     private Long entityId;
 
+    @Sorted
     @Column(name = "entity_key")
     private String entityKey;
 
+    @Sorted
     @Column(name = "entity_type_key")
     private String entityTypeKey;
 
@@ -81,6 +90,7 @@ public class XmTimeline implements Serializable {
     @Column(name = "http_status_code")
     private Integer httpStatusCode;
 
+    @Sorted
     @Column(name = "start_date")
     @Convert(converter = InstantConverter.class)
     private Instant startDate;
@@ -99,6 +109,7 @@ public class XmTimeline implements Serializable {
     @Column(name = "response_length")
     private Long responseLength;
 
+    @Sorted
     @Column(name = "channel_type")
     private String channelType;
 
