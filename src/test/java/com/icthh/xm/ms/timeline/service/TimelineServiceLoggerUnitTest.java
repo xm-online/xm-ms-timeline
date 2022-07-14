@@ -37,7 +37,8 @@ public class TimelineServiceLoggerUnitTest {
             DATE,
             OPERATION,
             null,
-            0)
+            0,
+                null)
             .getTimelines()).hasSize(1);
 
         Assertions.assertThat(timelineService.getTimelines(
@@ -48,7 +49,8 @@ public class TimelineServiceLoggerUnitTest {
             null,
             null,
             null,
-            0)
+            0,
+                null)
             .getTimelines()).hasSize(1);
 
         Assertions.assertThat(timelineService.getTimelines(
@@ -59,7 +61,8 @@ public class TimelineServiceLoggerUnitTest {
             DATE,
             OPERATION,
             null,
-            0)
+            0,
+                null)
             .getTimelines()).hasSize(0);
     }
 

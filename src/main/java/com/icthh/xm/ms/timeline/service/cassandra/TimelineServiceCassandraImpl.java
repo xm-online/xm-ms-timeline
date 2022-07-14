@@ -12,6 +12,7 @@ import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 import java.time.Instant;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Sort;
 
 public class TimelineServiceCassandraImpl implements TimelineService {
     private TimelineCassandraRepository timelineRepository;
@@ -47,7 +48,8 @@ public class TimelineServiceCassandraImpl implements TimelineService {
                                        Instant dateTo,
                                        String operation,
                                        String next,
-                                       int limit) {
+                                       int limit,
+                                       Sort sort) {
 
         if (idOrKey != null) {
             IdOrKey idOrKeyObj = IdOrKey.of(idOrKey);

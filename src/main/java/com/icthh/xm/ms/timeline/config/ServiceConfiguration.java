@@ -8,6 +8,7 @@ import com.icthh.xm.commons.tenant.TenantContextHolder;
 import com.icthh.xm.ms.timeline.repository.cassandra.EntityMappingRepository;
 import com.icthh.xm.ms.timeline.repository.cassandra.TimelineCassandraRepository;
 import com.icthh.xm.ms.timeline.repository.jpa.TimelineJpaRepository;
+import com.icthh.xm.ms.timeline.service.SortProcessor;
 import com.icthh.xm.ms.timeline.service.TenantPropertiesService;
 import com.icthh.xm.ms.timeline.service.TimelineService;
 import com.icthh.xm.ms.timeline.service.cassandra.TimelineServiceCassandraImpl;
@@ -24,6 +25,7 @@ import org.springframework.context.annotation.Configuration;
 public class ServiceConfiguration {
 
     private final TenantPropertiesService tenantPropertiesService;
+    private final SortProcessor sortProcessor;
 
     @Bean(name = "timelineService")
     @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = CASSANDRA_IMPL)
@@ -42,7 +44,7 @@ public class ServiceConfiguration {
     @Bean(name = "timelineService")
     @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = RDBMS_IMPL)
     public TimelineService dbTimelineService(TimelineJpaRepository timelineJpaRepository) {
-        return new TimelineServiceDbImpl(timelineJpaRepository, tenantPropertiesService);
+        return new TimelineServiceDbImpl(timelineJpaRepository, tenantPropertiesService, sortProcessor);
     }
 
     @Bean(name = "timelineService")

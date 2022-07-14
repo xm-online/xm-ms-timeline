@@ -2,6 +2,7 @@ package com.icthh.xm.ms.timeline.service;
 
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
+import org.springframework.data.domain.Sort;
 
 import java.time.Instant;
 
@@ -14,7 +15,8 @@ public interface TimelineService {
                                 Instant dateTo,
                                 String operation,
                                 String next,
-                                int limit);
+                                int limit,
+                                Sort sort);
 
     void insertTimelines(XmTimeline xmTimeline);
 }

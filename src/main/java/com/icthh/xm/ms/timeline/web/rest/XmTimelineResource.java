@@ -10,6 +10,8 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,6 +45,7 @@ public class XmTimelineResource {
      * @param dateFrom the date from for timeline filter
      * @param dateTo the date to for timeline filter
      * @param next the next value for definition next page in cassandra
+     * @param sort sorting the list of xmTimelines
      * @param limit the limit of timelines on page
      * @return the ResponseEntity with status 200 (OK) and the list of xmTimelines and next page code in body.
      */
@@ -70,12 +73,14 @@ public class XmTimelineResource {
         @RequestParam(value = "operation", required = false) String operation,
         @ApiParam(name = "next", value = "Next value for definition next page in cassandra")
         @RequestParam(value = "next", required = false) String next,
+        @ApiParam(name = "sort", value = "Sorting declared fields")
+        @SortDefault(sort = "startDate", direction = Sort.Direction.DESC) Sort sort,
         @ApiParam(name = "limit", value = "Limit of timelines on page", required = true)
         @RequestParam(value = "limit") int limit
     ) {
 
         return new ResponseEntity<>(
-            service.getTimelines(msName, userKey, idOrKey, dateFrom, dateTo, operation, next, limit), HttpStatus.OK);
+            service.getTimelines(msName, userKey, idOrKey, dateFrom, dateTo, operation, next, limit, sort), HttpStatus.OK);
     }
 
 }

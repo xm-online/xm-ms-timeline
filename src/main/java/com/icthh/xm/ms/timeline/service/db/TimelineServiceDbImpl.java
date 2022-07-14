@@ -1,23 +1,12 @@
 package com.icthh.xm.ms.timeline.service.db;
 
-import static com.icthh.xm.ms.timeline.service.db.JpaSpecUtil.combineEqualSpecifications;
-import static com.icthh.xm.ms.timeline.service.db.JpaSpecUtil.combineGreaterThanOrEqualToSpecifications;
-import static com.icthh.xm.ms.timeline.service.db.JpaSpecUtil.combineLessThanOrEqualToSpecifications;
-import static java.math.BigInteger.ONE;
-import static java.math.BigInteger.ZERO;
-
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.domain.properties.TenantProperties;
 import com.icthh.xm.ms.timeline.repository.jpa.TimelineJpaRepository;
+import com.icthh.xm.ms.timeline.service.SortProcessor;
 import com.icthh.xm.ms.timeline.service.TenantPropertiesService;
 import com.icthh.xm.ms.timeline.service.TimelineService;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
-
-import java.time.Instant;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -26,11 +15,22 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import static com.icthh.xm.ms.timeline.service.db.JpaSpecUtil.*;
+import static java.math.BigInteger.ONE;
+import static java.math.BigInteger.ZERO;
+import static org.springframework.data.domain.Sort.Direction.DESC;
+
 @AllArgsConstructor
 public class TimelineServiceDbImpl implements TimelineService {
 
     private TimelineJpaRepository timelineRepository;
     private TenantPropertiesService tenantPropertiesService;
+    private SortProcessor sortProcessor;
 
     private static final String FIELD_START_DATE = "startDate";
     private static final String FIELD_MS_NAME = "msName";
@@ -52,7 +52,8 @@ public class TimelineServiceDbImpl implements TimelineService {
                                        Instant dateTo,
                                        String operation,
                                        String next,
-                                       int limit) {
+                                       int limit,
+                                       Sort sort) {
         Specification<XmTimeline> specificationsForFiltering = null;
 
         if (StringUtils.isNotBlank(msName)) {
@@ -81,7 +82,11 @@ public class TimelineServiceDbImpl implements TimelineService {
         }
 
         int page = next != null ? Integer.parseInt(next) : ZERO.intValue();
-        PageRequest pageRequest = PageRequest.of(page, limit, Sort.Direction.DESC, "startDate");
+        PageRequest pageRequest = PageRequest.of(
+            page,
+            limit,
+            sortProcessor.findValidOrDefault(XmTimeline.class, sort, Sort.by(DESC, FIELD_START_DATE))
+        );
 
         Page<XmTimeline> timelines = specificationsForFiltering != null
             ? timelineRepository.findAllWithHeaders(specificationsForFiltering, pageRequest)

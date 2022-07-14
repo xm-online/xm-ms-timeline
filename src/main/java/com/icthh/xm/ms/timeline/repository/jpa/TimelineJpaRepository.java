@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,17 +24,17 @@ public interface TimelineJpaRepository extends JpaRepository<XmTimeline, Long>, 
      */
     default Page<XmTimeline> findAllWithHeaders(Specification spec, Pageable pageable) {
         Page<XmTimeline> timelines = findAll(spec, pageable);
-        List<XmTimeline> timeLinesWithHeaders = findByIdIn(timelines.map(XmTimeline::getId).getContent());
+        List<XmTimeline> timeLinesWithHeaders = findByIdIn(timelines.map(XmTimeline::getId).getContent(), pageable.getSort());
         return new PageImpl<>(timeLinesWithHeaders, pageable, timelines.getTotalElements());
     }
 
     default Page<XmTimeline> findAllWithHeaders(Pageable pageable) {
         Page<XmTimeline> timelines = findAll(pageable);
-        List<XmTimeline> timeLinesWithHeaders = findByIdIn(timelines.map(XmTimeline::getId).getContent());
+        List<XmTimeline> timeLinesWithHeaders = findByIdIn(timelines.map(XmTimeline::getId).getContent(), pageable.getSort());
         return new PageImpl<>(timeLinesWithHeaders, pageable, timelines.getTotalElements());
     }
 
     @EntityGraph(value = "withHeaders", type = EntityGraph.EntityGraphType.LOAD)
-    List<XmTimeline> findByIdIn(List<Long> userIds);
+    List<XmTimeline> findByIdIn(List<Long> userIds, Sort sort);
 
 }

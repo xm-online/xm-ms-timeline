@@ -56,7 +56,7 @@ public class TimelineServiceCassandraUnitTest {
     public void testGetByUserKey() {
         when(timelineRepository.getTimelinesByUserKeyAndDate(USER_KEY, DATE, DATE, null, LIMIT, null))
             .thenReturn(new TimelinePageVM(new ArrayList<>(), null));
-        timelineService.getTimelines(null, USER_KEY, null, DATE, DATE, null, null, LIMIT);
+        timelineService.getTimelines(null, USER_KEY, null, DATE, DATE, null, null, LIMIT, null);
         verify(timelineRepository).getTimelinesByUserKeyAndDate(USER_KEY, DATE, DATE, null, LIMIT, null);
     }
 
@@ -64,7 +64,7 @@ public class TimelineServiceCassandraUnitTest {
     public void testGetByUserKeyAndMsName() {
         when(timelineRepository.getTimelinesByUserKeyAndDate(USER_KEY, DATE, DATE, null, LIMIT, null))
             .thenReturn(new TimelinePageVM(new ArrayList<>(), null));
-        timelineService.getTimelines(MS_NAME, USER_KEY, null, DATE, DATE, null, null, LIMIT);
+        timelineService.getTimelines(MS_NAME, USER_KEY, null, DATE, DATE, null, null, LIMIT, null);
         verify(timelineRepository).getTimelinesByUserKeyAndDate(USER_KEY, DATE, DATE, null, LIMIT, MS_NAME);
 
     }
@@ -73,7 +73,7 @@ public class TimelineServiceCassandraUnitTest {
     public void testGetByEntityId() {
         when(timelineRepository.getTimelinesByEntityAndDate(ENTITY_ID_LONG, DATE, DATE, null, LIMIT, null))
             .thenReturn(new TimelinePageVM(new ArrayList<>(), null));
-        timelineService.getTimelines(null, null, ENTITY_ID, DATE, DATE, null, null, LIMIT);
+        timelineService.getTimelines(null, null, ENTITY_ID, DATE, DATE, null, null, LIMIT, null);
         verify(timelineRepository).getTimelinesByEntityAndDate(ENTITY_ID_LONG, DATE, DATE, null, LIMIT, null);
 
     }
@@ -82,7 +82,7 @@ public class TimelineServiceCassandraUnitTest {
     public void testGetByEntityIdAndOp() {
         when(timelineRepository.getTimelinesByEntityAndOpAndDate(ENTITY_ID_LONG, OPERATION, DATE, DATE, null, LIMIT, null))
             .thenReturn(new TimelinePageVM(new ArrayList<>(), null));
-        timelineService.getTimelines(null, null, ENTITY_ID, DATE, DATE, OPERATION, null, LIMIT);
+        timelineService.getTimelines(null, null, ENTITY_ID, DATE, DATE, OPERATION, null, LIMIT, null);
         verify(timelineRepository).getTimelinesByEntityAndOpAndDate(ENTITY_ID_LONG, OPERATION, DATE, DATE, null, LIMIT, null);
     }
 
@@ -92,7 +92,7 @@ public class TimelineServiceCassandraUnitTest {
             .thenReturn(ENTITY_ID_LONG);
         when(timelineRepository.getTimelinesByEntityAndDate(ENTITY_ID_LONG, DATE, DATE, null, LIMIT, null))
             .thenReturn(new TimelinePageVM(new ArrayList<>(), null));
-        timelineService.getTimelines(null, null, ENTITY_KEY, DATE, DATE, null, null, LIMIT);
+        timelineService.getTimelines(null, null, ENTITY_KEY, DATE, DATE, null, null, LIMIT, null);
         verify(timelineRepository).getTimelinesByEntityAndDate(ENTITY_ID_LONG, DATE, DATE, null, LIMIT, null);
         verify(entityMappingRepository).getIdByKey(eq(ENTITY_KEY), anyString());
     }
@@ -103,7 +103,7 @@ public class TimelineServiceCassandraUnitTest {
             .thenReturn(ENTITY_ID_LONG);
         when(timelineRepository.getTimelinesByEntityAndOpAndDate(ENTITY_ID_LONG, OPERATION, DATE, DATE, null, LIMIT, null))
             .thenReturn(new TimelinePageVM(new ArrayList<>(), null));
-        timelineService.getTimelines(null, null, ENTITY_KEY, DATE, DATE, OPERATION, null, LIMIT);
+        timelineService.getTimelines(null, null, ENTITY_KEY, DATE, DATE, OPERATION, null, LIMIT, null);
         verify(timelineRepository).getTimelinesByEntityAndOpAndDate(ENTITY_ID_LONG, OPERATION, DATE, DATE, null, LIMIT, null);
         verify(entityMappingRepository).getIdByKey(eq(ENTITY_KEY), anyString());
     }
