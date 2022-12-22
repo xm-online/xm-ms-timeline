@@ -40,7 +40,7 @@ import static com.icthh.xm.commons.config.domain.Configuration.of;
 import static com.icthh.xm.ms.timeline.config.Constants.CASSANDRA_IMPL;
 import static com.icthh.xm.ms.timeline.config.Constants.LOGGER_IMPL;
 import static com.icthh.xm.ms.timeline.config.Constants.RDBMS_IMPL;
-import static com.icthh.xm.ms.timeline.config.Constants.TOPIC_CONFIG_DB_EVENT_FORMAT;
+import static com.icthh.xm.ms.timeline.config.Constants.TOPIC_CONFIG_EVENT_FORMAT;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
@@ -127,8 +127,11 @@ public class TenantManagerConfiguration {
         Assert.notNull(topics, String.format("Unable to obtain mapping metadata for %s!", TopicConfig.class));
 
         String tenantKey = tenantContextHolder.getTenantKey();
-        String topicName = String.format(TOPIC_CONFIG_DB_EVENT_FORMAT, tenantKey.toLowerCase());
-        topics.forEach(topic -> topic.setTopicName(topicName));
+
+        topics.forEach(topic -> {
+            String topicName = String.format(TOPIC_CONFIG_EVENT_FORMAT, tenantKey.toLowerCase(), topic.getKey());
+            topic.setTopicName(topicName);
+        });
         return mapper.writeValueAsString(topicConsumersSpec);
     }
 }

@@ -39,6 +39,6 @@ public final class Constants {
     public static final String RDBMS_IMPL = "rdbms";
 
     public static final String TOPIC_CONFIG_PATH = "config/specs/default-topics-spec.yml";
-    public static final String TOPIC_CONFIG_DB_EVENT_FORMAT = "event.%s.db";
+    public static final String TOPIC_CONFIG_EVENT_FORMAT = "event.%s.%s";
 
 }

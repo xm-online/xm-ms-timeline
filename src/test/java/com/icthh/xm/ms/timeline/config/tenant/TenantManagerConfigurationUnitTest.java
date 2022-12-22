@@ -93,24 +93,36 @@ public class TenantManagerConfigurationUnitTest {
     private String getTopicContent() {
         return "---\n" +
             "topics:\n" +
-            "  - key: db\n" +
-            "    topicName: event.tenantName.db\n" +
-            "    retriesCount: 4\n" +
-            "    typeKey: event.db\n" +
-            "    backOffPeriod: 1\n" +
-            "    groupId: timeline\n" +
-            "  - key: web\n" +
-            "    topicName: event.tenantName.web\n" +
-            "    retriesCount: 4\n" +
-            "    typeKey: event.web\n" +
-            "    backOffPeriod: 1\n" +
-            "    groupId: timeline\n" +
-            "  - key: lep\n" +
-            "    topicName: event.tenantName.lep\n" +
-            "    retriesCount: 4\n" +
-            "    typeKey: event.lep\n" +
-            "    backOffPeriod: 1\n" +
-            "    groupId: timeline\n";
+            "- key: \"db\"\n" +
+            "  typeKey: \"event.db\"\n" +
+            "  topicName: \"event.newtenant.db\"\n" +
+            "  retriesCount: 4\n" +
+            "  backOffPeriod: 1\n" +
+            "  deadLetterQueue: null\n" +
+            "  groupId: \"timeline\"\n" +
+            "  logBody: true\n" +
+            "  maxPollInterval: null\n" +
+            "  isolationLevel: null\n" +
+            "- key: \"web\"\n" +
+            "  typeKey: \"event.web\"\n" +
+            "  topicName: \"event.newtenant.web\"\n" +
+            "  retriesCount: 4\n" +
+            "  backOffPeriod: 1\n" +
+            "  deadLetterQueue: null\n" +
+            "  groupId: \"timeline\"\n" +
+            "  logBody: true\n" +
+            "  maxPollInterval: null\n" +
+            "  isolationLevel: null\n" +
+            "- key: \"lep\"\n" +
+            "  typeKey: \"event.lep\"\n" +
+            "  topicName: \"event.newtenant.lep\"\n" +
+            "  retriesCount: 4\n" +
+            "  backOffPeriod: 1\n" +
+            "  deadLetterQueue: null\n" +
+            "  groupId: \"timeline\"\n" +
+            "  logBody: true\n" +
+            "  maxPollInterval: null\n" +
+            "  isolationLevel: null\n";
     }
 
     @Test
