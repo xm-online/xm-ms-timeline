@@ -8,6 +8,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.datastax.driver.core.Cluster;
 import com.icthh.xm.commons.config.client.repository.TenantConfigRepository;
+import com.icthh.xm.commons.migration.db.liquibase.LiquibaseRunner;
 import com.icthh.xm.commons.migration.db.tenant.DropSchemaResolver;
 import com.icthh.xm.commons.migration.db.tenant.provisioner.TenantDatabaseProvisioner;
 import com.icthh.xm.commons.tenantendpoint.TenantManager;
@@ -28,13 +29,14 @@ import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.ResourceLoader;
 
 import javax.sql.DataSource;
 
 @Slf4j
-@org.springframework.context.annotation.Configuration
+@Configuration
 public class TenantManagerConfiguration {
 
     @Bean
@@ -65,6 +67,9 @@ public class TenantManagerConfiguration {
             .configuration(of().path(applicationProperties.getTenantPropertiesPathPattern())
                                .content(readResource(Constants.DEFAULT_CONFIG_PATH))
                                .build())
+            .configuration(of().path(applicationProperties.getDomainEventPathPattern())
+                                .content(readResource(Constants.DEFAULT_DOMAIN_EVENT_PATH))
+                                .build())
             .build();
 
         log.info("Configured tenant config provisioner: {}", provisioner);
@@ -75,9 +80,9 @@ public class TenantManagerConfiguration {
     @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = RDBMS_IMPL)
     public TenantProvisioner rdbmsTenantProvisioner(DataSource dataSource,
                                                     LiquibaseProperties liquibaseProperties,
-                                                    ResourceLoader resourceLoader,
-                                                    DropSchemaResolver dropSchemaResolver) {
-        return new TenantDatabaseProvisioner(dataSource, liquibaseProperties, resourceLoader, dropSchemaResolver);
+                                                    DropSchemaResolver schemaDropResolver,
+                                                    LiquibaseRunner liquibaseRunner) {
+        return new TenantDatabaseProvisioner(dataSource, liquibaseProperties, schemaDropResolver, liquibaseRunner);
     }
 
     @Bean("storageTenantProvisioner")

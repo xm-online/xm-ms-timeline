@@ -1,0 +1,11 @@
+enabled: false
+sources:
+    DB:
+        enabled: false
+        transport: outboxTransport
+    WEB:
+        enabled: false
+        transport: outboxTransport
+    LEP:
+        enabled: false
+        transport: outboxTransport

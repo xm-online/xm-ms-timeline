@@ -59,6 +59,8 @@ public class TenantManagerConfigurationUnitTest {
 
         when(applicationProperties.getTenantPropertiesPathPattern()).thenReturn(
             "/config/tenants/{tenantName}/timeline/timeline.yml");
+        when(applicationProperties.getDomainEventPathPattern()).thenReturn(
+            "/config/tenants/{tenantName}/timeline/domainevent.yml");
 
         configProvisioner = spy(configuration.tenantConfigProvisioner(tenantConfigRepository, applicationProperties));
 
@@ -76,6 +78,7 @@ public class TenantManagerConfigurationUnitTest {
 
         List<Configuration> configurations = new ArrayList<>();
         configurations.add(Configuration.of().path("/config/tenants/{tenantName}/timeline/timeline.yml").build());
+        configurations.add(Configuration.of().path("/config/tenants/{tenantName}/timeline/domainevent.yml").build());
 
         verify(tenantConfigRepository).createConfigsFullPath(eq("newtenant"), eq(configurations));
 

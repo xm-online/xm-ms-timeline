@@ -31,6 +31,7 @@ public final class Constants {
     public static final String EVENT_TENANT = "tenant";
 
     public static final String DEFAULT_CONFIG_PATH = "config/specs/default-timeline.yml";
+    public static final String DEFAULT_DOMAIN_EVENT_PATH = "config/specs/default-domain-event.yml";
     public static final String CHANGE_LOG_PATH = "classpath:config/liquibase/master.xml";
 
     public static final String CASSANDRA_IMPL = "cassandra";

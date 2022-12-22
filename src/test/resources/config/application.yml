@@ -124,4 +124,6 @@ application:
     tenant-properties-name: timeline.yml
     kafka-system-queue: system_queue
     timeline-service-impl: cassandra
+    lep:
+        tenant-script-storage: XM_MS_CONFIG
 

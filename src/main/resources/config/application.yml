@@ -181,6 +181,8 @@ application:
         connectionTimeout: 1000
     tenant-properties-path-pattern: /config/tenants/{tenantName}/timeline/${application.tenant-properties-name}
     tenant-properties-name: timeline.yml
+    domain-event-path-pattern: /config/tenants/{tenantName}/timeline/${application.domain-event-name}
+    domain-event-name: domainevent.yml
     tenant-ignored-path-list: /v2/api-docs, /api/profile-info, /swagger-resources/configuration/ui, /management/health
     kafka-system-topic: system_topic
     kafka-system-queue: system_queue
@@ -203,3 +205,5 @@ application:
         keyspace-create-cql: "CREATE KEYSPACE IF NOT EXISTS %s WITH REPLICATION = {'class':'SimpleStrategy','replication_factor':3} AND DURABLE_WRITES = true;"
         keyspace-switch-cql: "USE %s"
     db-schema-suffix:
+    lep:
+        tenant-script-storage: XM_MS_CONFIG

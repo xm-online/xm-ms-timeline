@@ -2,6 +2,8 @@ package com.icthh.xm.ms.timeline.config;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.icthh.xm.commons.lep.TenantScriptStorage;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,12 +21,15 @@ public class ApplicationProperties {
     private Cassandra cassandra = new Cassandra();
     private List<String> tenantIgnoredPathList = new ArrayList<>();
     private Zookeeper zookeeper = new Zookeeper();
+    private final Lep lep = new Lep();
     private String kafkaSystemTopic;
     private String kafkaSystemQueue;
     private String tenantPropertiesPathPattern;
     private String tenantPropertiesName;
     private String timelineServiceImpl;
     private String dbSchemaSuffix;
+    private String domainEventPathPattern;
+    private String domainEventName;
 
     private final KafkaHealthCheck kafkaHealthCheck = new KafkaHealthCheck();
 
@@ -58,5 +63,11 @@ public class ApplicationProperties {
         private short replication;
         private int sessionTimeout;
         private int connectionTimeout;
+    }
+
+    @Getter
+    @Setter
+    public static class Lep {
+        private TenantScriptStorage tenantScriptStorage;
     }
 }
