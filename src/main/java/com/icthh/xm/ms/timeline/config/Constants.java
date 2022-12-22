@@ -38,4 +38,7 @@ public final class Constants {
     public static final int LOGGER_IMPL_CAPACITY = 100;
     public static final String RDBMS_IMPL = "rdbms";
 
+    public static final String TOPIC_CONFIG_PATH = "config/specs/default-topics-spec.yml";
+    public static final String TOPIC_CONFIG_DB_EVENT_FORMAT = "event.%s.db";
+
 }

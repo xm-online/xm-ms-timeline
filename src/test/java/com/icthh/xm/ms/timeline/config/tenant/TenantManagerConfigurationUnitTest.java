@@ -1,16 +1,10 @@
 package com.icthh.xm.ms.timeline.config.tenant;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
 import com.icthh.xm.commons.config.client.repository.TenantConfigRepository;
 import com.icthh.xm.commons.config.domain.Configuration;
 import com.icthh.xm.commons.gen.model.Tenant;
 import com.icthh.xm.commons.migration.db.tenant.provisioner.TenantDatabaseProvisioner;
+import com.icthh.xm.commons.tenant.TenantContextHolder;
 import com.icthh.xm.commons.tenantendpoint.TenantManager;
 import com.icthh.xm.commons.tenantendpoint.provisioner.TenantAbilityCheckerProvisioner;
 import com.icthh.xm.commons.tenantendpoint.provisioner.TenantConfigProvisioner;
@@ -24,11 +18,17 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TenantManagerConfigurationUnitTest {
@@ -37,8 +37,8 @@ public class TenantManagerConfigurationUnitTest {
 
     private TenantConfigProvisioner configProvisioner;
 
-    @Spy
-    private TenantManagerConfiguration configuration = new TenantManagerConfiguration();
+    @Mock
+    private TenantContextHolder tenantContextHolder;
 
     @Mock
     private TenantAbilityCheckerProvisioner abilityCheckerProvisioner;
@@ -55,10 +55,17 @@ public class TenantManagerConfigurationUnitTest {
 
     @Before
     public void setup() {
+
+        when(tenantContextHolder.getTenantKey()).thenReturn("newtenant");
+
+        TenantManagerConfiguration configuration = new TenantManagerConfiguration(tenantContextHolder);
+
         MockitoAnnotations.initMocks(this);
 
         when(applicationProperties.getTenantPropertiesPathPattern()).thenReturn(
             "/config/tenants/{tenantName}/timeline/timeline.yml");
+        when(applicationProperties.getDomainEventTopicsPathPattern()).thenReturn(
+            "/config/tenants/{tenantName}/timeline/default-topics-spec.yml");
 
         configProvisioner = spy(configuration.tenantConfigProvisioner(tenantConfigRepository, applicationProperties));
 
@@ -76,9 +83,34 @@ public class TenantManagerConfigurationUnitTest {
 
         List<Configuration> configurations = new ArrayList<>();
         configurations.add(Configuration.of().path("/config/tenants/{tenantName}/timeline/timeline.yml").build());
+        configurations.add(Configuration.of().path("/config/tenants/{tenantName}/timeline/default-topics-spec.yml")
+            .content(getTopicContent()).build());
 
         verify(tenantConfigRepository).createConfigsFullPath(eq("newtenant"), eq(configurations));
 
+    }
+
+    private String getTopicContent() {
+        return "---\n" +
+            "topics:\n" +
+            "  - key: db\n" +
+            "    topicName: event.tenantName.db\n" +
+            "    retriesCount: 4\n" +
+            "    typeKey: event.db\n" +
+            "    backOffPeriod: 1\n" +
+            "    groupId: timeline\n" +
+            "  - key: web\n" +
+            "    topicName: event.tenantName.web\n" +
+            "    retriesCount: 4\n" +
+            "    typeKey: event.web\n" +
+            "    backOffPeriod: 1\n" +
+            "    groupId: timeline\n" +
+            "  - key: lep\n" +
+            "    topicName: event.tenantName.lep\n" +
+            "    retriesCount: 4\n" +
+            "    typeKey: event.lep\n" +
+            "    backOffPeriod: 1\n" +
+            "    groupId: timeline\n";
     }
 
     @Test
