@@ -11,6 +11,8 @@ import com.icthh.xm.commons.tenantendpoint.provisioner.TenantConfigProvisioner;
 import com.icthh.xm.commons.tenantendpoint.provisioner.TenantListProvisioner;
 import com.icthh.xm.ms.timeline.config.ApplicationProperties;
 import com.icthh.xm.ms.timeline.service.tenant.provisioner.TenantKafkaProvisioner;
+import lombok.SneakyThrows;
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,10 +21,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.core.io.ClassPathResource;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.spy;
@@ -65,7 +70,7 @@ public class TenantManagerConfigurationUnitTest {
         when(applicationProperties.getTenantPropertiesPathPattern()).thenReturn(
             "/config/tenants/{tenantName}/timeline/timeline.yml");
         when(applicationProperties.getDomainEventTopicsPathPattern()).thenReturn(
-            "/config/tenants/{tenantName}/timeline/default-topics-spec.yml");
+            "/config/tenants/{tenantName}/timeline/default-topic-consumers.yml");
 
         configProvisioner = spy(configuration.tenantConfigProvisioner(tenantConfigRepository, applicationProperties));
 
@@ -83,46 +88,17 @@ public class TenantManagerConfigurationUnitTest {
 
         List<Configuration> configurations = new ArrayList<>();
         configurations.add(Configuration.of().path("/config/tenants/{tenantName}/timeline/timeline.yml").build());
-        configurations.add(Configuration.of().path("/config/tenants/{tenantName}/timeline/default-topics-spec.yml")
-            .content(getTopicContent()).build());
+        configurations.add(Configuration.of().path("/config/tenants/{tenantName}/timeline/default-topic-consumers.yml")
+            .content(getSpecificationConfig("config/specs/topic-consumers.yml")).build());
 
         verify(tenantConfigRepository).createConfigsFullPath(eq("newtenant"), eq(configurations));
 
     }
 
-    private String getTopicContent() {
-        return "---\n" +
-            "topics:\n" +
-            "- key: \"db\"\n" +
-            "  typeKey: \"event.db\"\n" +
-            "  topicName: \"event.newtenant.db\"\n" +
-            "  retriesCount: 4\n" +
-            "  backOffPeriod: 1\n" +
-            "  deadLetterQueue: null\n" +
-            "  groupId: \"timeline\"\n" +
-            "  logBody: true\n" +
-            "  maxPollInterval: null\n" +
-            "  isolationLevel: null\n" +
-            "- key: \"web\"\n" +
-            "  typeKey: \"event.web\"\n" +
-            "  topicName: \"event.newtenant.web\"\n" +
-            "  retriesCount: 4\n" +
-            "  backOffPeriod: 1\n" +
-            "  deadLetterQueue: null\n" +
-            "  groupId: \"timeline\"\n" +
-            "  logBody: true\n" +
-            "  maxPollInterval: null\n" +
-            "  isolationLevel: null\n" +
-            "- key: \"lep\"\n" +
-            "  typeKey: \"event.lep\"\n" +
-            "  topicName: \"event.newtenant.lep\"\n" +
-            "  retriesCount: 4\n" +
-            "  backOffPeriod: 1\n" +
-            "  deadLetterQueue: null\n" +
-            "  groupId: \"timeline\"\n" +
-            "  logBody: true\n" +
-            "  maxPollInterval: null\n" +
-            "  isolationLevel: null\n";
+    @SneakyThrows
+    private String getSpecificationConfig(String configPath) {
+        InputStream cfgInputStream = new ClassPathResource(configPath).getInputStream();
+        return IOUtils.toString(cfgInputStream, UTF_8);
     }
 
     @Test

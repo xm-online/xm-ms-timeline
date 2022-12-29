@@ -80,7 +80,7 @@ public class TenantManagerConfiguration {
                                .content(readResource(Constants.DEFAULT_CONFIG_PATH))
                                .build())
             .configuration(of().path(applicationProperties.getDomainEventTopicsPathPattern())
-                                .content(getTopicContent())
+                                .content(getTopicConsumerSpec())
                                 .build())
             .build();
 
@@ -117,7 +117,7 @@ public class TenantManagerConfiguration {
     }
 
     @SneakyThrows
-    private String getTopicContent() {
+    private String getTopicConsumerSpec() {
         String json = readResource(Constants.TOPIC_CONFIG_PATH);
         TopicConsumersSpec topicConsumersSpec = mapper.readValue(json, TopicConsumersSpec.class);
         Assert.notNull(topicConsumersSpec,
