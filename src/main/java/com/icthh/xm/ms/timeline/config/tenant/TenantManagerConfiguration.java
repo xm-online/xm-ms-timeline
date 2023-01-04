@@ -31,10 +31,10 @@ import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.Assert;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Objects;
 
 import static com.icthh.xm.commons.config.domain.Configuration.of;
 import static com.icthh.xm.ms.timeline.config.Constants.CASSANDRA_IMPL;
@@ -120,11 +120,10 @@ public class TenantManagerConfiguration {
     private String getTopicConsumerSpec() {
         String json = readResource(Constants.TOPIC_CONFIG_PATH);
         TopicConsumersSpec topicConsumersSpec = mapper.readValue(json, TopicConsumersSpec.class);
-        Assert.notNull(topicConsumersSpec,
-            String.format("Unable to obtain mapping metadata for %s!", TopicConsumersSpec.class));
+        Objects.requireNonNull(topicConsumersSpec, String.format("Unable to obtain mapping metadata for %s!", TopicConsumersSpec.class));
 
         List<TopicConfig> topics = topicConsumersSpec.getTopics();
-        Assert.notNull(topics, String.format("Unable to obtain mapping metadata for %s!", TopicConfig.class));
+        Objects.requireNonNull(topics, String.format("Unable to obtain mapping metadata for %s!", TopicConfig.class));
 
         String tenantKey = tenantContextHolder.getTenantKey();
 
