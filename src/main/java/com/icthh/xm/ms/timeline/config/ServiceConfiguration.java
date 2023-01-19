@@ -1,5 +1,9 @@
 package com.icthh.xm.ms.timeline.config;
 
+import static com.icthh.xm.ms.timeline.config.Constants.CASSANDRA_IMPL;
+import static com.icthh.xm.ms.timeline.config.Constants.LOGGER_IMPL;
+import static com.icthh.xm.ms.timeline.config.Constants.RDBMS_IMPL;
+
 import com.icthh.xm.commons.tenant.TenantContextHolder;
 import com.icthh.xm.ms.timeline.repository.cassandra.EntityMappingRepository;
 import com.icthh.xm.ms.timeline.repository.cassandra.TimelineCassandraRepository;
@@ -15,10 +19,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import static com.icthh.xm.ms.timeline.config.Constants.CASSANDRA_IMPL;
-import static com.icthh.xm.ms.timeline.config.Constants.LOGGER_IMPL;
-import static com.icthh.xm.ms.timeline.config.Constants.RDBMS_IMPL;
 
 @Configuration
 @RequiredArgsConstructor
