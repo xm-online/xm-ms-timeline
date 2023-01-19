@@ -1,6 +1,7 @@
 package com.icthh.xm.ms.timeline.service;
 
 import com.datastax.driver.core.Cluster;
+import com.icthh.xm.commons.migration.db.liquibase.LiquibaseRunner;
 import com.icthh.xm.commons.migration.db.tenant.DropSchemaResolver;
 import com.icthh.xm.ms.timeline.TimelineApp;
 import com.icthh.xm.ms.timeline.config.SecurityBeanOverrideConfiguration;
@@ -49,6 +50,9 @@ public class TimelineServiceIntTest {
 
     @MockBean
     private Cluster cluster;
+
+    @MockBean
+    private LiquibaseRunner liquibaseRunner;
 
     private static final Long ID = 1L;
     private static final String MS_NAME = "test_ms_name";
