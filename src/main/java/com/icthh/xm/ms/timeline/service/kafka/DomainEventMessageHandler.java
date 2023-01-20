@@ -18,7 +18,6 @@ import static com.icthh.xm.commons.lep.XmLepConstants.THREAD_CONTEXT_KEY_AUTH_CO
 import static com.icthh.xm.commons.lep.XmLepConstants.THREAD_CONTEXT_KEY_TENANT_CONTEXT;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
 public class DomainEventMessageHandler implements MessageHandler {
 
