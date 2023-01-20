@@ -1,0 +1,20 @@
+---
+topics:
+  - key: db
+    topicName: event.tenantName.db
+    retriesCount: 4
+    typeKey: event.db
+    backOffPeriod: 1
+    groupId: timeline
+  - key: web
+    topicName: event.tenantName.web
+    retriesCount: 4
+    typeKey: event.web
+    backOffPeriod: 1
+    groupId: timeline
+  - key: lep
+    topicName: event.tenantName.lep
+    retriesCount: 4
+    typeKey: event.lep
+    backOffPeriod: 1
+    groupId: timeline

@@ -2,6 +2,7 @@ package com.icthh.xm.ms.timeline.config.tenant;
 
 import com.datastax.driver.core.Cluster;
 import com.icthh.xm.commons.migration.db.tenant.DropSchemaResolver;
+import com.icthh.xm.commons.tenant.TenantContextHolder;
 import com.icthh.xm.commons.tenantendpoint.provisioner.TenantAbilityCheckerProvisioner;
 import com.icthh.xm.commons.tenantendpoint.provisioner.TenantConfigProvisioner;
 import com.icthh.xm.commons.tenantendpoint.provisioner.TenantListProvisioner;
@@ -58,6 +59,9 @@ public class TenantManagerStorageConfigurationUnitTest {
 
     @MockBean
     private ApplicationProperties applicationProperties;
+
+    @MockBean
+    private TenantContextHolder tenantContextHolder;
 
     @MockBean
     private Cluster cluster;

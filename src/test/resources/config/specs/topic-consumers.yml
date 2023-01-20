@@ -1,0 +1,32 @@
+---
+topics:
+    - key: "db"
+      typeKey: "event.db"
+      topicName: "event.newtenant.db"
+      retriesCount: 4
+      backOffPeriod: 1
+      deadLetterQueue: null
+      groupId: "timeline"
+      logBody: true
+      maxPollInterval: null
+      isolationLevel: null
+    - key: "web"
+      typeKey: "event.web"
+      topicName: "event.newtenant.web"
+      retriesCount: 4
+      backOffPeriod: 1
+      deadLetterQueue: null
+      groupId: "timeline"
+      logBody: true
+      maxPollInterval: null
+      isolationLevel: null
+    - key: "lep"
+      typeKey: "event.lep"
+      topicName: "event.newtenant.lep"
+      retriesCount: 4
+      backOffPeriod: 1
+      deadLetterQueue: null
+      groupId: "timeline"
+      logBody: true
+      maxPollInterval: null
+      isolationLevel: null
