@@ -46,13 +46,4 @@ public class ServiceConfiguration {
     public TimelineService dbTimelineService(TimelineJpaRepository timelineJpaRepository) {
         return new TimelineServiceDbImpl(timelineJpaRepository, tenantPropertiesService, sortProcessor);
     }
-
-    @Bean(name = "timelineService")
-    @ConditionalOnProperty(name = "application.timeline-service-impl", matchIfMissing = true)
-    @ConditionalOnMissingBean
-    public TimelineService defaultTimelineService(TimelineCassandraRepository tr,
-                                                  EntityMappingRepository emr,
-                                                  TenantContextHolder tch) {
-        return new TimelineServiceCassandraImpl(tr, emr, tch);
-    }
 }
