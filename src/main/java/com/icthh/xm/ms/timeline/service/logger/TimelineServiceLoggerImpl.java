@@ -3,6 +3,7 @@ package com.icthh.xm.ms.timeline.service.logger;
 import static com.icthh.xm.ms.timeline.config.Constants.LOGGER_IMPL_CAPACITY;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 
+import com.icthh.xm.commons.domainevent.domain.DomainEvent;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.domain.ext.IdOrKey;
 import com.icthh.xm.ms.timeline.service.TimelineService;
@@ -61,6 +62,11 @@ public class TimelineServiceLoggerImpl implements TimelineService {
     public void insertTimelines(XmTimeline xmTimeline) {
         timelines.add(xmTimeline);
         log.info("Event {}", xmTimeline);
+    }
+
+    @Override
+    public void insertTimelines(DomainEvent domainEvent) {
+        log.warn("Not implemented!");
     }
 
     private static boolean stringFilter(String filter, String value) {
