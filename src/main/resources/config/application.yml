@@ -207,3 +207,5 @@ application:
     db-schema-suffix:
     lep:
         tenant-script-storage: XM_MS_CONFIG
+    domain-event:
+        enabled: false
