@@ -1,15 +1,16 @@
-package com.icthh.xm.ms.timeline.service;
+package com.icthh.xm.ms.timeline.service.kafka;
 
 import com.datastax.driver.core.Cluster;
-import com.icthh.xm.commons.domainevent.domain.DomainEvent;
 import com.icthh.xm.commons.lep.XmLepScriptConfigServerResourceLoader;
-import com.icthh.xm.commons.migration.db.tenant.DropSchemaResolver;
+import com.icthh.xm.commons.messaging.event.system.SystemEvent;
 import com.icthh.xm.commons.security.XmAuthenticationContextHolder;
 import com.icthh.xm.commons.tenant.TenantContextHolder;
 import com.icthh.xm.commons.tenant.TenantContextUtils;
 import com.icthh.xm.lep.api.LepManager;
 import com.icthh.xm.ms.timeline.TimelineApp;
 import com.icthh.xm.ms.timeline.config.SecurityBeanOverrideConfiguration;
+import com.icthh.xm.ms.timeline.service.SystemQueueProcessorService;
+import com.icthh.xm.ms.timeline.service.TimelineService;
 import io.github.jhipster.config.JHipsterConstants;
 import org.junit.After;
 import org.junit.Before;
@@ -26,22 +27,20 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static com.icthh.xm.commons.lep.XmLepConstants.THREAD_CONTEXT_KEY_AUTH_CONTEXT;
 import static com.icthh.xm.commons.lep.XmLepConstants.THREAD_CONTEXT_KEY_TENANT_CONTEXT;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {TimelineApp.class, SecurityBeanOverrideConfiguration.class, DropSchemaResolver.class})
+@SpringBootTest(classes = {TimelineApp.class, SecurityBeanOverrideConfiguration.class})
 @TestPropertySource(properties = {
-    "application.timeline-service-impl = logger",
-    "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.cassandra.CassandraAutoConfiguration"
+        "application.timeline-service-impl = logger",
+        "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.cassandra.CassandraAutoConfiguration"
 })
 @ActiveProfiles(JHipsterConstants.SPRING_PROFILE_TEST)
-public class DomainEventServiceIntTest {
+public class SystemQueueConsumerIntTest {
 
     public static final String DEFAULT_TENANT = "RESINTTEST";
 
@@ -58,7 +57,7 @@ public class DomainEventServiceIntTest {
     private TenantContextHolder tenantContextHolder;
 
     @Autowired
-    private DomainEventService domainEventService;
+    private SystemQueueProcessorService systemQueueProcessorService;
 
     @MockBean
     private TimelineService timelineService;
@@ -91,24 +90,19 @@ public class DomainEventServiceIntTest {
         lepManager.endThreadContext();
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void test_lep() {
-        String prefix = "/config/tenants/" + DEFAULT_TENANT + "/timeline/lep/topic/";
-        String key = prefix + "ProcessEvent$$partyIndividual$$around.groovy";
-        String body = "def domainEvent = lepContext.inArgs?.domainEvent\n" +
-            "domainEvent.msName = \"new-ms-name\"\n" +
-            "return lepContext.lep.proceed(domainEvent)";
+        String prefix = "/config/tenants/" + DEFAULT_TENANT + "/timeline/lep/system/queue/";
+        String key = prefix + "ProcessQueueEvent$$around.groovy";
+        String body = "throw new RuntimeException(\"Hello\")";
 
         leps.onRefresh(key, body);
         lepsForCleanUp.add(key);
 
-        DomainEvent domainEvent = new DomainEvent();
-        domainEvent.setAggregateType("partyIndividual");
-        domainEvent.setMsName("old-ms-name");
+        SystemEvent systemEvent = new SystemEvent();
+        systemEvent.setEventId(UUID.randomUUID().toString());
+        systemEvent.setEventType("eventType");
 
-        domainEventService.processEvent(domainEvent);
-
-        domainEvent.setMsName("new-ms-name");
-        verify(timelineService, times(1)).insertTimelines(eq(domainEvent));
+        systemQueueProcessorService.handleSystemEvent(systemEvent);
     }
 }
