@@ -1,4 +1,4 @@
-package com.icthh.xm.ms.timeline.service.kafka;
+package com.icthh.xm.ms.timeline.service;
 
 import com.datastax.driver.core.Cluster;
 import com.icthh.xm.commons.lep.XmLepScriptConfigServerResourceLoader;
@@ -9,8 +9,6 @@ import com.icthh.xm.commons.tenant.TenantContextUtils;
 import com.icthh.xm.lep.api.LepManager;
 import com.icthh.xm.ms.timeline.TimelineApp;
 import com.icthh.xm.ms.timeline.config.SecurityBeanOverrideConfiguration;
-import com.icthh.xm.ms.timeline.service.SystemQueueProcessorService;
-import com.icthh.xm.ms.timeline.service.TimelineService;
 import io.github.jhipster.config.JHipsterConstants;
 import org.junit.After;
 import org.junit.Before;
@@ -40,7 +38,7 @@ import static com.icthh.xm.commons.lep.XmLepConstants.THREAD_CONTEXT_KEY_TENANT_
         "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.cassandra.CassandraAutoConfiguration"
 })
 @ActiveProfiles(JHipsterConstants.SPRING_PROFILE_TEST)
-public class SystemQueueConsumerIntTest {
+public class SystemQueueProcessorServiceIntTest {
 
     public static final String DEFAULT_TENANT = "RESINTTEST";
 
