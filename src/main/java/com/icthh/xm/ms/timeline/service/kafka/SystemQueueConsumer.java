@@ -35,7 +35,7 @@ public class SystemQueueConsumer {
         try {
             SystemEvent event = fromJson(message.value());
             if (systemQueueProcessors != null) {
-                systemQueueProcessors.forEach(processor -> processor.processSystemEvent(event));
+                systemQueueProcessors.forEach(processor -> processor.processQueueEvent(event));
             }
         } finally {
             MdcUtils.removeRid();
