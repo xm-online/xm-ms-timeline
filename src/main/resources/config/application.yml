@@ -182,7 +182,7 @@ application:
     tenant-properties-path-pattern: /config/tenants/{tenantName}/timeline/${application.tenant-properties-name}
     tenant-properties-name: timeline.yml
     domain-event-topics-name: domain-event-topic-consumers.yml
-    domain-event-topics-path-pattern: /config/tenants/{tenant}/${spring.application.name}/${domain-event-topics-name}
+    domain-event-topics-path-pattern: /config/tenants/{tenantName}/${spring.application.name}/${domain-event-topics-name}
     tenant-ignored-path-list: /v2/api-docs, /api/profile-info, /swagger-resources/configuration/ui, /management/health
     kafka-system-topic: system_topic
     kafka-system-queue: system_queue
