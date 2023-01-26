@@ -42,17 +42,16 @@ public class SystemQueueConsumer {
             backoff = @Backoff(delayExpression = "${application.retry.delay}",
                     multiplierExpression = "${application.retry.multiplier}"))
     public void consumeEvent(ConsumerRecord<String, String> message) {
-        MdcUtils.putRid();
         try {
             SystemEvent event = fromJson(message.value());
-            init(event.getTenantKey());
+            init(event.getTenantKey(), event.getUserLogin());
             systemQueueProcessorService.handleSystemEvent(event);
         } finally {
             destroy();
         }
     }
 
-    private void init(String tenantKey) {
+    private void init(String tenantKey, String login) {
         if (StringUtils.isNotBlank(tenantKey)) {
             TenantContextUtils.setTenant(tenantContextHolder, tenantKey);
 
@@ -61,6 +60,11 @@ public class SystemQueueConsumer {
                 threadContext.setValue(THREAD_CONTEXT_KEY_AUTH_CONTEXT, authContextHolder.getContext());
             });
         }
+
+        String newRid = MdcUtils.getRid()
+            + ":" + StringUtils.defaultIfBlank(login, "")
+            + ":" + StringUtils.defaultIfBlank(tenantKey, "");
+        MdcUtils.putRid(newRid);
     }
 
     private void destroy() {
