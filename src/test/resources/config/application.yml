@@ -123,7 +123,7 @@ application:
     tenant-properties-path-pattern: /config/tenants/{tenantName}/timeline/${tenant-properties-name}
     tenant-properties-name: timeline.yml
     domain-event-topics-name: domain-event-topic-consumers.yml
-    domain-event-topics-path-pattern: /config/tenants/{tenantName}/${spring.application.name}/${domain-event-topics-name}
+    domain-event-topics-path-pattern: /config/tenants/{tenantName}/${spring.application.name}/${application.domain-event-topics-name}
     kafka-system-queue: system_queue
     kafka-metadata-max-age: 60000 #in milliseconds
     timeline-service-impl: cassandra
