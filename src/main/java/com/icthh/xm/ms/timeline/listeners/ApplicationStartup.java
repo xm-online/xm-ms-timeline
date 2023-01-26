@@ -48,9 +48,10 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
+        createKafkaSystemQueueConsumers();
+
         if (!env.acceptsProfiles(Profiles.of(JHipsterConstants.SPRING_PROFILE_TEST))) {
             createKafkaConsumers();
-            createKafkaSystemQueueConsumers();
             if (StringUtils.equalsIgnoreCase(properties.getTimelineServiceImpl(), CASSANDRA_IMPL)) {
                 migrateCassandra();
             }
