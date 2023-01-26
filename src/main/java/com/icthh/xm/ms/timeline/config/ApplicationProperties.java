@@ -23,6 +23,7 @@ public class ApplicationProperties {
     private final Lep lep = new Lep();
     private String kafkaSystemTopic;
     private String kafkaSystemQueue;
+    private Integer kafkaMetadataMaxAge;
     private String tenantPropertiesPathPattern;
     private String tenantPropertiesName;
     private String timelineServiceImpl;
