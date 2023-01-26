@@ -110,6 +110,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
         ContainerProperties containerProps = new ContainerProperties(name);
 
         Map<String, Object> props = kafkaProperties.buildConsumerProperties();
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, UUID.randomUUID().toString());
         props.put(ConsumerConfig.METADATA_MAX_AGE_CONFIG, properties.getKafkaMetadataMaxAge());
         ConsumerFactory<String, String> factory = new DefaultKafkaConsumerFactory<>(props);
 
