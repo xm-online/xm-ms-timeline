@@ -45,7 +45,7 @@ public class SystemQueueConsumer {
         try {
             SystemEvent event = fromJson(message.value());
             if (StringUtils.isBlank(event.getTenantKey())) {
-                log.info("Event ignored due to tenantKey is empty {}", event);
+                log.info("Event ignored due to tenantKey is empty {}", event.getEventType());
                 return;
             }
             init(event.getTenantKey(), event.getUserLogin());
