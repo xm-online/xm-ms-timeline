@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DomainEventAggregateTypeResolver extends AppendLepKeyResolver {
+
     @Override
     protected String[] getAppendSegments(SeparatorSegmentedLepKey baseKey, LepMethod method, LepManagerService managerService) {
         DomainEvent domainEvent = getRequiredParam(method, "domainEvent", DomainEvent.class);
