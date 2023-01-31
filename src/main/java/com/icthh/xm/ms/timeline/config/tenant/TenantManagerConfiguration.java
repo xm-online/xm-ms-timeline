@@ -98,7 +98,7 @@ public class TenantManagerConfiguration {
     }
 
     @Bean("storageTenantProvisioner")
-    @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = CASSANDRA_IMPL, matchIfMissing = true)
+    @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = CASSANDRA_IMPL)
     public TenantProvisioner cassandraTenantProvisioner(Cluster cluster,
                                                         CassandraProperties cassandraProperties,
                                                         ApplicationProperties applicationProperties) {

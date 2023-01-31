@@ -1,5 +1,6 @@
 package com.icthh.xm.ms.timeline.service;
 
+import com.icthh.xm.commons.domainevent.domain.DomainEvent;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 import org.springframework.data.domain.Sort;
@@ -19,4 +20,6 @@ public interface TimelineService {
                                 Sort sort);
 
     void insertTimelines(XmTimeline xmTimeline);
+
+    void insertTimelines(DomainEvent domainEvent);
 }

@@ -1,5 +1,6 @@
 package com.icthh.xm.ms.timeline.service.cassandra;
 
+import com.icthh.xm.commons.domainevent.domain.DomainEvent;
 import com.icthh.xm.commons.tenant.TenantContextHolder;
 import com.icthh.xm.commons.tenant.TenantContextUtils;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
@@ -11,9 +12,11 @@ import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 
 import java.time.Instant;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;
 
+@Slf4j
 public class TimelineServiceCassandraImpl implements TimelineService {
     private TimelineCassandraRepository timelineRepository;
     private EntityMappingRepository entityMappingRepository;
@@ -86,6 +89,11 @@ public class TimelineServiceCassandraImpl implements TimelineService {
         }
         insertUserKeyTimeline(xmTimeline);
         insertEntityTimeline(xmTimeline);
+    }
+
+    @Override
+    public void insertTimelines(DomainEvent domainEvent) {
+        log.warn("Not implemented!");
     }
 
     private String buildOperationName(XmTimeline xmTimeline) {

@@ -7,6 +7,7 @@ import com.icthh.xm.commons.logging.util.MdcUtils;
 import com.icthh.xm.commons.permission.inspector.PrivilegeInspector;
 import com.icthh.xm.ms.timeline.config.ApplicationProperties;
 import com.icthh.xm.ms.timeline.repository.kafka.SystemTopicConsumer;
+import com.icthh.xm.ms.timeline.service.kafka.SystemQueueConsumer;
 import com.icthh.xm.ms.timeline.service.kafka.TimelineEventConsumerHolder;
 import com.icthh.xm.ms.timeline.service.tenant.provisioner.TenantCassandraStorageProvisioner;
 import io.github.jhipster.config.JHipsterConstants;
@@ -43,10 +44,13 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
     private final TenantListRepository tenantListRepository;
     private final PrivilegeInspector privilegeInspector;
     private final TenantCassandraStorageProvisioner tenantCassandraStorageProvisioner;
+    private final SystemQueueConsumer systemQueueConsumer;
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
+
         if (!env.acceptsProfiles(Profiles.of(JHipsterConstants.SPRING_PROFILE_TEST))) {
+            createKafkaSystemQueueConsumers();
             createKafkaConsumers();
             if (StringUtils.equalsIgnoreCase(properties.getTimelineServiceImpl(), CASSANDRA_IMPL)) {
                 migrateCassandra();
@@ -95,5 +99,25 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
         container.setupMessageListener((MessageListener<String, String>) commandConsumer::consumeEvent);
         container.start();
         log.info("Successfully created kafka command consumer for topic {}", name);
+    }
+
+    private void createKafkaSystemQueueConsumers() {
+        createSystemConsumer(properties.getKafkaSystemQueue(), systemQueueConsumer::consumeEvent);
+    }
+
+    private void createSystemConsumer(String name, MessageListener<String, String> consumeEvent) {
+        log.info("Creating kafka consumer for topic {}", name);
+        ContainerProperties containerProps = new ContainerProperties(name);
+
+        Map<String, Object> props = kafkaProperties.buildConsumerProperties();
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, UUID.randomUUID().toString());
+        props.put(ConsumerConfig.METADATA_MAX_AGE_CONFIG, properties.getKafkaMetadataMaxAge());
+        ConsumerFactory<String, String> factory = new DefaultKafkaConsumerFactory<>(props);
+
+        ConcurrentMessageListenerContainer<String, String> container =
+                new ConcurrentMessageListenerContainer<>(factory, containerProps);
+        container.setupMessageListener(consumeEvent);
+        container.start();
+        log.info("Successfully created kafka consumer for topic {}", name);
     }
 }

@@ -1,5 +1,6 @@
 package com.icthh.xm.ms.timeline.service.db;
 
+import com.icthh.xm.commons.domainevent.domain.DomainEvent;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.domain.properties.TenantProperties;
 import com.icthh.xm.ms.timeline.repository.jpa.TimelineJpaRepository;
@@ -8,6 +9,7 @@ import com.icthh.xm.ms.timeline.service.TenantPropertiesService;
 import com.icthh.xm.ms.timeline.service.TimelineService;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +27,7 @@ import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
+@Slf4j
 @AllArgsConstructor
 public class TimelineServiceDbImpl implements TimelineService {
 
@@ -95,6 +98,11 @@ public class TimelineServiceDbImpl implements TimelineService {
         List<XmTimeline> content = filterResult(timelines);
 
         return new TimelinePageVM(content, timelines.hasNext() ? String.valueOf(page + ONE.intValue()) : null);
+    }
+
+    @Override
+    public void insertTimelines(DomainEvent domainEvent) {
+        log.warn("Not implemented!");
     }
 
     /**
