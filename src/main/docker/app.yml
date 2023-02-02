@@ -7,24 +7,9 @@ services:
             - SPRING_PROFILES_ACTIVE=prod,swagger
             - SPRING_CLOUD_CONSUL_HOST=consul
             - SPRING_CLOUD_CONSUL_PORT=8500
-            - SPRING_DATA_CASSANDRA_CONTACTPOINTS=timeline-cassandra
-            - JHIPSTER_SLEEP=80 # gives time for uaa and the Cassandra cluster to start and execute the migration scripts
+            - JHIPSTER_SLEEP=80 # gives time for other services to boot before the application
             - SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS=kafka
             - SPRING_CLOUD_STREAM_KAFKA_BINDER_ZK_NODES=zookeeper
-    timeline-cassandra:
-        extends:
-            file: cassandra-cluster.yml
-            service: timeline-cassandra
-    timeline-cassandra-node:
-        image: cassandra:3.9
-        environment:
-            - CASSANDRA_SEEDS=timeline-cassandra
-    timeline-cassandra-migration:
-        extends:
-            file: cassandra-migration.yml
-            service: timeline-cassandra-migration
-        environment:
-            - CREATE_KEYSPACE_SCRIPT=create-keyspace-prod.cql
     kafka:
         extends:
             file: kafka.yml

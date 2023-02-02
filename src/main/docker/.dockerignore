@@ -12,4 +12,3 @@ test-results/
 www/
 !*.jar
 !*.war
-!cassandra/

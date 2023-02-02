@@ -1,28 +1,18 @@
-configurations {
-    developmentOnly
-    runtimeClasspath {
-        extendsFrom developmentOnly
-    }
-}
-
 dependencies {
-    developmentOnly "org.springframework.boot:spring-boot-devtools"
+    developmentOnly "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
 }
 
 def profiles = "dev"
 if (project.hasProperty("no-liquibase")) {
     profiles += ",no-liquibase"
 }
-if (project.hasProperty("tls")) {
-    profiles += ",tls"
-}
 
 springBoot {
     buildInfo {
-		properties {
-			time = null
-		}
-	}
+        properties {
+            time = null
+        }
+    }
 }
 
 bootRun {

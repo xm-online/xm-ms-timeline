@@ -63,6 +63,10 @@ management:
                 step: 60
 
 spring:
+    sleuth:
+        enabled: true
+        async:
+            enabled: false
     application:
         name: timeline
     main:
@@ -135,6 +139,8 @@ info:
 # ===================================================================
 
 jhipster:
+    security:
+        content-security-policy: "default-src 'self'; frame-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://storage.googleapis.com; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; img-src 'self' data:; font-src 'self' https://fonts.gstatic.com data:"
     async:
         core-pool-size: 2
         max-pool-size: 50
@@ -147,10 +153,8 @@ jhipster:
         #exposed-headers: "Authorization,Link,X-Total-Count"
         #allow-credentials: true
         #max-age: 1800
-    mail:
-        from: timeline@localhost
-    swagger:
-        default-include-pattern: /api/.*
+    api-docs:
+        default-include-pattern: ${server.servlet.context-path:}/api/**
         title: timeline API
         description: timeline API documentation
         version: 0.0.1
@@ -160,6 +164,8 @@ jhipster:
         contact-email:
         license:
         license-url:
+    mail:
+        from: timeline@localhost
 
 # ===================================================================
 # Application specific properties
@@ -183,14 +189,14 @@ application:
     tenant-properties-name: timeline.yml
     domain-event-topics-name: domain-event-topic-consumers.yml
     domain-event-topics-path-pattern: /config/tenants/{tenantName}/${spring.application.name}/${application.domain-event-topics-name}
-    tenant-ignored-path-list: /v2/api-docs, /api/profile-info, /swagger-resources/configuration/ui, /management/health
+    tenant-ignored-path-list: /v3/api-docs, /api/profile-info, /swagger-resources/configuration/ui, /management/health
     kafka-system-topic: system_topic
     kafka-system-queue: system_queue
     kafka-metadata-max-age: 60000 #in milliseconds
     # =================================================
-    # options [cassandra, logger, rdbms]
+    # options [logger, rdbms]
     # =================================================
-    timeline-service-impl: cassandra
+    timeline-service-impl: rdbms
     retry:
         max-attempts: 3
         delay: 1000 #in milliseconds
@@ -201,10 +207,6 @@ application:
         replication: 1
         session-timeout: 10000 #in milliseconds
         connection-timeout: 10000 #in milliseconds
-    cassandra:
-        migration-folder: config/cql/changelog
-        keyspace-create-cql: "CREATE KEYSPACE IF NOT EXISTS %s WITH REPLICATION = {'class':'SimpleStrategy','replication_factor':3} AND DURABLE_WRITES = true;"
-        keyspace-switch-cql: "USE %s"
     db-schema-suffix:
     lep:
         tenant-script-storage: XM_MS_CONFIG

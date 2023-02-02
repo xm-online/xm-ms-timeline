@@ -20,7 +20,7 @@ public final class Constants {
     public static final String AUTH_XM_USERID_KEY = "xmUserID";
     public static final String AUTH_XM_LOCALE = "xmLocale";
     public static final String HEADER_TENANT = "x-tenant";
-    public static final String CASSANDRA_DROP_KEYSPACE = "DROP KEYSPACE IF EXISTS %s";
+
     public static final String CREATE_COMMAND = "CREATE";
     public static final String DELETE_COMMAND = "DELETE";
 
@@ -33,7 +33,6 @@ public final class Constants {
     public static final String DEFAULT_CONFIG_PATH = "config/specs/default-timeline.yml";
     public static final String CHANGE_LOG_PATH = "classpath:config/liquibase/master.xml";
 
-    public static final String CASSANDRA_IMPL = "cassandra";
     public static final String LOGGER_IMPL = "logger";
     public static final int LOGGER_IMPL_CAPACITY = 100;
     public static final String RDBMS_IMPL = "rdbms";

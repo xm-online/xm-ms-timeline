@@ -35,7 +35,7 @@ public class KafkaHealthIndicator extends AbstractHealthIndicator {
         DescribeClusterOptions describeClusterOptions = new DescribeClusterOptions()
             .timeoutMs(applicationProperties.getKafkaHealthCheck().getConnectionTimeout());
 
-        try(AdminClient adminClient = AdminClient.create(admin.getConfig())) {
+        try(AdminClient adminClient = AdminClient.create(admin.getConfigurationProperties())) {
             DescribeClusterResult describeCluster = adminClient.describeCluster(describeClusterOptions);
             try {
 

@@ -17,7 +17,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 public class ApplicationProperties {
     private final Retry retry = new Retry();
-    private Cassandra cassandra = new Cassandra();
     private List<String> tenantIgnoredPathList = new ArrayList<>();
     private Zookeeper zookeeper = new Zookeeper();
     private final Lep lep = new Lep();
@@ -45,14 +44,6 @@ public class ApplicationProperties {
         private int maxAttempts;
         private long delay;
         private int multiplier;
-    }
-
-    @Getter
-    @Setter
-    public static class Cassandra {
-        private String migrationFolder;
-        private String keyspaceCreateCql;
-        private String keyspaceSwitchCql;
     }
 
     @Getter

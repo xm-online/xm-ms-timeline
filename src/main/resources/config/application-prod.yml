@@ -25,12 +25,6 @@ spring:
                prefer-ip-address: true
             host: localhost
             port: 8500
-    data:
-        cassandra:
-            contactPoints: localhost
-            protocolVersion: V4
-            compression: LZ4
-            readTimeout: 60000
     mail:
         host: localhost
         port: 25
@@ -92,9 +86,6 @@ jhipster:
     mail: # specific JHipster mail property, for standard properties see MailProperties
         from: timeline@localhost
         base-url: http://my-server-url-to-change # Modify according to your server's URL
-    metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
-        logs: # Reports Dropwizard metrics in the logs
-            enabled: false
     logging:
         logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration
             enabled: false

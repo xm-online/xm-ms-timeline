@@ -21,9 +21,10 @@ logging:
 
 spring:
     profiles:
-        active: dev
-        include:
-            - swagger
+        group:
+            dev:
+                - dev
+                - swagger
             # Uncomment to activate TLS for the dev profile
             #- tls
     devtools:
@@ -40,12 +41,6 @@ spring:
                prefer-ip-address: true
             host: localhost
             port: 8500
-    data:
-        cassandra:
-            contactPoints: localhost
-            protocolVersion: V4
-            compression: LZ4
-            readTimeout: 60000
     mail:
         host: localhost
         port: 25
@@ -92,9 +87,6 @@ jhipster:
     mail: # specific JHipster mail property, for standard properties see MailProperties
         from: timeline@localhost
         base-url: http://127.0.0.1:8083
-    metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
-        logs: # Reports Dropwizard metrics in the logs
-            enabled: false
     logging:
         logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration
             enabled: false
@@ -115,6 +107,6 @@ application:
     zookeeper:
         host: localhost:2181
     # =================================================
-    # options [cassandra, logger, rdbms]
+    # options [logger, rdbms]
     # =================================================
-    timeline-service-impl: cassandra
+    timeline-service-impl: rdbms

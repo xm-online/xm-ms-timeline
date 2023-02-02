@@ -44,7 +44,7 @@ public class XmTimelineResource {
      * @param idOrKey the entity id or entity key for timeline filter
      * @param dateFrom the date from for timeline filter
      * @param dateTo the date to for timeline filter
-     * @param next the next value for definition next page in cassandra
+     * @param next the next value for definition next page
      * @param sort sorting the list of xmTimelines
      * @param limit the limit of timelines on page
      * @return the ResponseEntity with status 200 (OK) and the list of xmTimelines and next page code in body.
@@ -71,7 +71,7 @@ public class XmTimelineResource {
         @RequestParam(value = "dateTo", required = false) Instant dateTo,
         @ApiParam(name = "operation", value = "Operation name for timeline filter")
         @RequestParam(value = "operation", required = false) String operation,
-        @ApiParam(name = "next", value = "Next value for definition next page in cassandra")
+        @ApiParam(name = "next", value = "Next value for definition next page")
         @RequestParam(value = "next", required = false) String next,
         @ApiParam(name = "sort", value = "Sorting declared fields")
         @SortDefault(sort = "startDate", direction = Sort.Direction.DESC) Sort sort,
