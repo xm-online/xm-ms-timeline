@@ -5,8 +5,10 @@ management:
 
 spring:
     profiles:
-        active: dbdev
-        include: swagger
+        group:
+            dbdev:
+                - dbdev
+                - swagger
     devtools:
         restart:
             enabled: true
@@ -70,8 +72,6 @@ spring:
     liquibase:
         default-schema: XM
         enabled: true
-    autoconfigure:
-        exclude: org.springframework.boot.autoconfigure.data.cassandra.CassandraDataAutoConfiguration
 
 
 server:
@@ -96,9 +96,6 @@ jhipster:
     mail: # specific JHipster mail property, for standard properties see MailProperties
         from: timeline@localhost
         base-url: http://127.0.0.1:8083
-    metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
-        logs: # Reports Dropwizard metrics in the logs
-            enabled: false
     logging:
         logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration
             enabled: false
@@ -110,6 +107,6 @@ application:
     zookeeper:
         host: localhost:2181
     # =================================================
-    # options [cassandra, logger, rdbms]
+    # options [logger, rdbms]
     # =================================================
     timeline-service-impl: rdbms

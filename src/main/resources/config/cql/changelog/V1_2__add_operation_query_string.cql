@@ -1,4 +1,0 @@
-ALTER TABLE timeline_by_entity_and_date ADD operation_query_string text;
-ALTER TABLE timeline_by_entity_and_operation_and_date ADD operation_query_string text;
-ALTER TABLE timeline_by_user_and_date ADD operation_query_string text;
-ALTER TABLE timeline_by_user_and_operation_and_date ADD operation_query_string text;

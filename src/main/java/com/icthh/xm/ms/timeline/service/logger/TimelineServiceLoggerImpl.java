@@ -1,7 +1,7 @@
 package com.icthh.xm.ms.timeline.service.logger;
 
 import static com.icthh.xm.ms.timeline.config.Constants.LOGGER_IMPL_CAPACITY;
-import static org.apache.commons.lang.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import com.icthh.xm.commons.domainevent.domain.DomainEvent;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
@@ -15,7 +15,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;
 
 @Slf4j

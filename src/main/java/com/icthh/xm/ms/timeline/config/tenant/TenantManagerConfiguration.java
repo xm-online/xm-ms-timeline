@@ -1,6 +1,5 @@
 package com.icthh.xm.ms.timeline.config.tenant;
 
-import com.datastax.driver.core.Cluster;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.icthh.xm.commons.config.client.repository.TenantConfigRepository;
@@ -17,7 +16,6 @@ import com.icthh.xm.commons.topic.domain.TopicConfig;
 import com.icthh.xm.commons.topic.domain.TopicConsumersSpec;
 import com.icthh.xm.ms.timeline.config.ApplicationProperties;
 import com.icthh.xm.ms.timeline.config.Constants;
-import com.icthh.xm.ms.timeline.service.tenant.provisioner.TenantCassandraStorageProvisioner;
 import com.icthh.xm.ms.timeline.service.tenant.provisioner.TenantKafkaProvisioner;
 import com.icthh.xm.ms.timeline.service.tenant.provisioner.TenantLoggerStorageProvisioner;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +23,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.context.annotation.Bean;
@@ -37,7 +34,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.icthh.xm.commons.config.domain.Configuration.of;
-import static com.icthh.xm.ms.timeline.config.Constants.CASSANDRA_IMPL;
 import static com.icthh.xm.ms.timeline.config.Constants.LOGGER_IMPL;
 import static com.icthh.xm.ms.timeline.config.Constants.RDBMS_IMPL;
 import static com.icthh.xm.ms.timeline.config.Constants.TOPIC_CONFIG_EVENT_FORMAT;
@@ -89,20 +85,12 @@ public class TenantManagerConfiguration {
     }
 
     @Bean("storageTenantProvisioner")
-    @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = RDBMS_IMPL)
+    @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = RDBMS_IMPL, matchIfMissing = true)
     public TenantProvisioner rdbmsTenantProvisioner(DataSource dataSource,
                                                     LiquibaseProperties liquibaseProperties,
                                                     DropSchemaResolver schemaDropResolver,
                                                     LiquibaseRunner liquibaseRunner) {
         return new TenantDatabaseProvisioner(dataSource, liquibaseProperties, schemaDropResolver, liquibaseRunner);
-    }
-
-    @Bean("storageTenantProvisioner")
-    @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = CASSANDRA_IMPL)
-    public TenantProvisioner cassandraTenantProvisioner(Cluster cluster,
-                                                        CassandraProperties cassandraProperties,
-                                                        ApplicationProperties applicationProperties) {
-        return new TenantCassandraStorageProvisioner(cluster, cassandraProperties, applicationProperties);
     }
 
     @Bean("storageTenantProvisioner")

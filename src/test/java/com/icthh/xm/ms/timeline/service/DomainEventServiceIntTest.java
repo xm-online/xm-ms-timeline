@@ -1,6 +1,5 @@
 package com.icthh.xm.ms.timeline.service;
 
-import com.datastax.driver.core.Cluster;
 import com.icthh.xm.commons.domainevent.domain.DomainEvent;
 import com.icthh.xm.commons.lep.XmLepScriptConfigServerResourceLoader;
 import com.icthh.xm.commons.migration.db.tenant.DropSchemaResolver;
@@ -9,15 +8,13 @@ import com.icthh.xm.commons.tenant.TenantContextHolder;
 import com.icthh.xm.commons.tenant.TenantContextUtils;
 import com.icthh.xm.lep.api.LepManager;
 import com.icthh.xm.ms.timeline.TimelineApp;
-import com.icthh.xm.ms.timeline.config.SecurityBeanOverrideConfiguration;
-import io.github.jhipster.config.JHipsterConstants;
+import tech.jhipster.config.JHipsterConstants;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
@@ -29,16 +26,14 @@ import java.util.List;
 
 import static com.icthh.xm.commons.lep.XmLepConstants.THREAD_CONTEXT_KEY_AUTH_CONTEXT;
 import static com.icthh.xm.commons.lep.XmLepConstants.THREAD_CONTEXT_KEY_TENANT_CONTEXT;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {TimelineApp.class, SecurityBeanOverrideConfiguration.class, DropSchemaResolver.class})
+@SpringBootTest(classes = {TimelineApp.class, DropSchemaResolver.class})
 @TestPropertySource(properties = {
-    "application.timeline-service-impl = logger",
-    "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.cassandra.CassandraAutoConfiguration"
+    "application.timeline-service-impl = logger"
 })
 @ActiveProfiles(JHipsterConstants.SPRING_PROFILE_TEST)
 public class DomainEventServiceIntTest {
@@ -62,12 +57,6 @@ public class DomainEventServiceIntTest {
 
     @MockBean
     private TimelineService timelineService;
-
-    @MockBean
-    private Cluster cluster;
-
-    @MockBean
-    private CassandraProperties cassandraProperties;
 
     private final List<String> lepsForCleanUp = new ArrayList<>();
 

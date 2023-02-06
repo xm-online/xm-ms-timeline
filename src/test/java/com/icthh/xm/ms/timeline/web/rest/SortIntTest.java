@@ -1,20 +1,15 @@
 package com.icthh.xm.ms.timeline.web.rest;
 
-import com.icthh.xm.ms.timeline.AbstractCassandraTest;
-import com.icthh.xm.ms.timeline.TimelineApp;
-import com.icthh.xm.ms.timeline.config.SecurityBeanOverrideConfiguration;
+import com.icthh.xm.ms.timeline.AbstractSpringBootTest;
 import com.icthh.xm.ms.timeline.service.TimelineService;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.LinkedMultiValueMap;
@@ -33,10 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @see XmTimelineResource
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = {TimelineApp.class, SecurityBeanOverrideConfiguration.class})
 @WithMockUser(authorities = {"SUPER-ADMIN"})
-public class SortIntTest extends AbstractCassandraTest {
+public class SortIntTest extends AbstractSpringBootTest {
 
     @Autowired
     private XmTimelineResource controller;

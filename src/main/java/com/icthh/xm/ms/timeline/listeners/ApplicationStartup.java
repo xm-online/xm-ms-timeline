@@ -1,7 +1,5 @@
 package com.icthh.xm.ms.timeline.listeners;
 
-import static com.icthh.xm.ms.timeline.config.Constants.CASSANDRA_IMPL;
-
 import com.icthh.xm.commons.config.client.repository.TenantListRepository;
 import com.icthh.xm.commons.logging.util.MdcUtils;
 import com.icthh.xm.commons.permission.inspector.PrivilegeInspector;
@@ -9,11 +7,9 @@ import com.icthh.xm.ms.timeline.config.ApplicationProperties;
 import com.icthh.xm.ms.timeline.repository.kafka.SystemTopicConsumer;
 import com.icthh.xm.ms.timeline.service.kafka.SystemQueueConsumer;
 import com.icthh.xm.ms.timeline.service.kafka.TimelineEventConsumerHolder;
-import com.icthh.xm.ms.timeline.service.tenant.provisioner.TenantCassandraStorageProvisioner;
-import io.github.jhipster.config.JHipsterConstants;
+import tech.jhipster.config.JHipsterConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -43,36 +39,18 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
     private final KafkaProperties kafkaProperties;
     private final TenantListRepository tenantListRepository;
     private final PrivilegeInspector privilegeInspector;
-    private final TenantCassandraStorageProvisioner tenantCassandraStorageProvisioner;
     private final SystemQueueConsumer systemQueueConsumer;
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
-
         if (!env.acceptsProfiles(Profiles.of(JHipsterConstants.SPRING_PROFILE_TEST))) {
             createKafkaSystemQueueConsumers();
             createKafkaConsumers();
-            if (StringUtils.equalsIgnoreCase(properties.getTimelineServiceImpl(), CASSANDRA_IMPL)) {
-                migrateCassandra();
-            }
             privilegeInspector.readPrivileges(MdcUtils.getRid());
         } else {
             log.warn("WARNING! Privileges inspection is disabled by "
                 + "configuration parameter 'application.kafka-enabled'");
         }
-    }
-
-    private void migrateCassandra() {
-        tenantListRepository.getTenants().forEach(tenantName -> {
-            log.info("Start cassandra migration for tenant {}", tenantName);
-            try {
-                tenantCassandraStorageProvisioner.createCassandraKeyspaceIfNotExist(tenantName);
-                tenantCassandraStorageProvisioner.migrateCassandra(tenantName);
-            } catch (Exception e) {
-                log.error("Cassandra migration failed for tenant {}, error: {}",
-                    tenantName, e.getMessage(), e);
-            }
-        });
     }
 
     private void createKafkaConsumers() {

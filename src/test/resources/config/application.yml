@@ -15,6 +15,12 @@
 
 
 spring:
+    profiles:
+        active: test
+    sleuth:
+        enabled: true
+        async:
+            enabled: false
     application:
         name: timeline
     main:
@@ -38,13 +44,6 @@ spring:
             bindings:
                 output:
                     destination: topic-jhipster
-    data:
-        cassandra:
-            contactPoints: localhost
-            port: 0
-            protocolVersion: V4
-            compression: NONE
-            keyspaceName: cassandra_unit_keyspace
 
     mail:
         host: localhost
@@ -90,6 +89,7 @@ jhipster:
             port: 5000
             queue-size: 512
     security:
+        content-security-policy: "default-src 'self'; frame-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://storage.googleapis.com; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; img-src 'self' data:; font-src 'self' https://fonts.gstatic.com data:"
         authentication:
             jwt:
                 secret: afa5b8981b4cd0d7cf06a7152ac3144effad109d
@@ -100,9 +100,6 @@ jhipster:
             token-service-id: uaa
             client-id:
             client-secret:
-    metrics:
-        logs:
-            enabled: false
 
 # ===================================================================
 # Application specific properties
@@ -117,15 +114,12 @@ xm-config:
     enabled: false
 
 application:
-    cassandra:
-        migration-folder: config/cql/changelog
-        keyspace-create-cql: "CREATE KEYSPACE IF NOT EXISTS %s WITH REPLICATION = {'class':'SimpleStrategy','replication_factor':3} AND DURABLE_WRITES = true;"
+    tenant-ignored-path-list: /v3/api-docs, /api/profile-info, /swagger-resources/configuration/ui, /management/health
     tenant-properties-path-pattern: /config/tenants/{tenantName}/timeline/${tenant-properties-name}
     tenant-properties-name: timeline.yml
     domain-event-topics-name: domain-event-topic-consumers.yml
     domain-event-topics-path-pattern: /config/tenants/{tenantName}/${spring.application.name}/${application.domain-event-topics-name}
     kafka-system-queue: system_queue
     kafka-metadata-max-age: 60000 #in milliseconds
-    timeline-service-impl: cassandra
     lep:
         tenant-script-storage: XM_MS_CONFIG

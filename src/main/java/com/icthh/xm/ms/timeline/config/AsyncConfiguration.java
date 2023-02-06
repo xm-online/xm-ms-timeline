@@ -1,7 +1,7 @@
 package com.icthh.xm.ms.timeline.config;
 
-import io.github.jhipster.async.ExceptionHandlingAsyncTaskExecutor;
-import io.github.jhipster.config.JHipsterProperties;
+import tech.jhipster.async.ExceptionHandlingAsyncTaskExecutor;
+import tech.jhipster.config.JHipsterProperties;
 
 import java.util.concurrent.Executor;
 

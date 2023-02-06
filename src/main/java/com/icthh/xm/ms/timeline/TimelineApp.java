@@ -7,11 +7,10 @@ import com.icthh.xm.commons.tenant.TenantContextHolder;
 import com.icthh.xm.commons.tenant.TenantContextUtils;
 import com.icthh.xm.commons.tenant.TenantKey;
 import com.icthh.xm.commons.tenant.spring.config.TenantContextConfiguration;
-import com.icthh.xm.ms.timeline.client.OAuth2InterceptedFeignConfiguration;
 import com.icthh.xm.ms.timeline.config.ApplicationProperties;
 import com.icthh.xm.ms.timeline.config.DefaultProfileUtil;
 
-import io.github.jhipster.config.JHipsterConstants;
+import tech.jhipster.config.JHipsterConstants;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -38,8 +37,7 @@ import org.springframework.core.env.Environment;
     value = "com.icthh.xm",
     excludeFilters = {
         @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
-                              classes = {OAuth2InterceptedFeignConfiguration.class,
-                                         PermittedRepository.class,
+                              classes = {PermittedRepository.class,
                                          CriteriaPermittedRepository.class}),
         @ComponentScan.Filter(type = FilterType.REGEX,
                               pattern = "com\\.icthh\\.xm\\.commons\\.migration\\..*")

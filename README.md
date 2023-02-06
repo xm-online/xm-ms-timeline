@@ -2,11 +2,9 @@
 
 # timeline
 
-This application was generated using JHipster 6.5.1, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v6.5.1](https://www.jhipster.tech/documentation-archive/v6.5.1).
+This application was generated using JHipster 7.8.1, you can find documentation and help at [https://www.jhipster.tech](https://www.jhipster.tech).
 
 This is a "microservice" application intended to be part of a microservice architecture, please refer to the [Doing microservices with JHipster][] page of the documentation for more information.
-
-This application is configured for Service Discovery and Configuration with Consul. On launch, it will refuse to start if it is not able to connect to Consul at [http://localhost:8500](http://localhost:8500). For more information, read our documentation on [Service Discovery and Configuration with Consul][].
 
 ## Development
 
@@ -19,7 +17,7 @@ For further instructions on how to develop with JHipster, have a look at [Using 
 ## Enable RDBMS mode
 Open **application-<profile>.yml** config and add following configuration:
 
-1. Specify timeline service type. Possible values: cassandra, logger, rdbms
+1. Specify timeline service type. Possible values: logger, rdbms
 ```
 application:
     timeline-service-impl: rdbms
@@ -83,9 +81,9 @@ spring:
 ### Packaging as jar
 
 To build the final jar and optimize the timeline application for production, run:
-
+```
     ./gradlew -Pprod clean bootJar
-
+```
 To ensure everything worked, run:
 
     java -jar build/libs/*.jar
@@ -128,37 +126,35 @@ For more information, refer to the [Code quality page][].
 
 You can use Docker to improve your JHipster development experience. A number of docker-compose configuration are available in the [src/main/docker](src/main/docker) folder to launch required third party services.
 
-For example, to start a cassandra database in a docker container, run:
-
-    docker-compose -f src/main/docker/cassandra.yml up -d
-
-To stop it and remove the container, run:
-
-    docker-compose -f src/main/docker/cassandra.yml down
-
 You can also fully dockerize your application and all the services that it depends on.
 To achieve this, first build a docker image of your app by running:
-
+```
     ./gradlew bootWar -Pprod jibDockerBuild
-
+```
 Then run:
-
+```
     docker-compose -f src/main/docker/app.yml up -d
-
+```
 For more information refer to [Using Docker and Docker-Compose][], this page also contains information on the docker-compose sub-generator (`jhipster docker-compose`), which is able to generate docker configurations for one or several JHipster applications.
+
+## Continuous Integration (optional)
 
 ## Continuous Integration (optional)
 
 To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`), this will let you generate configuration files for a number of Continuous Integration systems. Consult the [Setting up Continuous Integration][] page for more information.
 
 [jhipster homepage and latest documentation]: https://www.jhipster.tech
-[jhipster 6.5.1 archive]: https://www.jhipster.tech/documentation-archive/v6.5.1
-[doing microservices with jhipster]: https://www.jhipster.tech/documentation-archive/v6.5.1/microservices-architecture/
-[using jhipster in development]: https://www.jhipster.tech/documentation-archive/v6.5.1/development/
-[service discovery and configuration with consul]: https://www.jhipster.tech/documentation-archive/v6.5.1/microservices-architecture/#consul
-[using docker and docker-compose]: https://www.jhipster.tech/documentation-archive/v6.5.1/docker-compose
-[using jhipster in production]: https://www.jhipster.tech/documentation-archive/v6.5.1/production/
-[running tests page]: https://www.jhipster.tech/documentation-archive/v6.5.1/running-tests/
-[code quality page]: https://www.jhipster.tech/documentation-archive/v6.5.1/code-quality/
-[setting up continuous integration]: https://www.jhipster.tech/documentation-archive/v6.5.1/setting-up-ci/
-
+[jhipster 7.8.1 archive]: https://www.jhipster.tech
+[doing microservices with jhipster]: https://www.jhipster.tech/microservices-architecture/
+[using jhipster in development]: https://www.jhipster.tech/development/
+[service discovery and configuration with consul]: https://www.jhipster.tech/microservices-architecture/#consul
+[using docker and docker-compose]: https://www.jhipster.tech/docker-compose
+[using jhipster in production]: https://www.jhipster.tech/production/
+[running tests page]: https://www.jhipster.tech/running-tests/
+[code quality page]: https://www.jhipster.tech/code-quality/
+[setting up continuous integration]: https://www.jhipster.tech/setting-up-ci/
+[node.js]: https://nodejs.org/
+[npm]: https://www.npmjs.com/
+[openapi-generator]: https://openapi-generator.tech
+[swagger-editor]: https://editor.swagger.io
+[doing api-first development]: https://www.jhipster.tech/doing-api-first-development/

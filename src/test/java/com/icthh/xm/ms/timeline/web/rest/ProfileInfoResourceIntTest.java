@@ -1,8 +1,7 @@
 package com.icthh.xm.ms.timeline.web.rest;
 
-import com.icthh.xm.ms.timeline.AbstractCassandraTest;
+import com.icthh.xm.ms.timeline.AbstractSpringBootTest;
 import com.icthh.xm.ms.timeline.TimelineApp;
-import com.icthh.xm.ms.timeline.config.SecurityBeanOverrideConfiguration;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,9 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @see ProfileInfoResource
  **/
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = {TimelineApp.class, SecurityBeanOverrideConfiguration.class})
-public class ProfileInfoResourceIntTest extends AbstractCassandraTest {
+public class ProfileInfoResourceIntTest extends AbstractSpringBootTest {
 
     @Mock
     private Environment environment;
@@ -52,7 +49,7 @@ public class ProfileInfoResourceIntTest extends AbstractCassandraTest {
     public void getProfileInfoWithRibbon() throws Exception {
         restProfileMockMvc.perform(get("/api/profile-info"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE));
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
     }
 
     @Test
@@ -63,6 +60,6 @@ public class ProfileInfoResourceIntTest extends AbstractCassandraTest {
 
         restProfileMockMvc.perform(get("/api/profile-info"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE));
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
     }
 }
