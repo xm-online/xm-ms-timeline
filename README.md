@@ -81,9 +81,9 @@ spring:
 ### Packaging as jar
 
 To build the final jar and optimize the timeline application for production, run:
-
+```
     ./gradlew -Pprod clean bootJar
-
+```
 To ensure everything worked, run:
 
     java -jar build/libs/*.jar
