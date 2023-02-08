@@ -7,6 +7,7 @@ import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.domain.properties.TenantProperties;
 import com.icthh.xm.ms.timeline.repository.jpa.TimelineJpaRepository;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
+import org.springframework.test.context.TestPropertySource;
 import tech.jhipster.config.JHipsterConstants;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
+@TestPropertySource(properties = {"application.timeline-service-impl = rdbms"})
 @SpringBootTest(classes = {TimelineApp.class, DropSchemaResolver.class})
 @ActiveProfiles(JHipsterConstants.SPRING_PROFILE_TEST)
 public class TimelineServiceIntTest {
