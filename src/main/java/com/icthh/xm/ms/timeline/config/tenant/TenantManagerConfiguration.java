@@ -85,7 +85,7 @@ public class TenantManagerConfiguration {
     }
 
     @Bean("storageTenantProvisioner")
-    @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = RDBMS_IMPL, matchIfMissing = true)
+    @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = RDBMS_IMPL)
     public TenantProvisioner rdbmsTenantProvisioner(DataSource dataSource,
                                                     LiquibaseProperties liquibaseProperties,
                                                     DropSchemaResolver schemaDropResolver,
