@@ -18,11 +18,11 @@ public class SortProcessorUnitTest {
     private static final String USER_KEY = "test_user_key";
     private static final String MS_NAME = "test_ms_name";
     private static final String OPERATION_NAME = "test_operation";
-    private static final Long ENTITY_ID_LONG = 111L;
+    private static final String AGGREGATE_ID = "111";
     private static final String ENTITY_KEY = "test_entity_key";
-    private static final String ENTITY_TYPE_KEY = "test_entity_type_key";
+    private static final String AGGREGATE_TYPE = "test_aggregate_type";
     private static final Instant DATE = Instant.now();
-    private static final String CHANNEL_TYPE = "test_channel_type";
+    private static final String CLIENT_ID = "test_client_id";
 
     private static final String ID_FIELD = "id";
     private static final String RID_FIELD = "rid";
@@ -30,11 +30,11 @@ public class SortProcessorUnitTest {
     private static final String USER_KEY_FIELD = "userKey";
     private static final String MS_NAME_FIELD = "msName";
     private static final String OPERATION_NAME_FIELD = "operationName";
-    private static final String ENTITY_ID_FIELD = "entityId";
+    private static final String AGGREGATE_ID_FIELD = "aggregateId";
     private static final String ENTITY_KEY_FIELD = "entityKey";
-    private static final String ENTITY_TYPE_KEY_FIELD = "entityTypeKey";
+    private static final String AGGREGATE_TYPE_FIELD = "aggregateType";
     private static final String START_DATE_FIELD = "startDate";
-    private static final String CHANNEL_TYPE_FIELD = "channelType";
+    private static final String CLIENT_ID_FIELD = "clientId";
 
     private static final String FAKE_FIRST_FIELD = "fieldFirst";
     private static final String FAKE_SECOND_FIELD = "fieldSecond";
@@ -76,11 +76,11 @@ public class SortProcessorUnitTest {
         timeline.setUserKey(USER_KEY);
         timeline.setMsName(MS_NAME);
         timeline.setOperationName(OPERATION_NAME);
-        timeline.setEntityId(ENTITY_ID_LONG);
+        timeline.setAggregateId(AGGREGATE_ID);
         timeline.setEntityKey(ENTITY_KEY);
-        timeline.setEntityTypeKey(ENTITY_TYPE_KEY);
+        timeline.setAggregateType(AGGREGATE_TYPE);
         timeline.setStartDate(DATE);
-        timeline.setChannelType(CHANNEL_TYPE);
+        timeline.setClientId(CLIENT_ID);
 
         return timeline;
     }
@@ -104,11 +104,11 @@ public class SortProcessorUnitTest {
             USER_KEY_FIELD,
             MS_NAME_FIELD,
             OPERATION_NAME_FIELD,
-            ENTITY_ID_FIELD,
+            AGGREGATE_ID_FIELD,
             ENTITY_KEY_FIELD,
-            ENTITY_TYPE_KEY_FIELD,
+            AGGREGATE_TYPE_FIELD,
             START_DATE_FIELD,
-            CHANNEL_TYPE_FIELD
+            CLIENT_ID_FIELD
         );
     }
 
