@@ -11,6 +11,8 @@
     <include file="/config/liquibase/changelog/20230214000000_add_columns_for_new_structure.xml" relativeToChangelogFile="false"/>
     <include file="/config/liquibase/changelog/20230214000001_rename_columns_for_new_structure.xml" relativeToChangelogFile="false"/>
     <include file="/config/liquibase/changelog/20230214000002_rename_column_and_modify_data_type_for_new_structure.xml" relativeToChangelogFile="false"/>
+    <include file="/config/liquibase/changelog/20230215000000_migrate_data_from_entity_id_to_aggregate_id_only_oracle.xml" relativeToChangelogFile="false"/>
+    <include file="/config/liquibase/changelog/20230215000001_recreate_index_only_oracle.xml" relativeToChangelogFile="false"/>
 
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->

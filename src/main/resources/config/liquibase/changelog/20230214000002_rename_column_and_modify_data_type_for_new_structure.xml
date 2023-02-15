@@ -17,15 +17,6 @@
         <addColumn tableName="xmtimeline">
             <column name="aggregate_id" type="varchar(255)"/>
         </addColumn>
-        <update tableName="xmtimeline">
-            <column name="aggregate_id" valueComputed="to_char(entity_id)"/>
-        </update>
-        <dropColumn tableName="xmtimeline">
-            <column name="entity_id"/>
-        </dropColumn>
-        <createIndex tableName="xmtimeline" indexName="idx_entity_id">
-            <column name="aggregate_id" />
-        </createIndex>
     </changeSet>
 
 </databaseChangeLog>
