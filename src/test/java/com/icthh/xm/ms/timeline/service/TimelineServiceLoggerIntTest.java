@@ -1,5 +1,6 @@
 package com.icthh.xm.ms.timeline.service;
 
+import com.icthh.xm.ms.timeline.TimelineApp;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.service.dto.Timeline;
 import com.icthh.xm.ms.timeline.service.logger.TimelineServiceLoggerImpl;
@@ -7,11 +8,24 @@ import com.icthh.xm.ms.timeline.service.mapper.XmTimelineMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.Instant;
 
-public class TimelineServiceLoggerUnitTest {
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = {TimelineApp.class})
+@TestPropertySource(properties = {
+    "application.timeline-service-impl = logger",
+})
+public class TimelineServiceLoggerIntTest {
+
+    @Autowired
+    private XmTimelineMapper xmTimelineMapper;
 
     private TimelineServiceLoggerImpl timelineService;
     private XmTimeline timeline;
@@ -26,7 +40,7 @@ public class TimelineServiceLoggerUnitTest {
 
     @Before
     public void init() {
-        timelineService = new TimelineServiceLoggerImpl(new XmTimelineMapper());
+        timelineService = new TimelineServiceLoggerImpl(xmTimelineMapper);
         timeline = createTestTimeline();
         timelineService.insertTimelines(timeline);
     }
