@@ -4,10 +4,10 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <changeSet id="20230215000000" author="fpyshnyi" dbms="oracle">
-        <update tableName="xmtimeline">
-            <column name="aggregate_id" valueComputed="to_char(entity_id)"/>
-        </update>
+    <changeSet id="20230214000002" author="fpyshnyi">
+        <createIndex tableName="xmtimeline" indexName="idx_aggregate_id">
+            <column name="aggregate_id" />
+        </createIndex>
     </changeSet>
 
 </databaseChangeLog>

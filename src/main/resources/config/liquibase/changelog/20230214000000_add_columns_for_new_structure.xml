@@ -10,6 +10,7 @@
 
     <changeSet id="20230214000000" author="fpyshnyi">
         <addColumn tableName="xmtimeline">
+            <column name="aggregate_id" type="varchar(255)"/>
             <column name="source" type="varchar(255)"/>
             <column name="data" type="${jsonType}"/>
             <column name="entity_before" type="${jsonType}"/>
