@@ -6,7 +6,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import com.icthh.xm.commons.domainevent.domain.DomainEvent;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.service.TimelineService;
-import com.icthh.xm.ms.timeline.service.dto.Timeline;
+import com.icthh.xm.ms.timeline.service.dto.TimelineDto;
 import com.icthh.xm.ms.timeline.service.mapper.XmTimelineMapper;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 
@@ -57,16 +57,16 @@ public class TimelineServiceLoggerImpl implements TimelineService {
     }
 
     @Override
-    public Page<Timeline> getTimelines(String msName,
-                                       String userKey,
-                                       String aggregateId,
-                                       Instant dateFrom,
-                                       Instant dateTo,
-                                       String operation,
-                                       String source,
-                                       int page,
-                                       int size,
-                                       Sort sort) {
+    public Page<TimelineDto> getTimelines(String msName,
+                                          String userKey,
+                                          String aggregateId,
+                                          Instant dateFrom,
+                                          Instant dateTo,
+                                          String operation,
+                                          String source,
+                                          int page,
+                                          int size,
+                                          Sort sort) {
         List<XmTimeline> filteredTimelines = getTimelines(msName, userKey, aggregateId, dateFrom, dateTo, operation, source);
         return new PageImpl<>(xmTimelineMapper.xmTimelineToTimeline(filteredTimelines));
     }

@@ -2,7 +2,7 @@ package com.icthh.xm.ms.timeline.service;
 
 import com.icthh.xm.commons.domainevent.domain.DomainEvent;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
-import com.icthh.xm.ms.timeline.service.dto.Timeline;
+import com.icthh.xm.ms.timeline.service.dto.TimelineDto;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -26,14 +26,14 @@ public interface TimelineService {
 
     void insertTimelines(DomainEvent domainEvent);
 
-    Page<Timeline> getTimelines(String msName,
-                                String userKey,
-                                String aggregateId,
-                                Instant dateFrom,
-                                Instant dateTo,
-                                String operation,
-                                String source,
-                                int page,
-                                int size,
-                                Sort sort);
+    Page<TimelineDto> getTimelines(String msName,
+                                   String userKey,
+                                   String aggregateId,
+                                   Instant dateFrom,
+                                   Instant dateTo,
+                                   String operation,
+                                   String source,
+                                   int page,
+                                   int size,
+                                   Sort sort);
 }

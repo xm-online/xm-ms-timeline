@@ -2,7 +2,7 @@ package com.icthh.xm.ms.timeline.service;
 
 import com.icthh.xm.ms.timeline.TimelineApp;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
-import com.icthh.xm.ms.timeline.service.dto.Timeline;
+import com.icthh.xm.ms.timeline.service.dto.TimelineDto;
 import com.icthh.xm.ms.timeline.service.logger.TimelineServiceLoggerImpl;
 import com.icthh.xm.ms.timeline.service.mapper.XmTimelineMapper;
 import org.assertj.core.api.Assertions;
@@ -89,7 +89,7 @@ public class TimelineServiceLoggerIntTest {
 
     @Test
     public void getTimelinesPage() {
-        Page<Timeline> page = timelineService.getTimelines(
+        Page<TimelineDto> page = timelineService.getTimelines(
                 MS_NAME,
                 USER_KEY,
                 AGGREGATE_ID,

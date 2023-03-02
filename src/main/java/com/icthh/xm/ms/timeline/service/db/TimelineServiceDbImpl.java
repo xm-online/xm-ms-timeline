@@ -7,7 +7,7 @@ import com.icthh.xm.ms.timeline.repository.jpa.TimelineJpaRepository;
 import com.icthh.xm.ms.timeline.service.SortProcessor;
 import com.icthh.xm.ms.timeline.service.TenantPropertiesService;
 import com.icthh.xm.ms.timeline.service.TimelineService;
-import com.icthh.xm.ms.timeline.service.dto.Timeline;
+import com.icthh.xm.ms.timeline.service.dto.TimelineDto;
 import com.icthh.xm.ms.timeline.service.mapper.XmTimelineMapper;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 import lombok.AllArgsConstructor;
@@ -85,16 +85,16 @@ public class TimelineServiceDbImpl implements TimelineService {
 
     @Transactional(readOnly = true)
     @Override
-    public Page<Timeline> getTimelines(String msName,
-                                       String userKey,
-                                       String aggregateId,
-                                       Instant dateFrom,
-                                       Instant dateTo,
-                                       String operation,
-                                       String source,
-                                       int page,
-                                       int size,
-                                       Sort sort) {
+    public Page<TimelineDto> getTimelines(String msName,
+                                          String userKey,
+                                          String aggregateId,
+                                          Instant dateFrom,
+                                          Instant dateTo,
+                                          String operation,
+                                          String source,
+                                          int page,
+                                          int size,
+                                          Sort sort) {
         Pageable pageable = PageRequest.of(
             page,
             size,

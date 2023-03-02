@@ -3,7 +3,7 @@ package com.icthh.xm.ms.timeline.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import com.icthh.xm.commons.permission.annotation.PrivilegeDescription;
 import com.icthh.xm.ms.timeline.service.TimelineService;
-import com.icthh.xm.ms.timeline.service.dto.Timeline;
+import com.icthh.xm.ms.timeline.service.dto.TimelineDto;
 import com.icthh.xm.ms.timeline.web.rest.util.PaginationUtil;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 import io.swagger.annotations.Api;
@@ -93,14 +93,14 @@ public class XmTimelineResource {
 
     @GetMapping("/timelines/v2")
     @Timed
-    @ApiOperation(value = "Get list of timelines (version 2)", response = Timeline.class, responseContainer = "List")
+    @ApiOperation(value = "Get list of timelines (version 2)", response = TimelineDto.class, responseContainer = "List")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Successful retrieval of timelines", response = Timeline.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "Successful retrieval of timelines", response = TimelineDto.class, responseContainer = "List"),
         @ApiResponse(code = 500, message = "Internal server error")})
     @PreAuthorize("hasPermission({'userKey':#userKey, 'aggregateId': #aggregateId, 'dateFrom': #dateFrom, 'dateTo': #dateTo, "
         + "'operation': #operation}, 'TIMELINE.GET_LIST_V2')")
     @PrivilegeDescription("Privilege to get all the timelines (version 2)")
-    public ResponseEntity<List<Timeline>> getTimelinesV2(
+    public ResponseEntity<List<TimelineDto>> getTimelinesV2(
         @ApiParam(name = "msName", value = "Microservices name for timeline filter")
         @RequestParam(value = "msName", required = false) String msName,
         @ApiParam(name = "userKey", value = "User key for timeline filter")
@@ -122,7 +122,7 @@ public class XmTimelineResource {
         @ApiParam(name = "sort", value = "Sorting declared fields")
         @SortDefault(sort = "startDate", direction = Sort.Direction.DESC) Sort sort
     ) {
-        Page<Timeline> timelines = service.getTimelines(msName, userKey, aggregateId, dateFrom, dateTo, operation, source, page, size, sort);
+        Page<TimelineDto> timelines = service.getTimelines(msName, userKey, aggregateId, dateFrom, dateTo, operation, source, page, size, sort);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(timelines, "/timelines/v2");
         return new ResponseEntity<>(timelines.getContent(), headers, HttpStatus.OK);
     }
