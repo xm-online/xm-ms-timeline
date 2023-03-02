@@ -8,6 +8,9 @@
     <include file="config/liquibase/changelog/20190112305400_add_column_operation_query_string.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190204112300_add_index.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20211020173000_add_request_response_header_index.xml" relativeToChangelogFile="false"/>
+    <include file="/config/liquibase/changelog/20230214000000_add_columns_for_new_structure.xml" relativeToChangelogFile="false"/>
+    <include file="/config/liquibase/changelog/20230214000001_rename_columns_for_new_structure.xml" relativeToChangelogFile="false"/>
+    <include file="/config/liquibase/changelog/20230214000002_add_index_for_new_structure.xml" relativeToChangelogFile="false"/>
 
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->

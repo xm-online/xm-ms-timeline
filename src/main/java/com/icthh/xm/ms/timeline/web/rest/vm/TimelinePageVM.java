@@ -1,9 +1,8 @@
 package com.icthh.xm.ms.timeline.web.rest.vm;
 
-import com.icthh.xm.ms.timeline.domain.XmTimeline;
-
 import java.util.List;
 
+import com.icthh.xm.ms.timeline.service.dto.TimelineEvent;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,11 +10,11 @@ import lombok.Setter;
 @Setter
 public class TimelinePageVM {
 
-    private List<XmTimeline> timelines;
+    private List<TimelineEvent> timelines;
 
     private String next;
 
-    public TimelinePageVM(List<XmTimeline> timelines, String next) {
+    public TimelinePageVM(List<TimelineEvent> timelines, String next) {
         this.timelines = timelines;
         this.next = next;
     }

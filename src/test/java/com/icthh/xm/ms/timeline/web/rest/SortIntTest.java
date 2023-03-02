@@ -56,7 +56,7 @@ public class SortIntTest extends AbstractSpringBootTest {
 
         Sort expectedSort = Sort.by(DESC, "startDate");
 
-        verify(timelineService).getTimelines(any(), any(), any(), any(), any(), any(), any(), eq(0), eq(expectedSort));
+        verify(timelineService).getTimelines(any(), any(), any(), any(), any(), any(), any(), any(), eq(0), eq(expectedSort));
     }
 
     @Test
@@ -71,7 +71,7 @@ public class SortIntTest extends AbstractSpringBootTest {
 
         Sort expectedSort = Sort.by(desc("id"), desc("startDate"));
 
-        verify(timelineService).getTimelines(any(), any(), any(), any(), any(), any(), any(), eq(0), eq(expectedSort));
+        verify(timelineService).getTimelines(any(), any(), any(), any(), any(), any(), any(), any(), eq(0), eq(expectedSort));
     }
 
 }

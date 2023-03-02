@@ -6,6 +6,7 @@ import com.icthh.xm.ms.timeline.TimelineApp;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.domain.properties.TenantProperties;
 import com.icthh.xm.ms.timeline.repository.jpa.TimelineJpaRepository;
+import com.icthh.xm.ms.timeline.service.dto.TimelineEvent;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 import org.springframework.test.context.TestPropertySource;
 import tech.jhipster.config.JHipsterConstants;
@@ -49,7 +50,8 @@ public class TimelineServiceIntTest {
     private static final String USER_KEY = "test_user_key";
     private static final Instant DATE = Instant.now();
     private static final String OPERATION = "test_operation";
-    private static final Long ENTITY_ID_LONG = 111L;
+    private static final String SOURCE = "test_source";
+    private static final String AGGREGATE_ID = "111";
     private static final String ENTITY_KEY = "test_entity_key";
     private static final String TEST_PAYLOAD = "test payload body";
 
@@ -61,21 +63,23 @@ public class TimelineServiceIntTest {
         TimelinePageVM pageVM = timelineService.getTimelines(
             MS_NAME,
             USER_KEY,
-            ENTITY_ID_LONG.toString(),
+            AGGREGATE_ID,
             DATE.minus(1,
                 ChronoUnit.DAYS),
             DATE.plus(1,
                 ChronoUnit.DAYS),
             OPERATION,
+            SOURCE,
             null,
             20,
             Sort.by(Sort.Direction.DESC, "startDate"));
         assertThat(pageVM.getTimelines()).hasSize(1);
-        XmTimeline xmTimeline = pageVM.getTimelines().iterator().next();
-        assertThat(xmTimeline.getResponseBody()).isNotNull();
-        assertThat(xmTimeline.getRequestBody()).isNotNull();
+        TimelineEvent timelineEvent = pageVM.getTimelines().iterator().next();
+        assertThat(timelineEvent.responseBody()).isNotNull();
+        assertThat(timelineEvent.requestBody()).isNotNull();
 
         assertThat(timelineService.getTimelines(
+            null,
             null,
             null,
             null,
@@ -90,10 +94,11 @@ public class TimelineServiceIntTest {
         assertThat(timelineService.getTimelines(
             "WRONG_MS_NAME",
             USER_KEY,
-            ENTITY_ID_LONG.toString(),
+            AGGREGATE_ID,
             DATE,
             DATE,
             OPERATION,
+            SOURCE,
             null,
             20,
                 Sort.by(Sort.Direction.DESC, "startDate"))
@@ -110,19 +115,20 @@ public class TimelineServiceIntTest {
         TimelinePageVM pageVM = timelineService.getTimelines(
             MS_NAME,
             USER_KEY,
-            ENTITY_ID_LONG.toString(),
+            AGGREGATE_ID,
             DATE.minus(1,
                 ChronoUnit.DAYS),
             DATE.plus(1,
                 ChronoUnit.DAYS),
             OPERATION,
+            SOURCE,
             null,
             20,
             Sort.by(Sort.Direction.DESC, "startDate"));
         assertThat(pageVM.getTimelines()).hasSize(1);
-        XmTimeline xmTimeline = pageVM.getTimelines().iterator().next();
-        assertThat(xmTimeline.getResponseBody()).isNull();
-        assertThat(xmTimeline.getRequestBody()).isNull();
+        TimelineEvent timelineEvent = pageVM.getTimelines().iterator().next();
+        assertThat(timelineEvent.responseBody()).isNull();
+        assertThat(timelineEvent.requestBody()).isNull();
 
         timelineJpaRepository.deleteAll();
     }
@@ -133,10 +139,11 @@ public class TimelineServiceIntTest {
         timeline.setId(ID);
         timeline.setMsName(MS_NAME);
         timeline.setUserKey(USER_KEY);
-        timeline.setEntityId(ENTITY_ID_LONG);
+        timeline.setAggregateId(AGGREGATE_ID);
         timeline.setEntityKey(ENTITY_KEY);
         timeline.setStartDate(DATE);
         timeline.setOperationName(OPERATION);
+        timeline.setSource(SOURCE);
         timeline.setRequestBody(TEST_PAYLOAD);
         timeline.setResponseBody(TEST_PAYLOAD);
 

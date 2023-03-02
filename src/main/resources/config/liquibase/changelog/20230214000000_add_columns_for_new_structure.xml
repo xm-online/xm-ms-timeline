@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <property name="jsonType" value="varchar" dbms="h2"/>
+    <property name="jsonType" value="jsonb" dbms="postgresql"/>
+    <property name="jsonType" value="text" dbms="oracle"/>
+
+    <changeSet id="20230214000000" author="fpyshnyi">
+        <addColumn tableName="xmtimeline">
+            <column name="aggregate_id" type="varchar(255)"/>
+            <column name="source" type="varchar(255)"/>
+            <column name="data" type="${jsonType}"/>
+            <column name="entity_before" type="${jsonType}"/>
+            <column name="entity_after" type="${jsonType}"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

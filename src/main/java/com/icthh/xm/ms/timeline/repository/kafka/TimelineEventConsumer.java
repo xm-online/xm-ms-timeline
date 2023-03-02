@@ -9,6 +9,8 @@ import com.icthh.xm.commons.tenant.TenantContextUtils;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.service.TenantPropertiesService;
 import com.icthh.xm.ms.timeline.service.TimelineService;
+import com.icthh.xm.ms.timeline.service.dto.TimelineEvent;
+import com.icthh.xm.ms.timeline.service.mapper.XmTimelineMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -28,6 +30,7 @@ import java.util.function.Consumer;
 @IgnoreLogginAspect
 public class TimelineEventConsumer {
     private final TimelineService timelineService;
+    private final XmTimelineMapper xmTimelineMapper;
     private final TenantPropertiesService tenantPropertiesService;
     private final TenantContextHolder tenantContextHolder;
 
@@ -47,7 +50,8 @@ public class TimelineEventConsumer {
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
             try {
-                XmTimeline xmTimeline = mapper.readValue(message.value(), XmTimeline.class);
+                TimelineEvent timelineEvent = mapper.readValue(message.value(), TimelineEvent.class);
+                XmTimeline xmTimeline = xmTimelineMapper.timelineEventToXmTimeline(timelineEvent);
                 if (StringUtils.isBlank(xmTimeline.getTenant())) {
                     xmTimeline.setTenant(message.topic());
                 }

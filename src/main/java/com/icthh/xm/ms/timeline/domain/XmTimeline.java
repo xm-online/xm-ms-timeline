@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -20,16 +21,26 @@ import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer;
+import com.icthh.xm.commons.migration.db.jsonb.Jsonb;
+import com.icthh.xm.ms.timeline.domain.converter.MapToStringConverter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Entity
 @Table(name = "xmtimeline")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @ToString(exclude = {"httpStatusCode", "startDate", "requestBody", "responseBody",
-    "requestHeaders", "responseHeaders", "browser", "opSystem"})
+    "requestHeaders", "responseHeaders", "browser", "opSystem", "data", "entityBefore", "entityAfter"})
 @NamedEntityGraph(name = "withHeaders",
                   attributeNodes = {
                       @NamedAttributeNode("requestHeaders"),
@@ -67,16 +78,16 @@ public class XmTimeline implements Serializable {
     private String operationName;
 
     @Sorted
-    @Column(name = "entity_id")
-    private Long entityId;
+    @Column(name = "aggregate_id")
+    private String aggregateId;
 
     @Sorted
     @Column(name = "entity_key")
     private String entityKey;
 
     @Sorted
-    @Column(name = "entity_type_key")
-    private String entityTypeKey;
+    @Column(name = "aggregate_type")
+    private String aggregateType;
 
     @Column(name = "operation_url")
     private String operationUrl;
@@ -110,8 +121,8 @@ public class XmTimeline implements Serializable {
     private Long responseLength;
 
     @Sorted
-    @Column(name = "channel_type")
-    private String channelType;
+    @Column(name = "client_id")
+    private String clientId;
 
     @ElementCollection
     @MapKeyColumn(name = "header_key")
@@ -133,4 +144,29 @@ public class XmTimeline implements Serializable {
 
     @Column(name = "op_system")
     private String opSystem;
+
+    @Column(name = "source")
+    private String source;
+
+    @Jsonb
+    @JsonDeserialize(using = UntypedObjectDeserializer.class)
+    @Convert(converter = MapToStringConverter.class)
+    @Column(name = "data")
+    @Builder.Default
+    private Map<String, Object> data = new HashMap<>();
+
+    @Jsonb
+    @JsonDeserialize(using = UntypedObjectDeserializer.class)
+    @Convert(converter = MapToStringConverter.class)
+    @Column(name = "entity_before")
+    @Builder.Default
+    private Map<String, Object> entityBefore = new HashMap<>();
+
+    @Jsonb
+    @JsonDeserialize(using = UntypedObjectDeserializer.class)
+    @Convert(converter = MapToStringConverter.class)
+    @Column(name = "entity_after")
+    @Builder.Default
+    private Map<String, Object> entityAfter = new HashMap<>();
+
 }
