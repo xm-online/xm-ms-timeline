@@ -25,18 +25,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer;
 import com.icthh.xm.commons.migration.db.jsonb.Jsonb;
 import com.icthh.xm.ms.timeline.domain.converter.MapToStringConverter;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Entity
 @Table(name = "xmtimeline")
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @ToString(exclude = {"httpStatusCode", "startDate", "requestBody", "responseBody",
@@ -152,21 +146,18 @@ public class XmTimeline implements Serializable {
     @JsonDeserialize(using = UntypedObjectDeserializer.class)
     @Convert(converter = MapToStringConverter.class)
     @Column(name = "data")
-    @Builder.Default
     private Map<String, Object> data = new HashMap<>();
 
     @Jsonb
     @JsonDeserialize(using = UntypedObjectDeserializer.class)
     @Convert(converter = MapToStringConverter.class)
     @Column(name = "entity_before")
-    @Builder.Default
     private Map<String, Object> entityBefore = new HashMap<>();
 
     @Jsonb
     @JsonDeserialize(using = UntypedObjectDeserializer.class)
     @Convert(converter = MapToStringConverter.class)
     @Column(name = "entity_after")
-    @Builder.Default
     private Map<String, Object> entityAfter = new HashMap<>();
 
 }

@@ -80,7 +80,8 @@ public class TimelineServiceDbImpl implements TimelineService {
 
     @Override
     public void insertTimelines(DomainEvent domainEvent) {
-        log.warn("Not implemented!");
+        XmTimeline xmTimeline = xmTimelineMapper.domainEventToXmTimeline(domainEvent);
+        insertTimelines(xmTimeline);
     }
 
     @Transactional(readOnly = true)
@@ -105,7 +106,7 @@ public class TimelineServiceDbImpl implements TimelineService {
 
         List<XmTimeline> content = filterResult(timelines);
 
-        return new PageImpl<>(xmTimelineMapper.xmTimelineToTimeline(content), timelines.getPageable(), timelines.getTotalElements());
+        return new PageImpl<>(xmTimelineMapper.xmTimelineToTimelineDto(content), timelines.getPageable(), timelines.getTotalElements());
     }
 
     private Page<XmTimeline> getTimelines(String msName,

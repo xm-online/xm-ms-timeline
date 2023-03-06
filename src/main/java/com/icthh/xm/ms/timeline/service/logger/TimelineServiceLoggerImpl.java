@@ -53,7 +53,8 @@ public class TimelineServiceLoggerImpl implements TimelineService {
 
     @Override
     public void insertTimelines(DomainEvent domainEvent) {
-        log.warn("Not implemented!");
+        XmTimeline xmTimeline = xmTimelineMapper.domainEventToXmTimeline(domainEvent);
+        insertTimelines(xmTimeline);
     }
 
     @Override
@@ -68,7 +69,7 @@ public class TimelineServiceLoggerImpl implements TimelineService {
                                           int size,
                                           Sort sort) {
         List<XmTimeline> filteredTimelines = getTimelines(msName, userKey, aggregateId, dateFrom, dateTo, operation, source);
-        return new PageImpl<>(xmTimelineMapper.xmTimelineToTimeline(filteredTimelines));
+        return new PageImpl<>(xmTimelineMapper.xmTimelineToTimelineDto(filteredTimelines));
     }
 
     private List<XmTimeline> getTimelines(String msName,
@@ -94,7 +95,7 @@ public class TimelineServiceLoggerImpl implements TimelineService {
             })
             .filter(t -> dateFrom == null || (dateFrom.isBefore(t.getStartDate()) || dateFrom.equals(t.getStartDate())))
             .filter(t -> dateTo == null || (dateTo.isAfter(t.getStartDate()) || dateTo.equals(t.getStartDate())))
-            .collect(Collectors.toList());
+            .toList();
     }
 
     private static boolean stringFilter(String filter, String value) {
