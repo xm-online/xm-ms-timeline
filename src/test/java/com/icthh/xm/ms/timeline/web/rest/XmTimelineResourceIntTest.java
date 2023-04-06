@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -66,6 +67,7 @@ public class XmTimelineResourceIntTest extends AbstractSpringBootTest {
 
     public static XmTimeline createEntity(String aggregateId, String source) {
         XmTimeline entity = new XmTimeline();
+        entity.setStartDate(Instant.now());
         entity.setAggregateId(aggregateId);
         entity.setSource(source);
 

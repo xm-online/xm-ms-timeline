@@ -8,6 +8,7 @@ import com.icthh.xm.ms.timeline.domain.properties.TenantProperties;
 import com.icthh.xm.ms.timeline.repository.jpa.TimelineJpaRepository;
 import com.icthh.xm.ms.timeline.service.dto.TimelineEvent;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.TestPropertySource;
 import tech.jhipster.config.JHipsterConstants;
 import org.junit.Test;
@@ -58,7 +59,7 @@ public class TimelineServiceIntTest {
     @Test
     public void testTimelineH2db() {
         mockHidePayloadProp(false);
-        timelineJpaRepository.save(createTestTimeline());
+        timelineJpaRepository.save(createTestTimeline(DATE));
 
         TimelinePageVM pageVM = timelineService.getTimelines(
             MS_NAME,
@@ -102,7 +103,7 @@ public class TimelineServiceIntTest {
             null,
             20,
                 Sort.by(Sort.Direction.DESC, "startDate"))
-            .getTimelines()).hasSize(0);
+            .getTimelines()).isEmpty();
 
         timelineJpaRepository.deleteAll();
     }
@@ -110,7 +111,7 @@ public class TimelineServiceIntTest {
     @Test
     public void testTimelineH2dbWithHidePayload() {
         mockHidePayloadProp(true);
-        timelineJpaRepository.save(createTestTimeline());
+        timelineJpaRepository.save(createTestTimeline(DATE));
 
         TimelinePageVM pageVM = timelineService.getTimelines(
             MS_NAME,
@@ -133,7 +134,14 @@ public class TimelineServiceIntTest {
         timelineJpaRepository.deleteAll();
     }
 
-    private XmTimeline createTestTimeline() {
+    @Test(expected = DataIntegrityViolationException.class)
+    public void testTimelineH2dbExpectedConstraintException() {
+        mockHidePayloadProp(false);
+
+        timelineJpaRepository.save(createTestTimeline(null));
+    }
+
+    private XmTimeline createTestTimeline(Instant startDate) {
         XmTimeline timeline = new XmTimeline();
 
         timeline.setId(ID);
@@ -141,7 +149,7 @@ public class TimelineServiceIntTest {
         timeline.setUserKey(USER_KEY);
         timeline.setAggregateId(AGGREGATE_ID);
         timeline.setEntityKey(ENTITY_KEY);
-        timeline.setStartDate(DATE);
+        timeline.setStartDate(startDate);
         timeline.setOperationName(OPERATION);
         timeline.setSource(SOURCE);
         timeline.setRequestBody(TEST_PAYLOAD);
