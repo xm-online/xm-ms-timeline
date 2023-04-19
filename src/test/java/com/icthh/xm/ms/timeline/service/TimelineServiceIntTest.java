@@ -53,6 +53,7 @@ public class TimelineServiceIntTest {
     private static final String OPERATION = "test_operation";
     private static final String SOURCE = "test_source";
     private static final String AGGREGATE_ID = "111";
+    private static final String AGGREGATE_TYPE = "test_type";
     private static final String ENTITY_KEY = "test_entity_key";
     private static final String TEST_PAYLOAD = "test payload body";
 
@@ -65,6 +66,7 @@ public class TimelineServiceIntTest {
             MS_NAME,
             USER_KEY,
             AGGREGATE_ID,
+            AGGREGATE_TYPE,
             DATE.minus(1,
                 ChronoUnit.DAYS),
             DATE.plus(1,
@@ -88,6 +90,7 @@ public class TimelineServiceIntTest {
             null,
             null,
             null,
+            null,
             20,
                 Sort.by(Sort.Direction.DESC, "startDate"))
             .getTimelines()).hasSize(1);
@@ -96,6 +99,7 @@ public class TimelineServiceIntTest {
             "WRONG_MS_NAME",
             USER_KEY,
             AGGREGATE_ID,
+            AGGREGATE_TYPE,
             DATE,
             DATE,
             OPERATION,
@@ -117,6 +121,7 @@ public class TimelineServiceIntTest {
             MS_NAME,
             USER_KEY,
             AGGREGATE_ID,
+            AGGREGATE_TYPE,
             DATE.minus(1,
                 ChronoUnit.DAYS),
             DATE.plus(1,
@@ -148,6 +153,7 @@ public class TimelineServiceIntTest {
         timeline.setMsName(MS_NAME);
         timeline.setUserKey(USER_KEY);
         timeline.setAggregateId(AGGREGATE_ID);
+        timeline.setAggregateType(AGGREGATE_TYPE);
         timeline.setEntityKey(ENTITY_KEY);
         timeline.setStartDate(startDate);
         timeline.setOperationName(OPERATION);

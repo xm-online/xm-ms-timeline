@@ -13,7 +13,6 @@ import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +33,7 @@ public class TimelineServiceLoggerImpl implements TimelineService {
     public TimelinePageVM getTimelines(String msName,
                                        String userKey,
                                        String idOrKey,
+                                       String typeKey,
                                        Instant dateFrom,
                                        Instant dateTo,
                                        String operation,
@@ -41,7 +41,7 @@ public class TimelineServiceLoggerImpl implements TimelineService {
                                        String next,
                                        int limit,
                                        Sort sort) {
-        List<XmTimeline> filteredTimelines = getTimelines(msName, userKey, idOrKey, dateFrom, dateTo, operation, source);
+        List<XmTimeline> filteredTimelines = getTimelines(msName, userKey, idOrKey, typeKey, dateFrom, dateTo, operation, source);
         return new TimelinePageVM(xmTimelineMapper.xmTimelineToTimelineEvent(filteredTimelines), null);
     }
 
@@ -61,6 +61,7 @@ public class TimelineServiceLoggerImpl implements TimelineService {
     public Page<TimelineDto> getTimelines(String msName,
                                           String userKey,
                                           String aggregateId,
+                                          String aggregateType,
                                           Instant dateFrom,
                                           Instant dateTo,
                                           String operation,
@@ -68,17 +69,18 @@ public class TimelineServiceLoggerImpl implements TimelineService {
                                           int page,
                                           int size,
                                           Sort sort) {
-        List<XmTimeline> filteredTimelines = getTimelines(msName, userKey, aggregateId, dateFrom, dateTo, operation, source);
+        List<XmTimeline> filteredTimelines = getTimelines(msName, userKey, aggregateId, aggregateType, dateFrom, dateTo, operation, source);
         return new PageImpl<>(xmTimelineMapper.xmTimelineToTimelineDto(filteredTimelines));
     }
 
     private List<XmTimeline> getTimelines(String msName,
-                                       String userKey,
-                                       String aggregateId,
-                                       Instant dateFrom,
-                                       Instant dateTo,
-                                       String operation,
-                                       String source) {
+                                          String userKey,
+                                          String aggregateId,
+                                          String aggregateType,
+                                          Instant dateFrom,
+                                          Instant dateTo,
+                                          String operation,
+                                          String source) {
         // filter and return timelines from memory
 
         return timelines.stream()
@@ -86,6 +88,7 @@ public class TimelineServiceLoggerImpl implements TimelineService {
             .filter(t -> stringFilter(userKey, t.getUserKey()))
             .filter(t -> stringFilter(operation, t.getOperationName()))
             .filter(t -> stringFilter(source, t.getSource()))
+            .filter(t -> stringFilter(aggregateType, t.getAggregateType()))
             .filter(t -> {
                 if (isNotBlank(aggregateId)) {
                     return aggregateId.equals(t.getAggregateId());

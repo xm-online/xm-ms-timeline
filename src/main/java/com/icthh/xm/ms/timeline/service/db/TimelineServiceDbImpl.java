@@ -44,6 +44,7 @@ public class TimelineServiceDbImpl implements TimelineService {
     private static final String FIELD_MS_NAME = "msName";
     private static final String FIELD_USER_KEY = "userKey";
     private static final String FIELD_AGGREGATE_ID = "aggregateId";
+    private static final String FIELD_AGGREGATE_TYPE = "aggregateType";
     private static final String FIELD_OPERATION_NAME = "operationName";
     private static final String FIELD_SOURCE = "source";
 
@@ -57,6 +58,7 @@ public class TimelineServiceDbImpl implements TimelineService {
     public TimelinePageVM getTimelines(String msName,
                                        String userKey,
                                        String idOrKey,
+                                       String typeKey,
                                        Instant dateFrom,
                                        Instant dateTo,
                                        String operation,
@@ -71,7 +73,7 @@ public class TimelineServiceDbImpl implements TimelineService {
             sortProcessor.findValidOrDefault(XmTimeline.class, sort, Sort.by(DESC, FIELD_START_DATE))
         );
 
-        Page<XmTimeline> timelines = getTimelines(msName, userKey, idOrKey, dateFrom, dateTo, operation, source, pageRequest);
+        Page<XmTimeline> timelines = getTimelines(msName, userKey, idOrKey, typeKey, dateFrom, dateTo, operation, source, pageRequest);
 
         List<XmTimeline> content = filterResult(timelines);
 
@@ -89,6 +91,7 @@ public class TimelineServiceDbImpl implements TimelineService {
     public Page<TimelineDto> getTimelines(String msName,
                                           String userKey,
                                           String aggregateId,
+                                          String aggregateType,
                                           Instant dateFrom,
                                           Instant dateTo,
                                           String operation,
@@ -102,7 +105,7 @@ public class TimelineServiceDbImpl implements TimelineService {
             sortProcessor.findValidOrDefault(XmTimeline.class, sort, Sort.by(DESC, FIELD_START_DATE))
         );
 
-        Page<XmTimeline> timelines = getTimelines(msName, userKey, aggregateId, dateFrom, dateTo, operation, source, pageable);
+        Page<XmTimeline> timelines = getTimelines(msName, userKey, aggregateId, aggregateType, dateFrom, dateTo, operation, source, pageable);
 
         List<XmTimeline> content = filterResult(timelines);
 
@@ -112,6 +115,7 @@ public class TimelineServiceDbImpl implements TimelineService {
     private Page<XmTimeline> getTimelines(String msName,
                                           String userKey,
                                           String aggregateId,
+                                          String aggregateType,
                                           Instant dateFrom,
                                           Instant dateTo,
                                           String operation,
@@ -146,6 +150,10 @@ public class TimelineServiceDbImpl implements TimelineService {
         if (StringUtils.isNotBlank(aggregateId)) {
             specificationsForFiltering =
                 combineEqualSpecifications(specificationsForFiltering, aggregateId, FIELD_AGGREGATE_ID);
+        }
+        if (StringUtils.isNotBlank(aggregateType)) {
+            specificationsForFiltering =
+                combineEqualSpecifications(specificationsForFiltering, aggregateType, FIELD_AGGREGATE_TYPE);
         }
 
         return specificationsForFiltering != null

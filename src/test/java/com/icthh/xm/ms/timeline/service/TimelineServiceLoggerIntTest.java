@@ -36,6 +36,7 @@ public class TimelineServiceLoggerIntTest {
     private static final String OPERATION = "test_operation";
     private static final String SOURCE = "test_source";
     private static final String AGGREGATE_ID = "111";
+    private static final String AGGREGATE_TYPE = "test_type";
     private static final String ENTITY_KEY = "test_entity_key";
 
     @Before
@@ -48,65 +49,55 @@ public class TimelineServiceLoggerIntTest {
     @Test
     public void getTimelinesList() {
         Assertions.assertThat(timelineService.getTimelines(
-            MS_NAME,
-            USER_KEY,
-            AGGREGATE_ID,
-            DATE,
-            DATE,
-            OPERATION,
-            SOURCE,
-            null,
-            0,
+                MS_NAME,
+                USER_KEY,
+                AGGREGATE_ID,
+                AGGREGATE_TYPE,
+                DATE,
+                DATE,
+                OPERATION,
+                SOURCE,
+                null,
+                0,
                 null)
             .getTimelines()).hasSize(1);
 
         Assertions.assertThat(timelineService.getTimelines(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            0,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                0,
                 null)
             .getTimelines()).hasSize(1);
 
         Assertions.assertThat(timelineService.getTimelines(
-            "WRONG_MS_NAME",
-            USER_KEY,
-            AGGREGATE_ID,
-            DATE,
-            DATE,
-            OPERATION,
-            SOURCE,
-            null,
-            0,
+                "WRONG_MS_NAME",
+                USER_KEY,
+                AGGREGATE_ID,
+                AGGREGATE_TYPE,
+                DATE,
+                DATE,
+                OPERATION,
+                SOURCE,
+                null,
+                0,
                 null)
-            .getTimelines()).hasSize(0);
+            .getTimelines()).isEmpty();
     }
 
     @Test
     public void getTimelinesPage() {
         Page<TimelineDto> page = timelineService.getTimelines(
-                MS_NAME,
-                USER_KEY,
-                AGGREGATE_ID,
-                DATE,
-                DATE,
-                OPERATION,
-                SOURCE,
-                0,
-                0,
-                null);
-        Assertions.assertThat(page.getContent()).hasSize(1);
-        Assertions.assertThat(page.getTotalElements()).isEqualTo(1);
-
-        page = timelineService.getTimelines(
-            "WRONG_MS_NAME",
+            MS_NAME,
             USER_KEY,
             AGGREGATE_ID,
+            AGGREGATE_TYPE,
             DATE,
             DATE,
             OPERATION,
@@ -114,8 +105,23 @@ public class TimelineServiceLoggerIntTest {
             0,
             0,
             null);
-        Assertions.assertThat(page.getContent()).hasSize(0);
-        Assertions.assertThat(page.getTotalElements()).isEqualTo(0);
+        Assertions.assertThat(page.getContent()).hasSize(1);
+        Assertions.assertThat(page.getTotalElements()).isEqualTo(1);
+
+        page = timelineService.getTimelines(
+            "WRONG_MS_NAME",
+            USER_KEY,
+            AGGREGATE_ID,
+            AGGREGATE_TYPE,
+            DATE,
+            DATE,
+            OPERATION,
+            SOURCE,
+            0,
+            0,
+            null);
+        Assertions.assertThat(page.getContent()).isEmpty();
+        Assertions.assertThat(page.getTotalElements()).isZero();
     }
 
     private XmTimeline createTestTimeline() {
@@ -124,6 +130,7 @@ public class TimelineServiceLoggerIntTest {
         timeline.setRid("id");
         timeline.setUserKey(USER_KEY);
         timeline.setAggregateId(AGGREGATE_ID);
+        timeline.setAggregateType(AGGREGATE_TYPE);
         timeline.setEntityKey(ENTITY_KEY);
         timeline.setStartDate(DATE);
         timeline.setOperationName(OPERATION);
