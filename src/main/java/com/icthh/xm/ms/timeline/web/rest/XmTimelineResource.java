@@ -71,6 +71,8 @@ public class XmTimelineResource {
         @RequestParam(value = "userKey", required = false) String userKey,
         @ApiParam(name = "idOrKey", value = "Entity Id or entity key for timeline filter")
         @RequestParam(value = "idOrKey", required = false) String idOrKey,
+        @ApiParam(name = "typeKey", value = "Entity type key for timeline filter")
+        @RequestParam(value = "typeKey", required = false) String typeKey,
         @ApiParam(name = "dateFrom", value = "Date from for timeline filter")
         @RequestParam(value = "dateFrom", required = false) Instant dateFrom,
         @ApiParam(name = "dateTo", value = "Date to for timeline filter")
@@ -88,7 +90,7 @@ public class XmTimelineResource {
     ) {
 
         return new ResponseEntity<>(
-            service.getTimelines(msName, userKey, idOrKey, dateFrom, dateTo, operation, source, next, limit, sort), HttpStatus.OK);
+            service.getTimelines(msName, userKey, idOrKey, typeKey, dateFrom, dateTo, operation, source, next, limit, sort), HttpStatus.OK);
     }
 
     @GetMapping("/timelines/v2")
@@ -107,6 +109,8 @@ public class XmTimelineResource {
         @RequestParam(value = "userKey", required = false) String userKey,
         @ApiParam(name = "aggregateId", value = "Entity id for timeline filter")
         @RequestParam(value = "aggregateId", required = false) String aggregateId,
+        @ApiParam(name = "aggregateType", value = "Entity type for timeline filter")
+        @RequestParam(value = "aggregateType", required = false) String aggregateType,
         @ApiParam(name = "dateFrom", value = "Date from for timeline filter")
         @RequestParam(value = "dateFrom", required = false) Instant dateFrom,
         @ApiParam(name = "dateTo", value = "Date to for timeline filter")
@@ -122,7 +126,7 @@ public class XmTimelineResource {
         @ApiParam(name = "sort", value = "Sorting declared fields")
         @SortDefault(sort = "startDate", direction = Sort.Direction.DESC) Sort sort
     ) {
-        Page<TimelineDto> timelines = service.getTimelines(msName, userKey, aggregateId, dateFrom, dateTo, operation, source, page, size, sort);
+        Page<TimelineDto> timelines = service.getTimelines(msName, userKey, aggregateId, aggregateType, dateFrom, dateTo, operation, source, page, size, sort);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(timelines, "/timelines/v2");
         return new ResponseEntity<>(timelines.getContent(), headers, HttpStatus.OK);
     }
