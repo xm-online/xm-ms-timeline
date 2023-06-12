@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.icthh.xm.commons.permission.annotation.PrivilegeDescription;
 import com.icthh.xm.ms.timeline.service.TimelineService;
 import com.icthh.xm.ms.timeline.service.dto.TimelineDto;
+import com.icthh.xm.ms.timeline.template.TemplateParamsHolder;
 import com.icthh.xm.ms.timeline.web.rest.util.PaginationUtil;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 import io.swagger.annotations.Api;
@@ -13,6 +14,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +22,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -131,4 +136,17 @@ public class XmTimelineResource {
         return new ResponseEntity<>(timelines.getContent(), headers, HttpStatus.OK);
     }
 
+    @Timed
+    @PreAuthorize("hasPermission({'templateKey': #templateKey}, 'TIMELINE.TEMPLATE')")
+    @PostMapping("/search/{templateKey}")
+    public ResponseEntity<List<TimelineDto>> searchByTemplate(@PathVariable String templateKey,
+                                                              Pageable pageable,
+                                                              @RequestParam(required = false) String outFormat,
+                                                              @RequestBody TemplateParamsHolder templateParamsHolder) {
+
+        Page<TimelineDto> timelines = service.searchByTemplate(templateKey, templateParamsHolder, pageable, null);
+        HttpHeaders headers = PaginationUtil
+            .generatePaginationHttpHeaders(timelines, "/api/search/" + templateKey);
+        return new ResponseEntity<>(timelines.getContent(), headers, HttpStatus.OK);
+    }
 }
