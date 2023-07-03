@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.8'
 services:
     timeline-app:
         image: xmonline/xm-ms-timeline:${IMAGE_XM_MS_TIMELINE_TAG:-latest}
