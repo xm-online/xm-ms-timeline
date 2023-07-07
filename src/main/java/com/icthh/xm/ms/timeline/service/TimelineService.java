@@ -3,8 +3,10 @@ package com.icthh.xm.ms.timeline.service;
 import com.icthh.xm.commons.domainevent.domain.DomainEvent;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.service.dto.TimelineDto;
+import com.icthh.xm.ms.timeline.template.TemplateParamsHolder;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.time.Instant;
@@ -38,4 +40,11 @@ public interface TimelineService {
                                    int page,
                                    int size,
                                    Sort sort);
+
+    default Page<TimelineDto> searchByTemplate(String templateKey,
+                                               TemplateParamsHolder templateParamsHolder,
+                                               Pageable pageable,
+                                               String privilegeKey) {
+        return Page.empty();
+    }
 }

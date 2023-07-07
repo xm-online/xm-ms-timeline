@@ -29,6 +29,7 @@ public class ApplicationProperties {
     private String dbSchemaSuffix;
     private String domainEventTopicsPathPattern;
     private String domainEventTopicsName;
+    private String specificationTemplatesPathPattern;
 
     private final KafkaHealthCheck kafkaHealthCheck = new KafkaHealthCheck();
 
