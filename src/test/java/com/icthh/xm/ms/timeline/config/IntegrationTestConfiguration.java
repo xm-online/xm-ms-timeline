@@ -2,12 +2,15 @@ package com.icthh.xm.ms.timeline.config;
 
 import com.icthh.xm.commons.config.client.repository.TenantConfigRepository;
 import com.icthh.xm.commons.config.client.repository.TenantListRepository;
+import com.icthh.xm.commons.domainevent.service.impl.KafkaTransactionSynchronizationAdapter;
+import com.icthh.xm.commons.domainevent.service.impl.KafkaTransactionSynchronizationAdapterService;
 import com.icthh.xm.commons.security.jwt.TokenProvider;
 import com.icthh.xm.commons.security.oauth2.JwtVerificationKeyClient;
 import com.icthh.xm.commons.web.spring.TenantVerifyInterceptor;
 import io.prometheus.client.CollectorRegistry;
 import lombok.SneakyThrows;
 import org.springframework.cloud.client.loadbalancer.RestTemplateCustomizer;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -74,6 +77,16 @@ public class IntegrationTestConfiguration {
     @Bean(XM_CONFIG_REST_TEMPLATE)
     public RestTemplate restTemplate(RestTemplateCustomizer customizer) {
         return mock(RestTemplate.class);
+    }
+
+    @Bean
+    KafkaTransactionSynchronizationAdapterService kafkaTransactionSynchronizationAdapterService(ApplicationContext context) {
+        return new KafkaTransactionSynchronizationAdapterService() {
+            @Override
+            public KafkaTransactionSynchronizationAdapter getKafkaTransactionSynchronizationAdapter() {
+                return context.getBean(KafkaTransactionSynchronizationAdapter.class);
+            }
+        };
     }
 
     @SneakyThrows
