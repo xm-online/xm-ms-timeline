@@ -17,10 +17,11 @@ import org.mapstruct.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.http.HttpHeaders;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 @Mapper(config = BaseMapper.class)
 public interface XmTimelineMapper {
@@ -130,13 +131,13 @@ public interface XmTimelineMapper {
         }
     }
 
-    default Map<String, String> convertHeaders(HttpHeaders httpHeaders) {
-        if (httpHeaders == null) {
+    default Map<String, String> convertHeaders(Map<String, List<String>> headers) {
+        if (isEmpty(headers)) {
             return null;
         }
 
-        return httpHeaders.map().entrySet().stream()
-            .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().stream().collect(Collectors.joining(", "))));
+        return headers.entrySet().stream()
+            .collect(Collectors.toMap(Map.Entry::getKey, e -> String.join(", ", e.getValue())));
     }
 
 }

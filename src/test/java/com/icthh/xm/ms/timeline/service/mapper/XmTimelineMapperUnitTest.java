@@ -47,12 +47,11 @@ public class XmTimelineMapperUnitTest {
     public void testDomainEventToXmTimelineWithHttpDomainEventPayload() throws JsonProcessingException {
         Map<String, Object> data = convertJsonToMap(JSON);
         Map<String, List<String>> headerMap = Map.of(HEADER_X_TOTAL_COUNT, List.of("34"), HEADER_ACCEPT_ENCODING, List.of("gzip", "deflate", "br"));
-        HttpHeaders headers = HttpHeaders.of(headerMap, (s1, s2) -> true);
 
         HttpDomainEventPayload httpDomainEventPayload = new HttpDomainEventPayload();
         httpDomainEventPayload.setData(data);
         httpDomainEventPayload.setResponseHeaders(null);
-        httpDomainEventPayload.setRequestHeaders(headers);
+        httpDomainEventPayload.setRequestHeaders(headerMap);
 
         DomainEvent domainEvent = createTestDomainEvent(httpDomainEventPayload);
 
