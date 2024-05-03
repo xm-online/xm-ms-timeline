@@ -1,7 +1,5 @@
 package com.icthh.xm.ms.timeline;
 
-import com.icthh.xm.commons.lep.config.LepConfiguration;
-
 import com.icthh.xm.commons.migration.db.liquibase.LiquibaseRunner;
 import com.icthh.xm.commons.migration.db.tenant.DropSchemaResolver;
 import com.icthh.xm.ms.timeline.config.IntegrationTestConfiguration;
@@ -12,10 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @SpringBootTest(classes = {
-        TimelineApp.class,
-        LepConfiguration.class,
-        IntegrationTestConfiguration.class,
         TestLepConfiguration.class,
+        TimelineApp.class,
+        IntegrationTestConfiguration.class,
         DropSchemaResolver.class,
         LiquibaseRunner.class
 })

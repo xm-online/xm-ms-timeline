@@ -1,14 +1,33 @@
 package com.icthh.xm.ms.timeline.config;
 
 import com.icthh.xm.commons.lep.LogicExtensionPoint;
+import com.icthh.xm.commons.lep.groovy.GroovyLepEngineConfiguration;
 import com.icthh.xm.commons.lep.spring.LepService;
+import com.icthh.xm.commons.lep.spring.LepUpdateMode;
+import com.icthh.xm.commons.logging.config.LoggingConfigService;
+import com.icthh.xm.commons.logging.config.LoggingConfigServiceStub;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Map;
 
 @Configuration
-public class TestLepConfiguration {
+public class TestLepConfiguration extends GroovyLepEngineConfiguration {
+
+    public TestLepConfiguration(@Value("${spring.application.name}") String appName) {
+        super(appName);
+    }
+
+    @Override
+    public LepUpdateMode lepUpdateMode() {
+        return LepUpdateMode.SYNCHRONOUS;
+    }
+
+    @Bean
+    public LoggingConfigService LoggingConfigService() {
+        return new LoggingConfigServiceStub();
+    }
 
     @Bean
     public TestLepService testLepService() {
