@@ -220,6 +220,7 @@ dependencies {
     }
     implementation "org.postgresql:postgresql"
     implementation "com.h2database:h2"
+    implementation 'com.microsoft.sqlserver:mssql-jdbc'
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-hibernate5"
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
