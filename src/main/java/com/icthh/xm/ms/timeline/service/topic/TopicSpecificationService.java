@@ -34,7 +34,7 @@ public class TopicSpecificationService implements DynamicConsumerConfiguration {
         TopicConsumersSpec topicSpec = readTopicSpec(config);
         List<DynamicConsumer> dynamicConsumerList = topicSpec.getTopics().stream()
             .map(this::buildDynamicConsumer)
-            .collect(Collectors.toList());
+            .toList();
 
         dynamicConsumersByTenant.put(tenantKey, dynamicConsumerList);
     }

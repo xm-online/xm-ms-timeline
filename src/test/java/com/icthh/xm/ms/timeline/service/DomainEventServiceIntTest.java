@@ -2,11 +2,11 @@ package com.icthh.xm.ms.timeline.service;
 
 import com.icthh.xm.commons.domainevent.domain.DomainEvent;
 import com.icthh.xm.commons.lep.XmLepScriptConfigServerResourceLoader;
+import com.icthh.xm.commons.lep.api.LepManagementService;
 import com.icthh.xm.commons.migration.db.tenant.DropSchemaResolver;
 import com.icthh.xm.commons.security.XmAuthenticationContextHolder;
 import com.icthh.xm.commons.tenant.TenantContextHolder;
 import com.icthh.xm.commons.tenant.TenantContextUtils;
-import com.icthh.xm.lep.api.LepManager;
 import com.icthh.xm.ms.timeline.TimelineApp;
 import tech.jhipster.config.JHipsterConstants;
 import org.junit.After;
@@ -47,7 +47,7 @@ public class DomainEventServiceIntTest {
     private XmAuthenticationContextHolder authContextHolder;
 
     @Autowired
-    private LepManager lepManager;
+    private LepManagementService lepManagementService;
 
     @Autowired
     private TenantContextHolder tenantContextHolder;
@@ -66,10 +66,7 @@ public class DomainEventServiceIntTest {
 
         TenantContextUtils.setTenant(tenantContextHolder, DEFAULT_TENANT);
 
-        lepManager.beginThreadContext(ctx -> {
-            ctx.setValue(THREAD_CONTEXT_KEY_TENANT_CONTEXT, tenantContextHolder.getContext());
-            ctx.setValue(THREAD_CONTEXT_KEY_AUTH_CONTEXT, authContextHolder.getContext());
-        });
+        lepManagementService.beginThreadContext();
     }
 
     @After
@@ -77,7 +74,7 @@ public class DomainEventServiceIntTest {
         lepsForCleanUp.forEach(it -> leps.onRefresh(it, null));
 
         tenantContextHolder.getPrivilegedContext().destroyCurrentContext();
-        lepManager.endThreadContext();
+        lepManagementService.endThreadContext();
     }
 
     @Test
