@@ -3,6 +3,7 @@ package com.icthh.xm.ms.timeline.service.kafka;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icthh.xm.commons.lep.api.LepManagementService;
+import com.icthh.xm.commons.logging.util.MdcUtils;
 import com.icthh.xm.commons.messaging.event.system.SystemEvent;
 import com.icthh.xm.commons.tenant.TenantContextHolder;
 import com.icthh.xm.commons.tenant.TenantContextUtils;
@@ -44,7 +45,13 @@ public class SystemQueueConsumer {
 
             tenantContextHolder.getPrivilegedContext().execute(TenantContextUtils.buildTenant(event.getTenantKey()), () -> {
                 try (var ctx = lepManagementService.beginThreadContext()) {
+                    String newRid = MdcUtils.getRid()
+                        + ":" + StringUtils.defaultIfBlank(event.getUserLogin(), "")
+                        + ":" + StringUtils.defaultIfBlank(event.getTenantKey(), "");
+                    MdcUtils.putRid(newRid);
                     systemQueueProcessorService.handleSystemEvent(event);
+                } finally {
+                    MdcUtils.removeRid();
                 }
             });
         } catch (Exception e) {
