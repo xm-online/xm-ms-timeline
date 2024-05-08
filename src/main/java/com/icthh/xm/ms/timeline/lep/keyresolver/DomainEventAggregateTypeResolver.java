@@ -17,7 +17,7 @@ public class DomainEventAggregateTypeResolver implements LepKeyResolver {
         return Arrays.stream(method.getMethodArgValues())
             .filter(arg -> arg instanceof DomainEvent)
             .map(arg -> ((DomainEvent) arg).getAggregateType())
-            .collect(Collectors.toList());
+            .toList();
     }
 
 }
