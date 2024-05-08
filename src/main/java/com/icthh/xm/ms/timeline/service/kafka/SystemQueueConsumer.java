@@ -2,12 +2,10 @@ package com.icthh.xm.ms.timeline.service.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.icthh.xm.commons.logging.util.MdcUtils;
+import com.icthh.xm.commons.lep.api.LepManagementService;
 import com.icthh.xm.commons.messaging.event.system.SystemEvent;
-import com.icthh.xm.commons.security.XmAuthenticationContextHolder;
 import com.icthh.xm.commons.tenant.TenantContextHolder;
 import com.icthh.xm.commons.tenant.TenantContextUtils;
-import com.icthh.xm.lep.api.LepManager;
 import com.icthh.xm.ms.timeline.service.SystemQueueProcessorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +14,6 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
-
-import static com.icthh.xm.commons.lep.XmLepConstants.THREAD_CONTEXT_KEY_AUTH_CONTEXT;
-import static com.icthh.xm.commons.lep.XmLepConstants.THREAD_CONTEXT_KEY_TENANT_CONTEXT;
-
 
 @Slf4j
 @Service
@@ -30,8 +24,7 @@ public class SystemQueueConsumer {
     private final SystemQueueProcessorService systemQueueProcessorService;
 
     private final TenantContextHolder tenantContextHolder;
-    private final XmAuthenticationContextHolder authContextHolder;
-    private final LepManager lepManager;
+    private final LepManagementService lepManagementService;
 
     /**
      * Consume tenant command event message.
@@ -48,33 +41,17 @@ public class SystemQueueConsumer {
                 log.info("Event ignored due to tenantKey is empty {}", event.getEventType());
                 return;
             }
-            init(event.getTenantKey(), event.getUserLogin());
-            systemQueueProcessorService.handleSystemEvent(event);
-        } finally {
-            destroy();
-        }
-    }
 
-    private void init(String tenantKey, String login) {
-        if (StringUtils.isNotBlank(tenantKey)) {
-            TenantContextUtils.setTenant(tenantContextHolder, tenantKey);
-
-            lepManager.beginThreadContext(threadContext -> {
-                threadContext.setValue(THREAD_CONTEXT_KEY_TENANT_CONTEXT, tenantContextHolder.getContext());
-                threadContext.setValue(THREAD_CONTEXT_KEY_AUTH_CONTEXT, authContextHolder.getContext());
+            tenantContextHolder.getPrivilegedContext().execute(TenantContextUtils.buildTenant(event.getTenantKey()), () -> {
+                try (var ctx = lepManagementService.beginThreadContext()) {
+                    systemQueueProcessorService.handleSystemEvent(event);
+                }
             });
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
 
-        String newRid = MdcUtils.getRid()
-            + ":" + StringUtils.defaultIfBlank(login, "")
-            + ":" + StringUtils.defaultIfBlank(tenantKey, "");
-        MdcUtils.putRid(newRid);
-    }
 
-    private void destroy() {
-        lepManager.endThreadContext();
-        tenantContextHolder.getPrivilegedContext().destroyCurrentContext();
-        MdcUtils.removeRid();
     }
 
     private SystemEvent fromJson(String value) {
