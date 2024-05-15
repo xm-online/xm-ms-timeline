@@ -42,7 +42,7 @@ public class TenantPropertiesService implements RefreshableConfiguration {
     public TenantProperties getTenantProps() {
         String tenant = TenantContextUtils.getRequiredTenantKeyValue(tenantContextHolder);
         if (!tenantProps.containsKey(tenant)) {
-            throw new IllegalArgumentException("Tenant configuration not found");
+            throw new IllegalArgumentException("Tenant configuration not found for tenant: " + tenant);
         }
         return tenantProps.get(tenant);
     }
