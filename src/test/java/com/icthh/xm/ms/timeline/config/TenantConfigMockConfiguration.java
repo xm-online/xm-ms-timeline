@@ -5,6 +5,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.icthh.xm.commons.config.client.api.ConfigService;
 import com.icthh.xm.commons.config.client.repository.TenantConfigRepository;
 import com.icthh.xm.commons.config.client.repository.TenantListRepository;
 import java.util.HashSet;
@@ -47,5 +48,10 @@ public class TenantConfigMockConfiguration {
     @Bean
     public TenantConfigService tenantConfigService() {
         return mock(TenantConfigService.class);
+    }
+
+    @Bean
+    public ConfigService configService() {
+        return mock(ConfigService.class);
     }
 }
