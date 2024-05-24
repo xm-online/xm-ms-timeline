@@ -38,7 +38,6 @@ public class KafkaHealthIndicator extends AbstractHealthIndicator {
         try(AdminClient adminClient = AdminClient.create(admin.getConfigurationProperties())) {
             DescribeClusterResult describeCluster = adminClient.describeCluster(describeClusterOptions);
             try {
-
                 String brokerId = describeCluster.controller().get().idString();
                 int replicationFactor = getReplicationFactor(brokerId, adminClient);
                 int nodes = describeCluster.nodes().get().size();
@@ -46,9 +45,14 @@ public class KafkaHealthIndicator extends AbstractHealthIndicator {
                 builder.status(status)
                        .withDetail("clusterId", describeCluster.clusterId().get())
                        .withDetail("nodeCount", nodes)
+                       .withDetail("transaction.state.log.replication.factor", replicationFactor)
                        .build();
-                log.debug("Run kafka health check. Result: OK");
+                log.debug("Run kafka health check. Result: {}", status);
+                if (Status.DOWN.equals(status)) {
+                    log.warn("Run kafka health replicationFactor={}, nodes={}. Result: {}", replicationFactor, nodes, status);
+                }
             } catch (InterruptedException | ExecutionException e) {
+                log.error(e.getMessage(), e);
                 builder.down().withException(e).build();
             }
         }
