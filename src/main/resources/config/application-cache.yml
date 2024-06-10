@@ -1,0 +1,7 @@
+# This profile is used for xm dynamic cache configuration
+
+application:
+    tenant-memory-cache:
+        enabled: true
+    deduplication:
+        strategy: memoryLepDeduplicationStrategy
