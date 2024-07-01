@@ -13,22 +13,29 @@
 @Transactional
 class InsertTimelineService {
 
-    private TenantCacheManagerFacade tenantCacheManagerFacade
-    ...
-    
-    public InsertTimelineService(LepContext lepContext) {
-        this.tenantCacheManagerFacade = lepContext.tenantCacheManagerFacade
-        ...
-    }
+    private EventDeduplicationStrategyFactory eventDeduplicationStrategyFactory
+    private EventDeduplicationStrategy eventDeduplicationStrategy
 
-    public void insertTimeLine(DomainEvent domainEvent) {
-        if (tenantCacheManagerFacade != null && tenantCacheManagerFacade.skipDuplicatedDomainEvent(domainEvent)) {
-            log.info("Skip domain event as a duplicate by id: {}", domainEvent.id)
-            return
+    public InsertTimelineService(LepContext lepContext) {
+        this.eventDeduplicationStrategyFactory = lepContext.eventDeduplicationStrategyFactory
+        if (eventDeduplicationStrategyFactory != null) {
+            eventDeduplicationStrategy = eventDeduplicationStrategyFactory.getStrategy()
         }
         ...
     }
 
-}
+    public void insertTimeLine(DomainEvent domainEvent) {
+        if (skipDuplicatedDomainEvent(domainEvent)) {
+            log.info("Skip domain event as a duplicate by id: {}", domainEvent.id)
+            return
+        }  
+        ...      
+    }
+
+    boolean skipDuplicatedDomainEvent(DomainEvent domainEvent) {
+        return eventDeduplicationStrategy != null && eventDeduplicationStrategy.cachedExists(domainEvent);
+    }
+
+}    
 ```
 
