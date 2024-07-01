@@ -3,7 +3,7 @@ package com.icthh.xm.ms.timeline.config;
 import com.icthh.xm.commons.cache.TenantCacheManager;
 import com.icthh.xm.ms.timeline.service.cache.EventDeduplicationStrategy;
 import com.icthh.xm.ms.timeline.service.cache.MemoryLepDeduplicationStrategy;
-import com.icthh.xm.ms.timeline.service.cache.TenantCacheManagerFacade;
+import com.icthh.xm.ms.timeline.service.cache.EventDeduplicationStrategyFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Configuration;
 public class TenantCacheConfiguration {
 
     @Bean
-    public TenantCacheManagerFacade tenantCacheManagerFacade() {
-        return new TenantCacheManagerFacade();
+    public EventDeduplicationStrategyFactory tenantCacheManagerFacade() {
+        return new EventDeduplicationStrategyFactory();
     }
 
     @Bean

@@ -5,7 +5,7 @@ import com.icthh.xm.commons.config.client.service.TenantConfigService;
 import com.icthh.xm.commons.lep.api.BaseLepContext;
 import com.icthh.xm.commons.lep.api.LepContextFactory;
 import com.icthh.xm.lep.api.LepMethod;
-import com.icthh.xm.ms.timeline.service.cache.TenantCacheManagerFacade;
+import com.icthh.xm.ms.timeline.service.cache.EventDeduplicationStrategyFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,14 +17,14 @@ public class LepContextListener implements LepContextFactory {
 
     private final TenantConfigService tenantConfigService;
     private final ConfigService configService;
-    private final Optional<TenantCacheManagerFacade> tenantCacheManagerFacade;
+    private final Optional<EventDeduplicationStrategyFactory> tenantCacheManagerFacade;
 
     @Override
     public BaseLepContext buildLepContext(LepMethod lepMethod) {
         LepContext lepContext = new LepContext();
         lepContext.tenantConfigService = tenantConfigService;
         lepContext.configService = configService;
-        tenantCacheManagerFacade.ifPresent(facade -> lepContext.tenantCacheManagerFacade = facade);
+        tenantCacheManagerFacade.ifPresent(facade -> lepContext.eventDeduplicationStrategyFactory = facade);
         return lepContext;
     }
 }
