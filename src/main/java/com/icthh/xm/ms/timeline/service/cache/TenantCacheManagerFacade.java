@@ -25,7 +25,7 @@ public class TenantCacheManagerFacade implements ApplicationContextAware {
         try {
             return context.getBean(deduplicationStrategyName, EventDeduplicationStrategy.class);
         } catch (NoSuchBeanDefinitionException e) {
-            log.info("Cache deduplication strategy by name '{}' not found", deduplicationStrategyName);
+            log.error("Cache deduplication strategy by name '{}' not found", deduplicationStrategyName);
             return null;
         }
     }

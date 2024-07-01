@@ -23,7 +23,7 @@ public class MemoryLepDeduplicationStrategy implements EventDeduplicationStrateg
     public boolean cachedExists(DomainEvent event) {
         Cache domainEventCache = lepCacheManager.getCache(DomainEvent.class.getSimpleName());
         if (domainEventCache == null) {
-            log.info("Cache by name '{}' is not init", DomainEvent.class.getSimpleName());
+            log.warn("Cache by name '{}' is not found", DomainEvent.class.getSimpleName());
             return false;
         }
         String hash = getHash(event);
