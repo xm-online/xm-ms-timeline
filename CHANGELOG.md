@@ -8,6 +8,10 @@
 ### Features
 
 * Caching in memory filter for duplication event filtering. Filter is enabled by [application-cache.yml](src%2Fmain%2Fresources%2Fconfig%2Fapplication-cache.yml)
+* Example of building LEP event filter using InMemory cache
+  * lep ProcessEvent$$saveDomainEvent$$around.groovy calls  InsertTimelineService
+  * InsertTimelineService receives currently available eventDeduplicationStrategy (local im memory realized, but could be extended to shared, ect)
+  * MemoryLepDeduplicationStrategy uses tenantCacheStrategy to work with configured memory cache for this feature 
 ```.groovy
 @Slf4j
 @Transactional
@@ -37,5 +41,12 @@ class InsertTimelineService {
     }
 
 }    
+```
+* Cache configuration example
+```yaml
+- cacheName: DomainEvent
+  expireAfterWrite: 3
+  maximumSize: 1000
+  recordStats: true
 ```
 
