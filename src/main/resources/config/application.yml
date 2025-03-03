@@ -63,8 +63,9 @@ management:
             logback: true
             process: true
             system: true
-        export:
-            prometheus:
+    prometheus:
+        metrics:
+            export:
                 enabled: true
                 step: 60
 

@@ -4,7 +4,6 @@ import static com.icthh.xm.ms.timeline.config.Constants.CHANGE_LOG_PATH;
 import static com.icthh.xm.ms.timeline.config.Constants.RDBMS_IMPL;
 import static com.icthh.xm.ms.timeline.config.DatabaseConfiguration.DBDEV;
 import static com.icthh.xm.ms.timeline.config.DatabaseConfiguration.DBPROD;
-import static org.hibernate.cfg.AvailableSettings.MULTI_TENANT;
 import static org.hibernate.cfg.AvailableSettings.MULTI_TENANT_CONNECTION_PROVIDER;
 import static org.hibernate.cfg.AvailableSettings.MULTI_TENANT_IDENTIFIER_RESOLVER;
 
@@ -12,12 +11,12 @@ import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import com.icthh.xm.commons.migration.db.XmMultiTenantSpringLiquibase;
 import com.icthh.xm.commons.migration.db.XmSpringLiquibase;
 import com.icthh.xm.commons.migration.db.tenant.SchemaResolver;
+import jakarta.persistence.EntityManagerFactory;
 import tech.jhipster.config.JHipsterConstants;
 
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import liquibase.integration.spring.MultiTenantSpringLiquibase;
@@ -25,7 +24,6 @@ import liquibase.integration.spring.SpringLiquibase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.h2.tools.Server;
-import org.hibernate.MultiTenancyStrategy;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -142,7 +140,6 @@ public class DatabaseConfiguration {
         CurrentTenantIdentifierResolver currentTenantIdentifierResolverImpl) {
 
         Map<String, Object> properties = new HashMap<>(jpaProperties.getProperties());
-        properties.put(MULTI_TENANT, MultiTenancyStrategy.SCHEMA);
         properties.put(MULTI_TENANT_CONNECTION_PROVIDER, multiTenantConnectionProviderImpl);
         properties.put(MULTI_TENANT_IDENTIFIER_RESOLVER, currentTenantIdentifierResolverImpl);
 

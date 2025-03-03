@@ -1,8 +1,9 @@
 package com.icthh.xm.ms.timeline.domain;
 
+import jakarta.persistence.AttributeConverter;
+
 import java.sql.Timestamp;
 import java.time.Instant;
-import javax.persistence.AttributeConverter;
 
 public class InstantConverter implements AttributeConverter<Instant, Timestamp> {
 

@@ -10,14 +10,14 @@ import com.icthh.xm.commons.tenant.spring.config.TenantContextConfiguration;
 import com.icthh.xm.ms.timeline.config.ApplicationProperties;
 import com.icthh.xm.ms.timeline.config.DefaultProfileUtil;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import tech.jhipster.config.JHipsterConstants;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Collection;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

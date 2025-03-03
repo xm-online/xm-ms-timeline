@@ -3,7 +3,7 @@ package com.icthh.xm.ms.timeline.config;
 import com.icthh.xm.commons.config.client.repository.CommonConfigRepository;
 import com.icthh.xm.commons.config.client.repository.TenantListRepository;
 import com.icthh.xm.commons.config.client.service.TenantAliasService;
-import com.icthh.xm.commons.lep.LepPathResolver;
+import com.icthh.xm.commons.config.client.service.TenantAliasServiceImpl;
 import com.icthh.xm.commons.lep.LogicExtensionPoint;
 import com.icthh.xm.commons.lep.groovy.GroovyLepEngineConfiguration;
 import com.icthh.xm.commons.lep.spring.LepService;
@@ -42,7 +42,7 @@ public class TestLepConfiguration extends GroovyLepEngineConfiguration {
 
     @Bean
     public TenantAliasService tenantAliasService() {
-        return new TenantAliasService(mock(CommonConfigRepository.class), mock(TenantListRepository.class));
+        return new TenantAliasServiceImpl(mock(CommonConfigRepository.class), mock(TenantListRepository.class));
     }
 
     @LepService(group = "test")

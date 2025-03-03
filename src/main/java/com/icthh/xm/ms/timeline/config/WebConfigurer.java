@@ -1,5 +1,7 @@
 package com.icthh.xm.ms.timeline.config;
 
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
@@ -14,9 +16,6 @@ import org.springframework.web.filter.CorsFilter;
 import tech.jhipster.config.JHipsterConstants;
 import tech.jhipster.config.JHipsterProperties;
 import tech.jhipster.config.h2.H2ConfigurationHelper;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 
 /**
  * Configuration of web application with Servlet 3.0 APIs.
