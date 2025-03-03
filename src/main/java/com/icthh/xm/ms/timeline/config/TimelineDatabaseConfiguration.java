@@ -7,6 +7,7 @@ import static com.icthh.xm.ms.timeline.config.TimelineDatabaseConfiguration.DBPR
 import com.icthh.xm.commons.migration.db.config.DatabaseConfiguration;
 import com.icthh.xm.commons.migration.db.tenant.SchemaResolver;
 import jakarta.persistence.EntityManagerFactory;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import tech.jhipster.config.JHipsterConstants;
 import java.sql.SQLException;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = RDBMS_IMPL)
 @Configuration
 @EnableJpaRepositories("com.icthh.xm.ms.timeline.repository.jpa")
+@EntityScan("com.icthh.xm.ms.timeline.domain.*")
 @EnableTransactionManagement
 @ComponentScan(basePackages = "com.icthh.xm.commons.migration")
 @Import({HibernateJpaAutoConfiguration.class, DataSourceAutoConfiguration.class})

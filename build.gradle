@@ -190,7 +190,6 @@ dependencies {
     implementation "com.zaxxer:HikariCP"
     implementation "org.apache.commons:commons-lang3"
     implementation "org.openapitools:jackson-databind-nullable:${jacksonDatabindNullableVersion}"
-    implementation "org.hibernate:hibernate-entitymanager:${hibernateEntityManager}"
     implementation "org.hibernate.validator:hibernate-validator"
     implementation "org.liquibase:liquibase-core"
 
