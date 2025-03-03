@@ -7,7 +7,7 @@ import static com.icthh.xm.ms.timeline.config.DatabaseConfiguration.DBPROD;
 import static org.hibernate.cfg.AvailableSettings.MULTI_TENANT_CONNECTION_PROVIDER;
 import static org.hibernate.cfg.AvailableSettings.MULTI_TENANT_IDENTIFIER_RESOLVER;
 
-import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
+import com.fasterxml.jackson.datatype.hibernate6.Hibernate6Module;
 import com.icthh.xm.commons.migration.db.XmMultiTenantSpringLiquibase;
 import com.icthh.xm.commons.migration.db.XmSpringLiquibase;
 import com.icthh.xm.commons.migration.db.tenant.SchemaResolver;
@@ -124,8 +124,8 @@ public class DatabaseConfiguration {
     }
 
     @Bean
-    public Hibernate5Module hibernate5Module() {
-        return new Hibernate5Module();
+    public Hibernate6Module hibernate6Module() {
+        return new Hibernate6Module();
     }
 
     @Bean
