@@ -12,6 +12,7 @@ import com.icthh.xm.ms.timeline.config.DefaultProfileUtil;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import tech.jhipster.config.JHipsterConstants;
 
 import java.net.InetAddress;
@@ -24,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -43,7 +43,7 @@ import org.springframework.core.env.Environment;
                               pattern = "com\\.icthh\\.xm\\.commons\\.migration\\..*")
     }
 )
-@EnableAutoConfiguration
+@SpringBootApplication
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
 @EnableDiscoveryClient
 @Import( {TenantContextConfiguration.class})
