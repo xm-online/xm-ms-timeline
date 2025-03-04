@@ -21,7 +21,14 @@ plugins {
     id "io.spring.nohttp"
     id 'pmd'
     id "com.github.spotbugs"
+    id "io.spring.dependency-management"
     //jhipster-needle-gradle-plugins - JHipster will add additional gradle plugins here
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
 }
 
 group = "com.icthh.xm.ms.timeline"
