@@ -217,11 +217,15 @@ dependencies {
     implementation ("io.springfox:springfox-swagger2:3.0.0") {
         exclude module: "mapstruct"
     }
+    implementation 'io.micrometer:micrometer-tracing'
+    implementation 'io.micrometer:micrometer-core'
+    implementation 'io.micrometer:micrometer-observation'
+    implementation "io.micrometer:micrometer-tracing-bridge-brave"
+    implementation "io.springfox:springfox-bean-validators:${springfoxVersion}"
     implementation "org.postgresql:postgresql"
     implementation "com.h2database:h2"
     implementation 'com.microsoft.sqlserver:mssql-jdbc'
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-hibernate6"
-    implementation "org.springframework:spring-aop"
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
     annotationProcessor "org.hibernate:hibernate-jpamodelgen:${hibernateVersion}"
