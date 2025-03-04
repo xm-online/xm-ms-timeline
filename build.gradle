@@ -120,7 +120,7 @@ task runCategorizedTests(type: Test) {
 }
 
 task testReport(type: TestReport) {
-    destinationDir = file("$buildDir/reports/tests")
+    getDestinationDirectory().set(file("$buildDir/reports/tests"))
     reportOn test
 }
 

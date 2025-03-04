@@ -9,7 +9,6 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer;
-import com.icthh.xm.commons.migration.db.jsonb.Jsonb;
 import com.icthh.xm.ms.timeline.domain.converter.MapToStringConverter;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -28,6 +27,8 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "xmtimeline")
@@ -142,19 +143,19 @@ public class XmTimeline implements Serializable {
     @Column(name = "source")
     private String source;
 
-    @Jsonb
+    @JdbcTypeCode(SqlTypes.JSON)
     @JsonDeserialize(using = UntypedObjectDeserializer.class)
     @Convert(converter = MapToStringConverter.class)
     @Column(name = "data")
     private Map<String, Object> data = new HashMap<>();
 
-    @Jsonb
+    @JdbcTypeCode(SqlTypes.JSON)
     @JsonDeserialize(using = UntypedObjectDeserializer.class)
     @Convert(converter = MapToStringConverter.class)
     @Column(name = "entity_before")
     private Map<String, Object> entityBefore = new HashMap<>();
 
-    @Jsonb
+    @JdbcTypeCode(SqlTypes.JSON)
     @JsonDeserialize(using = UntypedObjectDeserializer.class)
     @Convert(converter = MapToStringConverter.class)
     @Column(name = "entity_after")
