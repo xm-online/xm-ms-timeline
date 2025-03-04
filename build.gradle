@@ -221,6 +221,7 @@ dependencies {
     implementation "com.h2database:h2"
     implementation 'com.microsoft.sqlserver:mssql-jdbc'
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-hibernate6"
+    implementation "org.springframework:spring-aop"
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
     annotationProcessor "org.hibernate:hibernate-jpamodelgen:${hibernateVersion}"
