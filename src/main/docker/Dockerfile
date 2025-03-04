@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jre-focal
+FROM eclipse-temurin:21-jre
 
 ENTRYPOINT ["/entrypoint.sh"]
 
@@ -8,7 +8,7 @@ RUN chmod 755 entrypoint.sh && apt-get update && apt-get install -y locales loca
 
 ENV SPRING_OUTPUT_ANSI_ENABLED=ALWAYS \
     JHIPSTER_SLEEP=0 \
-    TZ=Europe/Kiev \
+    TZ=Europe/Kyiv \
 	LANG=en_US.UTF-8 \
 	LANGUAGE=en_US:en \
 	TERM=xterm \

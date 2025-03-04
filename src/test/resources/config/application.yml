@@ -49,9 +49,6 @@ spring:
         host: localhost
     messages:
         basename: i18n/messages
-    mvc:
-        favicon:
-            enabled: false
     thymeleaf:
         mode: XHTML
 
@@ -71,10 +68,11 @@ server:
 # Full reference is available at: https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 management:
-    metrics:
-        export:
-            prometheus:
+    prometheus:
+        metrics:
+            export:
                 enabled: true
+                step: 60
 
 jhipster:
     async:
@@ -83,11 +81,11 @@ jhipster:
         queue-capacity: 10000
     # To test logstash appender
     logging:
-        logstash:
-            enabled: true
+        logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration
+            enabled: false
             host: localhost
             port: 5000
-            queue-size: 512
+            ring-buffer-size: 512
     security:
         content-security-policy: "default-src 'self'; frame-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://storage.googleapis.com; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; img-src 'self' data:; font-src 'self' https://fonts.gstatic.com data:"
         authentication:

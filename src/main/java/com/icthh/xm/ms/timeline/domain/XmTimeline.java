@@ -6,28 +6,29 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.NamedAttributeNode;
-import javax.persistence.NamedEntityGraph;
-import javax.persistence.Table;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer;
-import com.icthh.xm.commons.migration.db.jsonb.Jsonb;
 import com.icthh.xm.ms.timeline.domain.converter.MapToStringConverter;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.MapKeyColumn;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "xmtimeline")
@@ -142,19 +143,19 @@ public class XmTimeline implements Serializable {
     @Column(name = "source")
     private String source;
 
-    @Jsonb
+    @JdbcTypeCode(SqlTypes.JSON)
     @JsonDeserialize(using = UntypedObjectDeserializer.class)
     @Convert(converter = MapToStringConverter.class)
     @Column(name = "data")
     private Map<String, Object> data = new HashMap<>();
 
-    @Jsonb
+    @JdbcTypeCode(SqlTypes.JSON)
     @JsonDeserialize(using = UntypedObjectDeserializer.class)
     @Convert(converter = MapToStringConverter.class)
     @Column(name = "entity_before")
     private Map<String, Object> entityBefore = new HashMap<>();
 
-    @Jsonb
+    @JdbcTypeCode(SqlTypes.JSON)
     @JsonDeserialize(using = UntypedObjectDeserializer.class)
     @Convert(converter = MapToStringConverter.class)
     @Column(name = "entity_after")

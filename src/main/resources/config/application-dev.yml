@@ -29,7 +29,7 @@ spring:
             #- tls
     devtools:
         restart:
-            enabled: true
+            enabled: false
         livereload:
             enabled: false # we use Webpack dev server + BrowserSync for livereload
     jackson:
@@ -92,7 +92,7 @@ jhipster:
             enabled: false
             host: localhost
             port: 5000
-            queue-size: 512
+            ring-buffer-size: 512
 
 # ===================================================================
 # Application specific properties

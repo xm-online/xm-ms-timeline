@@ -11,7 +11,7 @@ spring:
                 - swagger
     devtools:
         restart:
-            enabled: true
+            enabled: false
         livereload:
             enabled: false # we use gulp + BrowserSync for livereload
     jackson:
@@ -101,7 +101,7 @@ jhipster:
             enabled: false
             host: localhost
             port: 5000
-            queue-size: 512
+            ring-buffer-size: 512
 
 application:
     zookeeper:
