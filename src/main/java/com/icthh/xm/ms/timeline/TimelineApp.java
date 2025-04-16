@@ -45,7 +45,6 @@ import org.springframework.core.env.Environment;
 )
 @SpringBootApplication
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
-@EnableDiscoveryClient
 @Import( {TenantContextConfiguration.class})
 public class TimelineApp {
 

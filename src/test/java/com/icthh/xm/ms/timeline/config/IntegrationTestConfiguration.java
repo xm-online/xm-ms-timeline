@@ -75,7 +75,7 @@ public class IntegrationTestConfiguration {
     }
 
     @Bean(XM_CONFIG_REST_TEMPLATE)
-    public RestTemplate restTemplate(RestTemplateCustomizer customizer) {
+    public RestTemplate restTemplate() {
         return mock(RestTemplate.class);
     }
 

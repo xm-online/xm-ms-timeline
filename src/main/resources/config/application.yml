@@ -79,6 +79,12 @@ spring:
     main:
         allow-bean-definition-overriding: true
     cloud:
+        discovery:
+            enabled: false
+        loadbalancer:
+            enabled: false
+            retry:
+                enabled: false
         inetutils:
             preferredNetworks:
                 - 192.168.
