@@ -11,13 +11,12 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Configuration
+@Configuration
 public class RetryInterceptorConfiguration extends LoadBalancerAutoConfiguration.RetryInterceptorAutoConfiguration {
 
-//    @Bean
-//    @Profile("nolb")
-    public RestTemplateCustomizer restTemplateCustomizer(
-        final RetryLoadBalancerInterceptor loadBalancerInterceptor) {
+    @Bean
+    @Profile("nolb")
+    public RestTemplateCustomizer restTemplateCustomizer(final RetryLoadBalancerInterceptor loadBalancerInterceptor) {
         return restTemplate -> {
             List<ClientHttpRequestInterceptor> list = new ArrayList<>(
                 restTemplate.getInterceptors());
