@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class LepConfiguration extends GroovyLepEngineConfiguration {
-    public LepConfiguration(@Value("${spring.application.name}") String appName) {
+public class TimelineLepConfiguration extends GroovyLepEngineConfiguration {
+    public TimelineLepConfiguration(@Value("${spring.application.name}") String appName) {
         super(appName);
     }
 }

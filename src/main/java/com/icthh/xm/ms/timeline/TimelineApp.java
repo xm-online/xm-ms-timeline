@@ -10,6 +10,7 @@ import com.icthh.xm.commons.tenant.spring.config.TenantContextConfiguration;
 import com.icthh.xm.ms.timeline.config.ApplicationProperties;
 import com.icthh.xm.ms.timeline.config.DefaultProfileUtil;
 
+import com.icthh.xm.ms.timeline.config.lep.TimelineLepConfiguration;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -34,7 +35,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 
 @ComponentScan(
-    value = { "com.icthh.xm.commons", "com.icthh.xm" },
+    value = { "com.icthh.xm.ms.timeline", "com.icthh.xm" },
     excludeFilters = {
         @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
                               classes = {PermittedRepository.class,
@@ -43,7 +44,7 @@ import org.springframework.core.env.Environment;
                               pattern = "com\\.icthh\\.xm\\.commons\\.migration\\..*")
     }
 )
-@SpringBootApplication(scanBasePackages = { "com.icthh.xm.commons", "com.icthh.xm" })
+@SpringBootApplication
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
 @EnableDiscoveryClient
 @Import( {TenantContextConfiguration.class})
