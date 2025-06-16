@@ -34,7 +34,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 
 @ComponentScan(
-    value = "com.icthh.xm",
+    value = { "com.icthh.xm.commons", "com.icthh.xm" },
     excludeFilters = {
         @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
                               classes = {PermittedRepository.class,
@@ -43,7 +43,7 @@ import org.springframework.core.env.Environment;
                               pattern = "com\\.icthh\\.xm\\.commons\\.migration\\..*")
     }
 )
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = { "com.icthh.xm.commons", "com.icthh.xm" })
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
 @EnableDiscoveryClient
 @Import( {TenantContextConfiguration.class})
