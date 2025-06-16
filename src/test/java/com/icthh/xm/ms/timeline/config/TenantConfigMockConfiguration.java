@@ -8,11 +8,11 @@ import static org.mockito.Mockito.when;
 import com.icthh.xm.commons.config.client.api.ConfigService;
 import com.icthh.xm.commons.config.client.repository.TenantConfigRepository;
 import com.icthh.xm.commons.config.client.repository.TenantListRepository;
+import com.icthh.xm.commons.config.client.service.TenantConfigService;
+import com.icthh.xm.commons.topic.service.DynamicConsumerConfigurationService;
+import com.icthh.xm.commons.web.spring.TenantVerifyInterceptor;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.icthh.xm.commons.config.client.service.TenantConfigService;
-import com.icthh.xm.commons.web.spring.TenantVerifyInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -43,6 +43,11 @@ public class TenantConfigMockConfiguration {
     @Bean
     public TenantVerifyInterceptor tenantVerifyInterceptor() {
         return mock(TenantVerifyInterceptor.class);
+    }
+
+    @Bean
+    public DynamicConsumerConfigurationService dynamicConsumerBeanConfiguration() {
+        return mock(DynamicConsumerConfigurationService.class);
     }
 
     @Bean
