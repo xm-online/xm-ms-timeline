@@ -6,21 +6,18 @@ import org.springframework.cloud.client.loadbalancer.RetryLoadBalancerIntercepto
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
 
 import java.util.ArrayList;
-import java.util.List;
 
+@Profile("nolb")
 @Configuration
 public class RetryInterceptorConfiguration extends LoadBalancerAutoConfiguration.RetryInterceptorAutoConfiguration {
 
     @Bean
-    @Profile("nolb")
-    public RestTemplateCustomizer restTemplateCustomizer(
-        final RetryLoadBalancerInterceptor loadBalancerInterceptor) {
+    @Override
+    public RestTemplateCustomizer restTemplateCustomizer(final RetryLoadBalancerInterceptor loadBalancerInterceptor) {
         return restTemplate -> {
-            List<ClientHttpRequestInterceptor> list = new ArrayList<>(
-                restTemplate.getInterceptors());
+            var list = new ArrayList<>(restTemplate.getInterceptors());
             restTemplate.setInterceptors(list);
         };
     }
