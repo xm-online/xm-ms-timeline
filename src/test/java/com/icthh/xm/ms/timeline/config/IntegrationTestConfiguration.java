@@ -7,7 +7,6 @@ import com.icthh.xm.commons.domainevent.service.impl.KafkaTransactionSynchroniza
 import com.icthh.xm.commons.security.jwt.TokenProvider;
 import com.icthh.xm.commons.security.oauth2.JwtVerificationKeyClient;
 import com.icthh.xm.commons.web.spring.TenantVerifyInterceptor;
-import io.prometheus.client.CollectorRegistry;
 import lombok.SneakyThrows;
 import org.springframework.cloud.client.loadbalancer.RestTemplateCustomizer;
 import org.springframework.context.ApplicationContext;
@@ -35,11 +34,6 @@ public class IntegrationTestConfiguration {
         tenants.add("DEMO");
         tenants.add("TEST");
         tenants.add("RESINTTEST");
-    }
-
-    @Bean
-    public CollectorRegistry collectorRegistry() {
-        return new CollectorRegistry();
     }
 
     @Bean
