@@ -1,7 +1,9 @@
 package com.icthh.xm.ms.timeline.repository.kafka;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.icthh.xm.commons.lep.api.LepManagementService;
 import com.icthh.xm.commons.logging.aop.IgnoreLogginAspect;
 import com.icthh.xm.commons.logging.util.MdcUtils;
 import com.icthh.xm.commons.tenant.TenantContextHolder;
@@ -33,6 +35,9 @@ public class TimelineEventConsumer {
     private final XmTimelineMapper xmTimelineMapper;
     private final TenantPropertiesService tenantPropertiesService;
     private final TenantContextHolder tenantContextHolder;
+    private final LepManagementService lepManagementService;
+    private final ObjectMapper mapper = new ObjectMapper()
+        .registerModule(new JavaTimeModule());
 
     /**
      * Consume timeline event message.
@@ -47,8 +52,6 @@ public class TimelineEventConsumer {
         MdcUtils.putRid(rid);
         try {
             log.info("Consume event from topic [{}]", message.topic());
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.registerModule(new JavaTimeModule());
             try {
                 TimelineEvent timelineEvent = mapper.readValue(message.value(), TimelineEvent.class);
                 XmTimeline xmTimeline = xmTimelineMapper.timelineEventToXmTimeline(timelineEvent);
@@ -80,7 +83,9 @@ public class TimelineEventConsumer {
                     xmTimeline.getHttpMethod());
                 return;
             }
-            timelineService.insertTimelines(xmTimeline);
+            try (var context = lepManagementService.beginThreadContext()) {
+                timelineService.insertTimelines(xmTimeline);
+            }
         };
     }
 }
