@@ -229,7 +229,7 @@ dependencies {
     implementation 'io.micrometer:micrometer-observation'
     implementation "io.micrometer:micrometer-tracing-bridge-brave"
     implementation "io.springfox:springfox-bean-validators:${springfoxVersion}"
-    implementation "org.postgresql:postgresql"
+    implementation "org.postgresql:postgresql:${postgresqlVersion}"
     implementation "com.h2database:h2"
     implementation 'com.microsoft.sqlserver:mssql-jdbc'
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-hibernate6"
@@ -267,6 +267,32 @@ dependencies {
     testRuntimeOnly "com.tngtech.archunit:archunit-junit5-engine:${archunitJunit5Version}"
     testImplementation "com.h2database:h2"
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
+
+    constraints {
+        implementation("org.apache.commons:commons-compress:${apacheCommonCompress}")
+        implementation("io.github.classgraph:classgraph:${gitClassGraph}")
+
+        implementation("io.undertow:undertow-core") {
+            version {
+                strictly("${undertowVersion}")
+            }
+        }
+        implementation("io.undertow:undertow-servlet") {
+            version {
+                strictly("${undertowVersion}")
+            }
+        }
+        implementation("io.undertow:undertow-websockets-jsr") {
+            version {
+                strictly("${undertowVersion}")
+            }
+        }
+        implementation("org.jboss.xnio:xnio-api") {
+            version {
+                strictly("${xnioApiVersion}")
+            }
+        }
+    }
 }
 
 task cleanResources(type: Delete) {
