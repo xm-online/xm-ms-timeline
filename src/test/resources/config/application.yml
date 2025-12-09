@@ -49,6 +49,9 @@ spring:
         host: localhost
     messages:
         basename: i18n/messages
+    mvc:
+        pathmatch:
+            matching-strategy: ANT_PATH_MATCHER
     thymeleaf:
         mode: XHTML
 

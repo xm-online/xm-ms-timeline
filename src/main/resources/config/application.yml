@@ -94,6 +94,9 @@ spring:
         serialization.write_dates_as_timestamps: false
     messages:
         basename: i18n/messages
+    mvc:
+        pathmatch:
+            matching-strategy: ANT_PATH_MATCHER
     thymeleaf:
         mode: XHTML
     kafka:

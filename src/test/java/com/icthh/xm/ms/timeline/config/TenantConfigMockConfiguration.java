@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.icthh.xm.commons.config.client.api.ConfigService;
+import com.icthh.xm.commons.config.client.repository.CommonConfigRepository;
 import com.icthh.xm.commons.config.client.repository.TenantConfigRepository;
 import com.icthh.xm.commons.config.client.repository.TenantListRepository;
 import com.icthh.xm.commons.config.client.service.TenantConfigService;
@@ -58,5 +59,10 @@ public class TenantConfigMockConfiguration {
     @Bean
     public ConfigService configService() {
         return mock(ConfigService.class);
+    }
+
+    @Bean
+    public CommonConfigRepository commonConfigRepository() {
+        return mock(CommonConfigRepository.class);
     }
 }
