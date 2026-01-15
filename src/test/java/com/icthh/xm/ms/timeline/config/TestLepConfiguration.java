@@ -36,6 +36,11 @@ public class TestLepConfiguration extends GroovyLepEngineConfiguration {
     }
 
     @Bean
+    public CommonConfigRepository commonConfigRepository() {
+        return mock(CommonConfigRepository.class);
+    }
+
+    @Bean
     public TestLepService testLepService() {
         return new TestLepService();
     }
