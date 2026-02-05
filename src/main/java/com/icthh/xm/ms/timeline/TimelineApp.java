@@ -34,7 +34,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 
 @ComponentScan(
-    value = "com.icthh.xm",
+    value = {"com.icthh.xm.ms.timeline", "com.icthh.xm"},
     excludeFilters = {
         @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
                               classes = {PermittedRepository.class,
