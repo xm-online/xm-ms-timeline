@@ -124,6 +124,8 @@ public class XmTimelineResource {
         @RequestParam(value = "operation", required = false) String operation,
         @ApiParam(name = "source", value = "Source for timeline filter")
         @RequestParam(value = "source", required = false) String source,
+        @ApiParam(name = "clientId", value = "Client ID for timeline filter")
+        @RequestParam(value = "clientId", required = false) String clientId,
         @ApiParam(value = "Results page you want to retrieve (0..N)", defaultValue = "0")
         @RequestParam(value = "page", defaultValue = "0", required = false) int page,
         @ApiParam(value = "Number of records per page", defaultValue = "20")
@@ -131,7 +133,7 @@ public class XmTimelineResource {
         @ApiParam(name = "sort", value = "Sorting declared fields")
         @SortDefault(sort = "startDate", direction = Sort.Direction.DESC) Sort sort
     ) {
-        Page<TimelineDto> timelines = service.getTimelines(msName, userKey, aggregateId, aggregateType, dateFrom, dateTo, operation, source, page, size, sort);
+        Page<TimelineDto> timelines = service.getTimelines(msName, userKey, aggregateId, aggregateType, dateFrom, dateTo, operation, source, clientId, page, size, sort);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(timelines, "/timelines/v2");
         return new ResponseEntity<>(timelines.getContent(), headers, HttpStatus.OK);
     }

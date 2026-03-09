@@ -47,9 +47,11 @@ public class XmTimelineResourceIntTest extends AbstractSpringBootTest {
     private static final String PARAM_LIMIT = "limit";
     private static final String PARAM_AGGREGATE_ID = "aggregateId";
     private static final String PARAM_SOURCE = "source";
+    private static final String PARAM_CLIENT_ID = "clientId";
     private static final int VALUE_LIMIT = 10;
     private static final String VALUE_AGGREGATE_ID = "test_aggregate_id";
     private static final String VALUE_SOURCE = "test_source";
+    private static final String VALUE_CLIENT_ID = "test_client_id";
 
     private static Random random = new Random();
     private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
@@ -70,6 +72,16 @@ public class XmTimelineResourceIntTest extends AbstractSpringBootTest {
         entity.setStartDate(Instant.now());
         entity.setAggregateId(aggregateId);
         entity.setSource(source);
+
+        return entity;
+    }
+
+    public static XmTimeline createEntity(String aggregateId, String source, String clientId) {
+        XmTimeline entity = new XmTimeline();
+        entity.setStartDate(Instant.now());
+        entity.setAggregateId(aggregateId);
+        entity.setSource(source);
+        entity.setClientId(clientId);
 
         return entity;
     }
@@ -164,6 +176,28 @@ public class XmTimelineResourceIntTest extends AbstractSpringBootTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.*", Matchers.hasSize(1)))
             .andExpect(jsonPath("$.[0].aggregateId").value(VALUE_AGGREGATE_ID))
+            .andExpect(header().stringValues(HEADER_X_TOTAL_COUNT, "1"));
+    }
+
+    @Test
+    @Transactional
+    public void getTimelinesV2WithFilterClientId() throws Exception {
+        List<XmTimeline> entities = Arrays.asList(
+            createEntity(VALUE_AGGREGATE_ID, VALUE_SOURCE, VALUE_CLIENT_ID),
+            createEntity(String.valueOf(count.incrementAndGet()), VALUE_SOURCE, "another_client_id"),
+            createEntity(String.valueOf(count.incrementAndGet()), VALUE_SOURCE)
+        );
+        timelineJpaRepository.saveAllAndFlush(entities);
+
+        MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+        requestParams.add(PARAM_CLIENT_ID, VALUE_CLIENT_ID);
+
+        mockMvc
+            .perform(get(API_URL_V2).params(requestParams))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.*", Matchers.hasSize(1)))
+            .andExpect(jsonPath("$.[0].clientId").value(VALUE_CLIENT_ID))
             .andExpect(header().stringValues(HEADER_X_TOTAL_COUNT, "1"));
     }
 
