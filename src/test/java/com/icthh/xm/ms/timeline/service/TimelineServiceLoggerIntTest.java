@@ -102,6 +102,7 @@ public class TimelineServiceLoggerIntTest {
             DATE,
             OPERATION,
             SOURCE,
+            null,
             0,
             0,
             null);
@@ -117,6 +118,7 @@ public class TimelineServiceLoggerIntTest {
             DATE,
             OPERATION,
             SOURCE,
+            null,
             0,
             0,
             null);

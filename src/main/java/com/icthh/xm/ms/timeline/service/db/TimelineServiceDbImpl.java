@@ -47,6 +47,7 @@ public class TimelineServiceDbImpl implements TimelineService {
     private static final String FIELD_AGGREGATE_TYPE = "aggregateType";
     private static final String FIELD_OPERATION_NAME = "operationName";
     private static final String FIELD_SOURCE = "source";
+    private static final String FIELD_CLIENT_ID = "clientId";
 
     @Override
     public void insertTimelines(XmTimeline timeline) {
@@ -73,7 +74,7 @@ public class TimelineServiceDbImpl implements TimelineService {
             sortProcessor.findValidOrDefault(XmTimeline.class, sort, Sort.by(DESC, FIELD_START_DATE))
         );
 
-        Page<XmTimeline> timelines = getTimelines(msName, userKey, idOrKey, typeKey, dateFrom, dateTo, operation, source, pageRequest);
+        Page<XmTimeline> timelines = getTimelines(msName, userKey, idOrKey, typeKey, dateFrom, dateTo, operation, source, null, pageRequest);
 
         List<XmTimeline> content = filterResult(timelines);
 
@@ -96,6 +97,7 @@ public class TimelineServiceDbImpl implements TimelineService {
                                           Instant dateTo,
                                           String operation,
                                           String source,
+                                          String clientId,
                                           int page,
                                           int size,
                                           Sort sort) {
@@ -105,7 +107,7 @@ public class TimelineServiceDbImpl implements TimelineService {
             sortProcessor.findValidOrDefault(XmTimeline.class, sort, Sort.by(DESC, FIELD_START_DATE))
         );
 
-        Page<XmTimeline> timelines = getTimelines(msName, userKey, aggregateId, aggregateType, dateFrom, dateTo, operation, source, pageable);
+        Page<XmTimeline> timelines = getTimelines(msName, userKey, aggregateId, aggregateType, dateFrom, dateTo, operation, source, clientId, pageable);
 
         List<XmTimeline> content = filterResult(timelines);
 
@@ -120,6 +122,7 @@ public class TimelineServiceDbImpl implements TimelineService {
                                           Instant dateTo,
                                           String operation,
                                           String source,
+                                          String clientId,
                                           Pageable pageable) {
         Specification<XmTimeline> specificationsForFiltering = null;
 
@@ -138,6 +141,10 @@ public class TimelineServiceDbImpl implements TimelineService {
         if (StringUtils.isNotBlank(source)) {
             specificationsForFiltering =
                 combineEqualSpecifications(specificationsForFiltering, source, FIELD_SOURCE);
+        }
+        if (StringUtils.isNotBlank(clientId)) {
+            specificationsForFiltering =
+                combineEqualSpecifications(specificationsForFiltering, clientId, FIELD_CLIENT_ID);
         }
         if (Objects.nonNull(dateFrom)) {
             specificationsForFiltering =
