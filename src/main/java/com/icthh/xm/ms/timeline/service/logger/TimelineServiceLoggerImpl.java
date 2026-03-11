@@ -41,7 +41,7 @@ public class TimelineServiceLoggerImpl implements TimelineService {
                                        String next,
                                        int limit,
                                        Sort sort) {
-        List<XmTimeline> filteredTimelines = getTimelines(msName, userKey, idOrKey, typeKey, dateFrom, dateTo, operation, source);
+        List<XmTimeline> filteredTimelines = getTimelines(msName, userKey, idOrKey, typeKey, dateFrom, dateTo, operation, source, null);
         return new TimelinePageVM(xmTimelineMapper.xmTimelineToTimelineEvent(filteredTimelines), null);
     }
 
@@ -66,10 +66,11 @@ public class TimelineServiceLoggerImpl implements TimelineService {
                                           Instant dateTo,
                                           String operation,
                                           String source,
+                                          String clientId,
                                           int page,
                                           int size,
                                           Sort sort) {
-        List<XmTimeline> filteredTimelines = getTimelines(msName, userKey, aggregateId, aggregateType, dateFrom, dateTo, operation, source);
+        List<XmTimeline> filteredTimelines = getTimelines(msName, userKey, aggregateId, aggregateType, dateFrom, dateTo, operation, source, clientId);
         return new PageImpl<>(xmTimelineMapper.xmTimelineToTimelineDto(filteredTimelines));
     }
 
@@ -80,7 +81,8 @@ public class TimelineServiceLoggerImpl implements TimelineService {
                                           Instant dateFrom,
                                           Instant dateTo,
                                           String operation,
-                                          String source) {
+                                          String source,
+                                          String clientId) {
         // filter and return timelines from memory
 
         return timelines.stream()
@@ -88,6 +90,7 @@ public class TimelineServiceLoggerImpl implements TimelineService {
             .filter(t -> stringFilter(userKey, t.getUserKey()))
             .filter(t -> stringFilter(operation, t.getOperationName()))
             .filter(t -> stringFilter(source, t.getSource()))
+            .filter(t -> stringFilter(clientId, t.getClientId()))
             .filter(t -> stringFilter(aggregateType, t.getAggregateType()))
             .filter(t -> {
                 if (isNotBlank(aggregateId)) {

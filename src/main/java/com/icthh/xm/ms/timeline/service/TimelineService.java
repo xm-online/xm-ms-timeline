@@ -37,6 +37,7 @@ public interface TimelineService {
                                    Instant dateTo,
                                    String operation,
                                    String source,
+                                   String clientId,
                                    int page,
                                    int size,
                                    Sort sort);
