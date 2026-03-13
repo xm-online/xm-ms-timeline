@@ -11,10 +11,12 @@ import com.icthh.xm.commons.permission.annotation.PrivilegeDescription;
 import com.icthh.xm.ms.timeline.domain.properties.TenantProperties;
 import com.icthh.xm.ms.timeline.service.TenantPropertiesService;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimeLineValidationVM;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(value = "timelines")
+@Tag(name = "timelines", description = "Timeline Properties API")
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -37,10 +39,11 @@ public class TimelinePropertiesResource {
     private final TenantPropertiesService tenantPropertiesService;
 
     @PostMapping(value = "/timelines/properties/validate", consumes = {TEXT_PLAIN_VALUE})
-    @ApiOperation(value = "Validate timeline properties format", response = TimeLineValidationVM.class)
+    @Operation(summary = "Validate timeline properties format", description = "Validate timeline YAML configuration")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Timeline validation result", response = TimeLineValidationVM.class),
-        @ApiResponse(code = 500, message = "Internal server error")})
+        @ApiResponse(responseCode = "200", description = "Timeline validation result",
+            content = @Content(schema = @Schema(implementation = TimeLineValidationVM.class))),
+        @ApiResponse(responseCode = "500", description = "Internal server error")})
     @SneakyThrows
     @Timed
     @PreAuthorize("hasPermission(null, 'TIMELINE.TENANT.PROPERTIES.VALIDATE')")
@@ -56,10 +59,10 @@ public class TimelinePropertiesResource {
     }
 
     @PostMapping(value = "/timelines/properties", consumes = {TEXT_PLAIN_VALUE})
-    @ApiOperation(value = "Update timeline properties", response = ResponseEntity.class)
+    @Operation(summary = "Update timeline properties", description = "Update timeline YAML configuration for tenant")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Timeline properties update result", response = ResponseEntity.class),
-        @ApiResponse(code = 500, message = "Internal server error")})
+        @ApiResponse(responseCode = "200", description = "Timeline properties update result"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")})
     @SneakyThrows
     @Timed
     @PreAuthorize("hasPermission({'timelineYml': #timelineYml}, 'TIMELINE.TENANT.PROPERTIES.UPDATE')")
