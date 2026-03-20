@@ -1,6 +1,6 @@
 jib {
     from {
-        image = "17-jre-noble"
+        image = "eclipse-temurin:17-jre-noble"
     }
     to {
         image = "timeline:latest"

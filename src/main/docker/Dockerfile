@@ -1,4 +1,4 @@
-FROM 17-jre-noble
+FROM eclipse-temurin:17-jre-noble
 
 ENTRYPOINT ["/entrypoint.sh"]
 
