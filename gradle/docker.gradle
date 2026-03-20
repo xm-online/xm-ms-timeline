@@ -1,6 +1,6 @@
 jib {
     from {
-        image = "openjdk:17-alpine"
+        image = "eclipse-temurin:17-jre"
     }
     to {
         image = "timeline:latest"
