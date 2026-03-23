@@ -30,6 +30,7 @@ public class ApplicationProperties {
     private String domainEventTopicsPathPattern;
     private String domainEventTopicsName;
     private String specificationTemplatesPathPattern;
+    private Boolean timelineSourceSecurityEnable;
 
     private final KafkaHealthCheck kafkaHealthCheck = new KafkaHealthCheck();
 

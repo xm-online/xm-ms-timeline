@@ -5,6 +5,7 @@ import com.icthh.xm.commons.security.spring.config.SecurityConfiguration;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,7 +14,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
-@ConditionalOnMissingBean(name = "timelineSecurityConfiguration")
+@ConditionalOnProperty(
+        name = "application.timeline.source.security.enabled",
+        havingValue = "true",
+        matchIfMissing = true
+)
 public class TimelineSecurityConfig extends SecurityConfiguration {
 
     public TimelineSecurityConfig(TokenProvider tokenProvider,
