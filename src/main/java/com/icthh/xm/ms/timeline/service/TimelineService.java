@@ -29,6 +29,20 @@ public interface TimelineService {
 
     void insertTimelines(DomainEvent domainEvent);
 
+    default Page<TimelineDto> getTimelines(String msName,
+                                   String userKey,
+                                   String aggregateId,
+                                   String aggregateType,
+                                   Instant dateFrom,
+                                   Instant dateTo,
+                                   String operation,
+                                   String source,
+                                   int page,
+                                   int size,
+                                   Sort sort) {
+       return getTimelines(msName, userKey, aggregateId, aggregateType, dateFrom, dateTo, operation, source, null, page, size, sort);
+    }
+
     Page<TimelineDto> getTimelines(String msName,
                                    String userKey,
                                    String aggregateId,
