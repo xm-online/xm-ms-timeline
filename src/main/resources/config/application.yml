@@ -154,7 +154,7 @@ jhipster:
         queue-capacity: 10000
     # By default CORS is disabled. Uncomment to enable.
     #cors:
-        #allowed-origins: "*"
+        #allowed-origin-patterns: "*"
         #allowed-methods: "*"
         #allowed-headers: "*"
         #exposed-headers: "Authorization,Link,X-Total-Count"

@@ -7,11 +7,13 @@ import com.icthh.xm.ms.timeline.service.dto.TimelineDto;
 import com.icthh.xm.ms.timeline.template.TemplateParamsHolder;
 import com.icthh.xm.ms.timeline.web.rest.util.PaginationUtil;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +37,7 @@ import java.util.List;
 /**
  * REST controller for managing Timelines.
  */
-@Api(value = "timelines")
+@Tag(name = "timelines", description = "Timeline API")
 @RestController
 @RequestMapping("/api")
 @Slf4j
@@ -62,35 +64,36 @@ public class XmTimelineResource {
     @GetMapping("/timelines")
     @Timed
     @Deprecated
-    @ApiOperation(value = "Get list of timelines", response = TimelinePageVM.class)
+    @Operation(summary = "Get list of timelines", description = "Retrieve paginated list of timeline events (deprecated, use v2)")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Successful retrieval of timelines", response = TimelinePageVM.class),
-        @ApiResponse(code = 500, message = "Internal server error")})
+        @ApiResponse(responseCode = "200", description = "Successful retrieval of timelines",
+            content = @Content(schema = @Schema(implementation = TimelinePageVM.class))),
+        @ApiResponse(responseCode = "500", description = "Internal server error")})
     @PreAuthorize("hasPermission({'userKey':#userKey, 'idOrKey': #idOrKey, 'dateFrom': #dateFrom, 'dateTo': #dateTo, "
         + "'operation': #operation}, 'TIMELINE.GET_LIST')")
     @PrivilegeDescription("Privilege to get all the timelines")
     public ResponseEntity<TimelinePageVM> getTimelines(
-        @ApiParam(name = "msName", value = "Microservices name for timeline filter")
+        @Parameter(name = "msName", description = "Microservices name for timeline filter")
         @RequestParam(value = "msName", required = false) String msName,
-        @ApiParam(name = "userKey", value = "User key for timeline filter")
+        @Parameter(name = "userKey", description = "User key for timeline filter")
         @RequestParam(value = "userKey", required = false) String userKey,
-        @ApiParam(name = "idOrKey", value = "Entity Id or entity key for timeline filter")
+        @Parameter(name = "idOrKey", description = "Entity Id or entity key for timeline filter")
         @RequestParam(value = "idOrKey", required = false) String idOrKey,
-        @ApiParam(name = "typeKey", value = "Entity type key for timeline filter")
+        @Parameter(name = "typeKey", description = "Entity type key for timeline filter")
         @RequestParam(value = "typeKey", required = false) String typeKey,
-        @ApiParam(name = "dateFrom", value = "Date from for timeline filter")
+        @Parameter(name = "dateFrom", description = "Date from for timeline filter")
         @RequestParam(value = "dateFrom", required = false) Instant dateFrom,
-        @ApiParam(name = "dateTo", value = "Date to for timeline filter")
+        @Parameter(name = "dateTo", description = "Date to for timeline filter")
         @RequestParam(value = "dateTo", required = false) Instant dateTo,
-        @ApiParam(name = "operation", value = "Operation name for timeline filter")
+        @Parameter(name = "operation", description = "Operation name for timeline filter")
         @RequestParam(value = "operation", required = false) String operation,
-        @ApiParam(name = "source", value = "Source for timeline filter")
+        @Parameter(name = "source", description = "Source for timeline filter")
         @RequestParam(value = "source", required = false) String source,
-        @ApiParam(name = "next", value = "Next value for definition next page")
+        @Parameter(name = "next", description = "Next value for definition next page")
         @RequestParam(value = "next", required = false) String next,
-        @ApiParam(name = "sort", value = "Sorting declared fields")
+        @Parameter(name = "sort", description = "Sorting declared fields")
         @SortDefault(sort = "startDate", direction = Sort.Direction.DESC) Sort sort,
-        @ApiParam(name = "limit", value = "Limit of timelines on page", required = true)
+        @Parameter(name = "limit", description = "Limit of timelines on page", required = true)
         @RequestParam(value = "limit") int limit
     ) {
 
@@ -100,37 +103,38 @@ public class XmTimelineResource {
 
     @GetMapping("/timelines/v2")
     @Timed
-    @ApiOperation(value = "Get list of timelines (version 2)", response = TimelineDto.class, responseContainer = "List")
+    @Operation(summary = "Get list of timelines (version 2)", description = "Retrieve paginated list of timeline events with advanced filtering including clientId")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Successful retrieval of timelines", response = TimelineDto.class, responseContainer = "List"),
-        @ApiResponse(code = 500, message = "Internal server error")})
+        @ApiResponse(responseCode = "200", description = "Successful retrieval of timelines",
+            content = @Content(schema = @Schema(implementation = TimelineDto.class))),
+        @ApiResponse(responseCode = "500", description = "Internal server error")})
     @PreAuthorize("hasPermission({'userKey':#userKey, 'aggregateId': #aggregateId, 'dateFrom': #dateFrom, 'dateTo': #dateTo, "
         + "'operation': #operation}, 'TIMELINE.GET_LIST_V2')")
     @PrivilegeDescription("Privilege to get all the timelines (version 2)")
     public ResponseEntity<List<TimelineDto>> getTimelinesV2(
-        @ApiParam(name = "msName", value = "Microservices name for timeline filter")
+        @Parameter(name = "msName", description = "Microservices name for timeline filter", example = "entity")
         @RequestParam(value = "msName", required = false) String msName,
-        @ApiParam(name = "userKey", value = "User key for timeline filter")
+        @Parameter(name = "userKey", description = "User key for timeline filter", example = "user123")
         @RequestParam(value = "userKey", required = false) String userKey,
-        @ApiParam(name = "aggregateId", value = "Entity id for timeline filter")
+        @Parameter(name = "aggregateId", description = "Entity id for timeline filter", example = "12345")
         @RequestParam(value = "aggregateId", required = false) String aggregateId,
-        @ApiParam(name = "aggregateType", value = "Entity type for timeline filter")
+        @Parameter(name = "aggregateType", description = "Entity type for timeline filter", example = "ACCOUNT")
         @RequestParam(value = "aggregateType", required = false) String aggregateType,
-        @ApiParam(name = "dateFrom", value = "Date from for timeline filter")
+        @Parameter(name = "dateFrom", description = "Date from for timeline filter (ISO-8601)", example = "2026-03-01T00:00:00Z")
         @RequestParam(value = "dateFrom", required = false) Instant dateFrom,
-        @ApiParam(name = "dateTo", value = "Date to for timeline filter")
+        @Parameter(name = "dateTo", description = "Date to for timeline filter (ISO-8601)", example = "2026-03-12T23:59:59Z")
         @RequestParam(value = "dateTo", required = false) Instant dateTo,
-        @ApiParam(name = "operation", value = "Operation name for timeline filter")
+        @Parameter(name = "operation", description = "Operation name for timeline filter", example = "UPDATE")
         @RequestParam(value = "operation", required = false) String operation,
-        @ApiParam(name = "source", value = "Source for timeline filter")
+        @Parameter(name = "source", description = "Source for timeline filter", example = "WEB")
         @RequestParam(value = "source", required = false) String source,
-        @ApiParam(name = "clientId", value = "Client ID for timeline filter")
+        @Parameter(name = "clientId", description = "Client ID for timeline filter", example = "client-456")
         @RequestParam(value = "clientId", required = false) String clientId,
-        @ApiParam(value = "Results page you want to retrieve (0..N)", defaultValue = "0")
+        @Parameter(description = "Results page you want to retrieve (0..N)", example = "0")
         @RequestParam(value = "page", defaultValue = "0", required = false) int page,
-        @ApiParam(value = "Number of records per page", defaultValue = "20")
+        @Parameter(description = "Number of records per page", example = "20")
         @RequestParam(value = "size", required = false, defaultValue = "20") int size,
-        @ApiParam(name = "sort", value = "Sorting declared fields")
+        @Parameter(name = "sort", description = "Sorting declared fields (e.g., startDate,desc)", example = "startDate,desc")
         @SortDefault(sort = "startDate", direction = Sort.Direction.DESC) Sort sort
     ) {
         Page<TimelineDto> timelines = service.getTimelines(msName, userKey, aggregateId, aggregateType, dateFrom, dateTo, operation, source, clientId, page, size, sort);
