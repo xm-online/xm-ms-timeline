@@ -27,6 +27,8 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "xmtimeline")
@@ -141,16 +143,19 @@ public class XmTimeline implements Serializable {
     @Column(name = "source")
     private String source;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @JsonDeserialize(using = UntypedObjectDeserializer.class)
     @Convert(converter = MapToStringConverter.class)
     @Column(name = "data")
     private Map<String, Object> data = new HashMap<>();
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @JsonDeserialize(using = UntypedObjectDeserializer.class)
     @Convert(converter = MapToStringConverter.class)
     @Column(name = "entity_before")
     private Map<String, Object> entityBefore = new HashMap<>();
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @JsonDeserialize(using = UntypedObjectDeserializer.class)
     @Convert(converter = MapToStringConverter.class)
     @Column(name = "entity_after")

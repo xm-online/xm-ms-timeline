@@ -27,7 +27,8 @@ public class TimelineSecurityConfig extends SecurityConfiguration {
     protected HttpSecurity applyUrlSecurity(HttpSecurity http) {
         http
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/management/consumer-status/**").authenticated()
+                        auth.requestMatchers("/v3/api-docs/**").permitAll()
+                                .requestMatchers("/management/consumer-status/**").authenticated()
                 );
         return super.applyUrlSecurity(http);
     }
