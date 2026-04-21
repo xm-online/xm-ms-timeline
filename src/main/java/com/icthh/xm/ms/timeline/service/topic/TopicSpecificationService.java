@@ -1,7 +1,7 @@
 package com.icthh.xm.ms.timeline.service.topic;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.icthh.xm.commons.tenant.YamlMapperUtils;
+import tools.jackson.databind.ObjectMapper;
 import com.icthh.xm.commons.topic.domain.DynamicConsumer;
 import com.icthh.xm.commons.topic.domain.TopicConfig;
 import com.icthh.xm.commons.topic.domain.TopicConsumersSpec;
@@ -15,14 +15,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class TopicSpecificationService implements DynamicConsumerConfiguration {
 
     private final Map<String, List<DynamicConsumer>> dynamicConsumersByTenant = new ConcurrentHashMap<>();
-    private final ObjectMapper ymlMapper = new ObjectMapper(new YAMLFactory());
+    private final ObjectMapper ymlMapper = YamlMapperUtils.yamlDefaultMapper();
     private final TopicMessageHandlerFactory topicMessageHandlerFactory;
 
     public void processTopicSpecifications(String tenantKey, String config) {

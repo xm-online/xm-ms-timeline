@@ -109,4 +109,4 @@ application:
     # =================================================
     # options [logger, rdbms]
     # =================================================
-    timeline-service-impl: rdbms
+    timeline-service-impl: logger

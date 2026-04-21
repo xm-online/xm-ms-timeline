@@ -19,6 +19,8 @@ logging:
         ROOT: INFO
         io.github.jhipster: INFO
         com.icthh.xm.ms.timeline: INFO
+        org.springframework.security: DEBUG
+        org.springframework.security.oauth2: DEBUG
 
 feign:
     hystrix:
@@ -78,6 +80,7 @@ spring:
         name: timeline
     main:
         allow-bean-definition-overriding: true
+        allow-circular-references: true
     cloud:
         inetutils:
             preferredNetworks:
@@ -187,6 +190,8 @@ xm-config:
     enabled: true
     xm-config-url: http://config
     kafka-config-topic: config_topic
+    configMode: FILE
+    configDirPath: /Users/viktorpavlenko/work/xm-ms-config-repository
 
 application:
     kafkaHealthCheck:

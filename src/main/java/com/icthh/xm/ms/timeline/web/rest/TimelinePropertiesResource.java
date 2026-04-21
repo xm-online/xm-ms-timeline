@@ -3,10 +3,9 @@ package com.icthh.xm.ms.timeline.web.rest;
 import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
 import com.codahale.metrics.annotation.Timed;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.icthh.xm.commons.tenant.YamlMapperUtils;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import com.icthh.xm.commons.permission.annotation.PrivilegeDescription;
 import com.icthh.xm.ms.timeline.domain.properties.TenantProperties;
 import com.icthh.xm.ms.timeline.service.TenantPropertiesService;
@@ -32,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class TimelinePropertiesResource {
 
-    private final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+    private final ObjectMapper mapper = YamlMapperUtils.yamlDefaultMapper();
 
     private final TenantPropertiesService tenantPropertiesService;
 
@@ -49,7 +48,7 @@ public class TimelinePropertiesResource {
         try {
             mapper.readValue(timelineYml, TenantProperties.class);
             return TimeLineValidationVM.builder().isValid(true).build();
-        } catch (JsonParseException | JsonMappingException e) {
+        } catch (JacksonException e) {
             log.error("Error while validation", e);
             return TimeLineValidationVM.builder().isValid(false).errorMessage(e.getLocalizedMessage()).build();
         }

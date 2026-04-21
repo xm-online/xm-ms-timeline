@@ -1,7 +1,7 @@
 package com.icthh.xm.ms.timeline.service.kafka;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import com.icthh.xm.commons.lep.api.LepManagementService;
 import com.icthh.xm.commons.logging.util.MdcUtils;
 import com.icthh.xm.commons.messaging.event.system.SystemEvent;
@@ -64,7 +64,7 @@ public class SystemQueueConsumer {
     private SystemEvent fromJson(String value) {
         try {
             return objectMapper.readValue(value, SystemEvent.class);
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             throw new RuntimeException(e);
         }
     }
