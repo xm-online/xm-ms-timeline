@@ -1,9 +1,9 @@
 package com.icthh.xm.ms.timeline.service;
 
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
 import org.springframework.data.domain.Sort;
 
 import java.time.Instant;
@@ -46,7 +46,7 @@ public class SortProcessorUnitTest {
 
     private SortProcessor sortProcessor;
 
-    @Before
+    @BeforeEach
     public void init() {
         sortProcessor = new SortProcessor();
     }
@@ -56,7 +56,7 @@ public class SortProcessorUnitTest {
 
         Sort actual = sortProcessor.findValidOrDefault(xmTimeline.getClass(), notValidSort, defaultSort);
 
-        Assert.assertEquals(defaultSort, actual);
+        Assertions.assertEquals(defaultSort, actual);
     }
 
     @Test
@@ -64,7 +64,7 @@ public class SortProcessorUnitTest {
 
         Sort actual = sortProcessor.findValidOrDefault(xmTimeline.getClass(), validSort, defaultSort);
 
-        Assert.assertEquals(validSort, actual);
+        Assertions.assertEquals(validSort, actual);
     }
 
     private XmTimeline createTestTimeline() {

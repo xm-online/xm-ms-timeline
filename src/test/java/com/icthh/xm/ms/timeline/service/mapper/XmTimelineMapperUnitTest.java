@@ -3,16 +3,14 @@ package com.icthh.xm.ms.timeline.service.mapper;
 import com.icthh.xm.commons.tenant.JsonMapperUtils;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
-import tools.jackson.databind.JsonMapper;
 import com.icthh.xm.commons.domainevent.domain.DbDomainEventPayload;
 import com.icthh.xm.commons.domainevent.domain.DomainEvent;
 import com.icthh.xm.commons.domainevent.domain.DomainEventPayload;
 import com.icthh.xm.commons.domainevent.domain.HttpDomainEventPayload;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
-import java.net.http.HttpHeaders;
 import java.util.List;
 import java.util.Map;
 

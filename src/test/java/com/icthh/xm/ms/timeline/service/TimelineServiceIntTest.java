@@ -11,14 +11,14 @@ import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.TestPropertySource;
 import tech.jhipster.config.JHipsterConstants;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -26,9 +26,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @TestPropertySource(properties = {"application.timeline-service-impl = rdbms"})
 @SpringBootTest(classes = {TimelineApp.class, DropSchemaResolver.class})
 @ActiveProfiles(JHipsterConstants.SPRING_PROFILE_TEST)
@@ -40,10 +41,10 @@ public class TimelineServiceIntTest {
     @Autowired
     private TimelineJpaRepository timelineJpaRepository;
 
-    @MockBean
+    @MockitoBean
     private TenantPropertiesService tenantPropertiesService;
 
-    @MockBean
+    @MockitoBean
     private LiquibaseRunner liquibaseRunner;
 
     private static final Long ID = 1L;
@@ -139,11 +140,13 @@ public class TimelineServiceIntTest {
         timelineJpaRepository.deleteAll();
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
+    @Test
     public void testTimelineH2dbExpectedConstraintException() {
         mockHidePayloadProp(false);
 
-        timelineJpaRepository.save(createTestTimeline(null));
+        assertThrows(DataIntegrityViolationException.class, ()-> {
+            timelineJpaRepository.save(createTestTimeline(null));
+        });
     }
 
     private XmTimeline createTestTimeline(Instant startDate) {

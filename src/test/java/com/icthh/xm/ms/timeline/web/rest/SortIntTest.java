@@ -2,10 +2,10 @@ package com.icthh.xm.ms.timeline.web.rest;
 
 import com.icthh.xm.ms.timeline.AbstractSpringBootTest;
 import com.icthh.xm.ms.timeline.service.TimelineService;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
@@ -34,12 +34,12 @@ public class SortIntTest extends AbstractSpringBootTest {
     @Autowired
     private XmTimelineResource controller;
 
-    @MockBean
+    @MockitoBean
     private TimelineService timelineService;
 
     private MockMvc mockMvc;
 
-    @Before
+    @BeforeEach
     public void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
             .setCustomArgumentResolvers(new SortHandlerMethodArgumentResolver())
