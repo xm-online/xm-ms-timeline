@@ -8,8 +8,10 @@ import com.icthh.xm.ms.timeline.domain.properties.TenantProperties;
 import com.icthh.xm.ms.timeline.repository.jpa.TimelineJpaRepository;
 import com.icthh.xm.ms.timeline.service.dto.TimelineEvent;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.config.JHipsterConstants;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,6 +59,13 @@ public class TimelineServiceIntTest {
     private static final String AGGREGATE_TYPE = "test_type";
     private static final String ENTITY_KEY = "test_entity_key";
     private static final String TEST_PAYLOAD = "test payload body";
+
+
+    @BeforeEach
+    public void setup() {
+        timelineJpaRepository.deleteAll();
+        timelineJpaRepository.flush();
+    }
 
     @Test
     public void testTimelineH2db() {
@@ -109,8 +118,6 @@ public class TimelineServiceIntTest {
             20,
                 Sort.by(Sort.Direction.DESC, "startDate"))
             .getTimelines()).isEmpty();
-
-        timelineJpaRepository.deleteAll();
     }
 
     @Test
@@ -136,23 +143,23 @@ public class TimelineServiceIntTest {
         TimelineEvent timelineEvent = pageVM.getTimelines().iterator().next();
         assertThat(timelineEvent.responseBody()).isNull();
         assertThat(timelineEvent.requestBody()).isNull();
-
-        timelineJpaRepository.deleteAll();
     }
 
     @Test
+    @Transactional
     public void testTimelineH2dbExpectedConstraintException() {
         mockHidePayloadProp(false);
 
         assertThrows(DataIntegrityViolationException.class, ()-> {
-            timelineJpaRepository.save(createTestTimeline(null));
+            XmTimeline timeline = createTestTimeline(null);
+            timeline.setStartDate(null); // This should cause constraint violation
+            timelineJpaRepository.save(timeline);
         });
     }
 
     private XmTimeline createTestTimeline(Instant startDate) {
         XmTimeline timeline = new XmTimeline();
 
-        timeline.setId(ID);
         timeline.setMsName(MS_NAME);
         timeline.setUserKey(USER_KEY);
         timeline.setAggregateId(AGGREGATE_ID);

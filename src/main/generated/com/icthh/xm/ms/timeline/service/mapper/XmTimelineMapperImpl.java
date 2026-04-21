@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-02-16T14:12:35+0200",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.6 (Azul Systems, Inc.)"
+    date = "2026-04-21T19:48:07+0300",
+    comments = "version: 1.6.3, compiler: javac, environment: Java 25.0.2 (Azul Systems, Inc.)"
 )
 @Component
 public class XmTimelineMapperImpl implements XmTimelineMapper {
@@ -220,17 +220,10 @@ public class XmTimelineMapperImpl implements XmTimelineMapper {
     }
 
     private Map<String, Object> domainEventPayloadData(DomainEvent domainEvent) {
-        if ( domainEvent == null ) {
-            return null;
-        }
         DomainEventPayload payload = domainEvent.getPayload();
         if ( payload == null ) {
             return null;
         }
-        Map<String, Object> data = payload.getData();
-        if ( data == null ) {
-            return null;
-        }
-        return data;
+        return payload.getData();
     }
 }

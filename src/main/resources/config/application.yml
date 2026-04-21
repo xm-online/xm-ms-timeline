@@ -94,7 +94,11 @@ spring:
                 watch:
                     enabled: false
     jackson:
-        serialization.write_dates_as_timestamps: false
+        serialization:
+            INDENT_OUTPUT: true
+        default-property-inclusion: non_empty
+        mapper:
+            sort-properties-alphabetically: false
     messages:
         basename: i18n/messages
     mvc:
