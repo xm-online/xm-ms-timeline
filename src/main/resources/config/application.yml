@@ -31,18 +31,6 @@ feign:
 #                connectTimeout: 5000
 #                readTimeout: 5000
 
-# See https://github.com/Netflix/Hystrix/wiki/Configuration
-hystrix:
-    command:
-        default:
-            execution:
-                isolation:
-                    strategy: SEMAPHORE
-# See https://github.com/spring-cloud/spring-cloud-netflix/issues/1330
-#                    thread:
-#                        timeoutInMilliseconds: 10000
-    shareSecurityContext: true
-
 management:
     endpoints:
         web:
@@ -124,7 +112,7 @@ spring:
          repositories:
             enabled: false
     autoconfigure:
-        exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+        exclude: org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration, org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration
 
     liquibase:
         enabled: false

@@ -45,8 +45,6 @@
     <logger name="ch.qos.logback" level="WARN"/>
     <logger name="com.codahale.metrics" level="WARN"/>
     <logger name="com.datastax" level="WARN"/>
-    <logger name="com.netflix" level="WARN"/>
-    <logger name="com.netflix.discovery" level="INFO"/>
     <logger name="com.ryantenney" level="WARN"/>
     <logger name="com.sun" level="WARN"/>
     <logger name="com.zaxxer" level="WARN"/>
@@ -69,7 +67,6 @@
     <logger name="org.apache.kafka.clients.consumer.ConsumerConfig" level="OFF"/>
     <logger name="org.reflections" level="INFO"/>
     <logger name="org.springframework.boot.actuate.endpoint.EndpointId" level="ERROR"/>
-    <logger name="com.netflix.config.sources.URLConfigurationSource" level="ERROR"/>
 
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
         <resetJUL>true</resetJUL>
