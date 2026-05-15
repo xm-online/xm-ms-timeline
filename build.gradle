@@ -169,7 +169,6 @@ nohttp {
 }
 
 configurations {
-    providedRuntime
     all {
         resolutionStrategy {
             // Inherited version from Spring Boot can't be used because of regressions:
@@ -196,9 +195,6 @@ dependencies {
     implementation "io.micrometer:micrometer-registry-prometheus"
     implementation "tools.jackson.datatype:jackson-datatype-hppc"
     implementation "tools.jackson.core:jackson-databind"
-    implementation "com.fasterxml.jackson.datatype:jackson-datatype-hppc"
-    implementation "com.fasterxml.jackson.core:jackson-annotations"
-    implementation "com.fasterxml.jackson.core:jackson-databind"
     implementation "org.hibernate.orm:hibernate-core:${hibernateVersion}"
     implementation "com.zaxxer:HikariCP"
     implementation "org.apache.commons:commons-lang3"
@@ -228,7 +224,6 @@ dependencies {
     implementation ("io.springfox:springfox-swagger2:3.0.0") {
         exclude module: "mapstruct"
     }
-    implementation "org.springframework.boot:spring-boot-micrometer-tracing-brave"
     implementation "io.springfox:springfox-bean-validators:${springfoxVersion}"
     implementation "org.postgresql:postgresql:${postgresqlVersion}"
     implementation "com.h2database:h2"
@@ -251,6 +246,7 @@ dependencies {
     implementation "com.icthh.xm.commons:xm-commons-permission:${xm_commons_version}"
     implementation "com.icthh.xm.commons:xm-commons-scheduler:${xm_commons_version}"
     implementation "com.icthh.xm.commons:xm-commons-metric:${xm_commons_version}"
+    implementation "com.icthh.xm.commons:xm-commons-metric-lep:${xm_commons_version}"
     implementation "com.icthh.xm.commons:xm-commons-topic:${xm_commons_version}"
     implementation "com.icthh.xm.commons:xm-commons-logging-configurable:${xm_commons_version}"
     implementation "com.icthh.xm.commons:xm-commons-logging-trace:${xm_commons_version}"

@@ -2,7 +2,6 @@ package com.icthh.xm.ms.timeline.web.rest;
 
 import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
-import com.codahale.metrics.annotation.Timed;
 import com.icthh.xm.commons.tenant.YamlMapperUtils;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
@@ -41,7 +40,6 @@ public class TimelinePropertiesResource {
         @ApiResponse(code = 200, message = "Timeline validation result", response = TimeLineValidationVM.class),
         @ApiResponse(code = 500, message = "Internal server error")})
     @SneakyThrows
-    @Timed
     @PreAuthorize("hasPermission(null, 'TIMELINE.TENANT.PROPERTIES.VALIDATE')")
     @PrivilegeDescription("Privilege to validate timeline yml")
     public TimeLineValidationVM validate(@RequestBody String timelineYml) {
@@ -60,7 +58,6 @@ public class TimelinePropertiesResource {
         @ApiResponse(code = 200, message = "Timeline properties update result", response = ResponseEntity.class),
         @ApiResponse(code = 500, message = "Internal server error")})
     @SneakyThrows
-    @Timed
     @PreAuthorize("hasPermission({'timelineYml': #timelineYml}, 'TIMELINE.TENANT.PROPERTIES.UPDATE')")
     @PrivilegeDescription("Privilege to update timeline yml")
     public ResponseEntity<Void> updateTimelineProperties(@RequestBody String timelineYml) {

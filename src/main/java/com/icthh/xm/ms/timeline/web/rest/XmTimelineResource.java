@@ -1,6 +1,5 @@
 package com.icthh.xm.ms.timeline.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
 import com.icthh.xm.commons.permission.annotation.PrivilegeDescription;
 import com.icthh.xm.ms.timeline.service.TimelineService;
 import com.icthh.xm.ms.timeline.service.dto.TimelineDto;
@@ -60,7 +59,6 @@ public class XmTimelineResource {
      * @return the ResponseEntity with status 200 (OK) and the list of xmTimelines and next page code in body.
      */
     @GetMapping("/timelines")
-    @Timed
     @Deprecated
     @ApiOperation(value = "Get list of timelines", response = TimelinePageVM.class)
     @ApiResponses(value = {
@@ -99,7 +97,6 @@ public class XmTimelineResource {
     }
 
     @GetMapping("/timelines/v2")
-    @Timed
     @ApiOperation(value = "Get list of timelines (version 2)", response = TimelineDto.class, responseContainer = "List")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Successful retrieval of timelines", response = TimelineDto.class, responseContainer = "List"),
@@ -138,7 +135,6 @@ public class XmTimelineResource {
         return new ResponseEntity<>(timelines.getContent(), headers, HttpStatus.OK);
     }
 
-    @Timed
     @PreAuthorize("hasPermission({'templateKey': #templateKey}, 'TIMELINE.TEMPLATE')")
     @PostMapping("/search/{templateKey}")
     public ResponseEntity<List<TimelineDto>> searchByTemplate(@PathVariable String templateKey,

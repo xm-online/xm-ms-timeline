@@ -1,8 +1,6 @@
 package com.icthh.xm.ms.timeline.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashMap;
@@ -26,6 +24,8 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.deser.jdk.UntypedObjectDeserializer;
 
 @Entity
 @Table(name = "xmtimeline")
