@@ -15,8 +15,6 @@
 # ===================================================================
 
 logging:
-    async:
-        enabled: true
     level:
         ROOT: INFO
         io.github.jhipster: INFO
