@@ -1,6 +1,7 @@
 package com.icthh.xm.ms.timeline.repository.kafka;
 
 import com.icthh.xm.commons.tenant.JsonMapperUtils;
+import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 import com.icthh.xm.commons.logging.util.MdcUtils;
 import com.icthh.xm.commons.messaging.event.system.SystemEvent;
@@ -58,7 +59,7 @@ public class SystemTopicConsumer {
                         break;
                 }
 
-            } catch (tools.jackson.core.JacksonException e) {
+            } catch (JacksonException e) {
                 log.error("System topic message has incorrect format: '{}' ", message.value(), e);
             }
 

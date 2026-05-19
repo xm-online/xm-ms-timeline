@@ -15,6 +15,8 @@
 # ===================================================================
 
 logging:
+    async:
+        enabled: true
     level:
         ROOT: INFO
         io.github.jhipster: INFO
@@ -32,15 +34,6 @@ feign:
 #                readTimeout: 5000
 
 management:
-    opentelemetry:
-        tracing:
-            export:
-                otlp:
-                    endpoint: http://localhost:4318/v1/traces
-    otlp:
-        metrics:
-            export:
-                enabled: false
     endpoints:
         web:
             base-path: /management
@@ -191,8 +184,6 @@ xm-config:
     enabled: true
     xm-config-url: http://config
     kafka-config-topic: config_topic
-    configMode: FILE
-    configDirPath: /Users/viktorpavlenko/work/xm-ms-config-repository
 
 application:
     kafkaHealthCheck:
