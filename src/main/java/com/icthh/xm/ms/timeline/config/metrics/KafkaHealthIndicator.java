@@ -14,7 +14,7 @@ import org.apache.kafka.common.config.ConfigResource;
 import org.apache.kafka.common.config.ConfigResource.Type;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.health.contributor.AbstractHealthIndicator;
-import org.springframework.boot.health.contributor.Health;
+import org.springframework.boot.health.contributor.Health.Builder;
 import org.springframework.boot.health.contributor.Status;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.KafkaAdmin;
@@ -31,7 +31,7 @@ public class KafkaHealthIndicator extends AbstractHealthIndicator {
     private final ApplicationProperties applicationProperties;
 
     @Override
-    protected void doHealthCheck(Health.Builder builder) {
+    protected void doHealthCheck(Builder builder) {
         DescribeClusterOptions describeClusterOptions = new DescribeClusterOptions()
             .timeoutMs(applicationProperties.getKafkaHealthCheck().getConnectionTimeout());
 

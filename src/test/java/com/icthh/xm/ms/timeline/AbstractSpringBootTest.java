@@ -4,6 +4,7 @@ import com.icthh.xm.commons.migration.db.liquibase.LiquibaseRunner;
 import com.icthh.xm.commons.migration.db.tenant.DropSchemaResolver;
 import com.icthh.xm.ms.timeline.config.IntegrationTestConfiguration;
 import com.icthh.xm.ms.timeline.config.TestLepConfiguration;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -16,6 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
         LiquibaseRunner.class
 })
 @ExtendWith(SpringExtension.class)
+@Tag("com.icthh.xm.ms.timeline.AbstractSpringBootTest")
 public abstract class AbstractSpringBootTest {
 
 }

@@ -37,7 +37,7 @@ public class MapToStringConverter implements AttributeConverter<Map<String, Obje
             String json = StringUtils.isNoneBlank(data) ? data : "{}";
             return mapper.readValue(json, new TypeReference<HashMap<String, Object>>() {
             });
-        } catch (tools.jackson.core.JacksonException e) {
+        } catch (JacksonException e) {
             log.warn("Error during String to JSON converting", e);
             return Collections.emptyMap();
         }

@@ -60,13 +60,6 @@ public class TimelineServiceIntTest {
     private static final String ENTITY_KEY = "test_entity_key";
     private static final String TEST_PAYLOAD = "test payload body";
 
-
-    @BeforeEach
-    public void setup() {
-        timelineJpaRepository.deleteAll();
-        timelineJpaRepository.flush();
-    }
-
     @Test
     public void testTimelineH2db() {
         mockHidePayloadProp(false);
@@ -118,6 +111,8 @@ public class TimelineServiceIntTest {
             20,
                 Sort.by(Sort.Direction.DESC, "startDate"))
             .getTimelines()).isEmpty();
+
+        timelineJpaRepository.deleteAll();
     }
 
     @Test
@@ -143,10 +138,11 @@ public class TimelineServiceIntTest {
         TimelineEvent timelineEvent = pageVM.getTimelines().iterator().next();
         assertThat(timelineEvent.responseBody()).isNull();
         assertThat(timelineEvent.requestBody()).isNull();
+
+        timelineJpaRepository.deleteAll();
     }
 
     @Test
-    @Transactional
     public void testTimelineH2dbExpectedConstraintException() {
         mockHidePayloadProp(false);
 
