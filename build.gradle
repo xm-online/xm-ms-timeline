@@ -14,14 +14,14 @@ plugins {
     id "idea"
     id "eclipse"
     id "jacoco"
-    id "org.springframework.boot" version "${springBootVersion}"
+    id "org.springframework.boot"
     id "com.google.cloud.tools.jib"
-    id "com.gorylenko.gradle-git-properties" version "${gitPropertiesPluginVersion}"
+    id "com.gorylenko.gradle-git-properties"
     id "org.sonarqube"
-    id "io.spring.nohttp" version "${noHttpCheckstyleVersion}"
+    id "io.spring.nohttp"
     id 'pmd'
-    id "com.github.spotbugs" version "${spotbugsPluginVersion}"
-    id "io.spring.dependency-management" version "${springDependencyManagement}"
+    id "com.github.spotbugs"
+    id "io.spring.dependency-management"
 }
 
 dependencyManagement {
