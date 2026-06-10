@@ -110,12 +110,3 @@ application:
     # options [logger, rdbms]
     # =================================================
     timeline-service-impl: rdbms
-
-management:
-  tracing:
-    export:
-      enabled: false
-  otlp:
-    metrics:
-      export:
-        enabled: false
