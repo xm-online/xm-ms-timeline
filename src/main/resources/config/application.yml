@@ -75,7 +75,6 @@ spring:
         name: timeline
     main:
         allow-bean-definition-overriding: true
-        allow-circular-references: true
     cloud:
         inetutils:
             preferredNetworks:
@@ -118,9 +117,6 @@ spring:
         jpa:
          repositories:
             enabled: false
-    autoconfigure:
-        exclude: org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration, org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration
-
     liquibase:
         enabled: false
         change-log: classpath:config/liquibase/master.xml
