@@ -19,8 +19,6 @@ logging:
         ROOT: INFO
         io.github.jhipster: INFO
         com.icthh.xm.ms.timeline: INFO
-        org.springframework.security: DEBUG
-        org.springframework.security.oauth2: DEBUG
 
 feign:
     hystrix:
