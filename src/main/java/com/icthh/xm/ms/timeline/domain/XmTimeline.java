@@ -1,14 +1,11 @@
 package com.icthh.xm.ms.timeline.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer;
 import com.icthh.xm.ms.timeline.domain.converter.MapToStringConverter;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -27,8 +24,8 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.deser.jdk.UntypedObjectDeserializer;
 
 @Entity
 @Table(name = "xmtimeline")

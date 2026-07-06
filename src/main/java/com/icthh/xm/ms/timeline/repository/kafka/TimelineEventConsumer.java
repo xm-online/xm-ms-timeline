@@ -1,8 +1,8 @@
 package com.icthh.xm.ms.timeline.repository.kafka;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.icthh.xm.commons.tenant.JsonMapperUtils;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import com.icthh.xm.commons.lep.api.LepManagementService;
 import com.icthh.xm.commons.logging.aop.IgnoreLogginAspect;
 import com.icthh.xm.commons.logging.util.MdcUtils;
@@ -36,8 +36,7 @@ public class TimelineEventConsumer {
     private final TenantPropertiesService tenantPropertiesService;
     private final TenantContextHolder tenantContextHolder;
     private final LepManagementService lepManagementService;
-    private final ObjectMapper mapper = new ObjectMapper()
-        .registerModule(new JavaTimeModule());
+    private final ObjectMapper mapper = JsonMapperUtils.getDefaultJsonMapper();
 
     /**
      * Consume timeline event message.
@@ -62,7 +61,7 @@ public class TimelineEventConsumer {
                 tenantContextHolder.getPrivilegedContext()
                                    .execute(TenantContextUtils.buildTenant(xmTimeline.getTenant()),
                                             buildExclusionAwareTimelineAdder(), xmTimeline);
-            } catch (IOException e) {
+            } catch (JacksonException e) {
                 log.error("Timeline message has incorrect format: '{}'", message.value(), e);
             }
         } finally {

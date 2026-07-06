@@ -1,7 +1,7 @@
 package com.icthh.xm.ms.timeline.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.icthh.xm.commons.tenant.YamlMapperUtils;
+import tools.jackson.databind.ObjectMapper;
 import com.icthh.xm.commons.config.client.api.RefreshableConfiguration;
 import com.icthh.xm.commons.config.client.repository.TenantConfigRepository;
 import com.icthh.xm.commons.logging.aop.IgnoreLogginAspect;
@@ -26,7 +26,7 @@ public class TenantPropertiesService implements RefreshableConfiguration {
 
     private static final String TENANT_NAME = "tenantName";
 
-    private ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+    private ObjectMapper mapper = YamlMapperUtils.yamlDefaultMapper();
 
     private ConcurrentHashMap<String, TenantProperties> tenantProps = new ConcurrentHashMap<>();
 

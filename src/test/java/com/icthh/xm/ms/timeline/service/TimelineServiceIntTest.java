@@ -8,17 +8,19 @@ import com.icthh.xm.ms.timeline.domain.properties.TenantProperties;
 import com.icthh.xm.ms.timeline.repository.jpa.TimelineJpaRepository;
 import com.icthh.xm.ms.timeline.service.dto.TimelineEvent;
 import com.icthh.xm.ms.timeline.web.rest.vm.TimelinePageVM;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.config.JHipsterConstants;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -26,9 +28,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @TestPropertySource(properties = {"application.timeline-service-impl = rdbms"})
 @SpringBootTest(classes = {TimelineApp.class, DropSchemaResolver.class})
 @ActiveProfiles(JHipsterConstants.SPRING_PROFILE_TEST)
@@ -40,10 +43,10 @@ public class TimelineServiceIntTest {
     @Autowired
     private TimelineJpaRepository timelineJpaRepository;
 
-    @MockBean
+    @MockitoBean
     private TenantPropertiesService tenantPropertiesService;
 
-    @MockBean
+    @MockitoBean
     private LiquibaseRunner liquibaseRunner;
 
     private static final Long ID = 1L;
@@ -139,17 +142,20 @@ public class TimelineServiceIntTest {
         timelineJpaRepository.deleteAll();
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
+    @Test
     public void testTimelineH2dbExpectedConstraintException() {
         mockHidePayloadProp(false);
 
-        timelineJpaRepository.save(createTestTimeline(null));
+        assertThrows(DataIntegrityViolationException.class, ()-> {
+            XmTimeline timeline = createTestTimeline(null);
+            timeline.setStartDate(null); // This should cause constraint violation
+            timelineJpaRepository.save(timeline);
+        });
     }
 
     private XmTimeline createTestTimeline(Instant startDate) {
         XmTimeline timeline = new XmTimeline();
 
-        timeline.setId(ID);
         timeline.setMsName(MS_NAME);
         timeline.setUserKey(USER_KEY);
         timeline.setAggregateId(AGGREGATE_ID);

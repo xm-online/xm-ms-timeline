@@ -4,10 +4,10 @@ import com.icthh.xm.commons.migration.db.liquibase.LiquibaseRunner;
 import com.icthh.xm.commons.migration.db.tenant.DropSchemaResolver;
 import com.icthh.xm.ms.timeline.config.IntegrationTestConfiguration;
 import com.icthh.xm.ms.timeline.config.TestLepConfiguration;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SpringBootTest(classes = {
         TestLepConfiguration.class,
@@ -16,8 +16,8 @@ import org.springframework.test.context.junit4.SpringRunner;
         DropSchemaResolver.class,
         LiquibaseRunner.class
 })
-@Category(AbstractSpringBootTest.class)
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
+@Tag("com.icthh.xm.ms.timeline.AbstractSpringBootTest")
 public abstract class AbstractSpringBootTest {
 
 }

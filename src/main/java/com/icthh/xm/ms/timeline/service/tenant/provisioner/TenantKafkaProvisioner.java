@@ -3,9 +3,9 @@ package com.icthh.xm.ms.timeline.service.tenant.provisioner;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonMap;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.icthh.xm.commons.tenant.JsonMapperUtils;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
 import com.icthh.xm.commons.exceptions.BusinessException;
 import com.icthh.xm.commons.gen.model.Tenant;
@@ -130,7 +130,7 @@ public class TenantKafkaProvisioner implements TenantProvisioner {
                 DeleteTopicsResult createTopicsResult =
                     adminClient.deleteTopics(singleton(topicName), new DeleteTopicsOptions().timeoutMs(timeout));
                 // Since the call is Async, Lets wait for it to complete.
-                createTopicsResult.values().get(topicName).get();
+                createTopicsResult.topicNameValues().get(topicName).get();
                 log.info("Kafka topic deleted for tenantKey: {}, time = {} ms", topicName, stopWatch.getTime());
             } catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e.getMessage(), e);
@@ -193,11 +193,10 @@ public class TenantKafkaProvisioner implements TenantProvisioner {
         event.setMessageSource(getAppName());
         //TODO make SystemEvent.data Map by default, check if used everywhere
         event.setData(singletonMap(Constants.EVENT_TENANT, tenant));
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
+        ObjectMapper mapper = JsonMapperUtils.getDefaultJsonMapper();
         try {
             return mapper.writeValueAsString(event);
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             log.error("System Event mapping error", e);
             throw new BusinessException("Event mapping error", e.getMessage());
         }

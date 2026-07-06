@@ -1,16 +1,16 @@
 package com.icthh.xm.ms.timeline.service.mapper;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.icthh.xm.commons.tenant.JsonMapperUtils;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import com.icthh.xm.commons.domainevent.domain.DbDomainEventPayload;
 import com.icthh.xm.commons.domainevent.domain.DomainEvent;
 import com.icthh.xm.commons.domainevent.domain.DomainEventPayload;
 import com.icthh.xm.commons.domainevent.domain.HttpDomainEventPayload;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
-import java.net.http.HttpHeaders;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +27,7 @@ public class XmTimelineMapperUnitTest {
     private XmTimelineMapper xmTimelineMapper = Mappers.getMapper(XmTimelineMapper.class);
 
     @Test
-    public void testDomainEventToXmTimelineWithDbDomainEventPayload() throws JsonProcessingException {
+    public void testDomainEventToXmTimelineWithDbDomainEventPayload() throws JacksonException {
         Map<String, Object> data = convertJsonToMap(JSON);
 
         DbDomainEventPayload dbDomainEventPayload = new DbDomainEventPayload();
@@ -44,7 +44,7 @@ public class XmTimelineMapperUnitTest {
     }
 
     @Test
-    public void testDomainEventToXmTimelineWithHttpDomainEventPayload() throws JsonProcessingException {
+    public void testDomainEventToXmTimelineWithHttpDomainEventPayload() throws JacksonException {
         Map<String, Object> data = convertJsonToMap(JSON);
         Map<String, List<String>> headerMap = Map.of(HEADER_X_TOTAL_COUNT, List.of("34"), HEADER_ACCEPT_ENCODING, List.of("gzip", "deflate", "br"));
 
@@ -71,8 +71,8 @@ public class XmTimelineMapperUnitTest {
             .build();
     }
 
-    public static Map<String, Object> convertJsonToMap(String json) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
+    public static Map<String, Object> convertJsonToMap(String json) throws JacksonException {
+        ObjectMapper objectMapper = JsonMapperUtils.getDefaultJsonMapper();
         return objectMapper.readValue(json, Map.class);
     }
 

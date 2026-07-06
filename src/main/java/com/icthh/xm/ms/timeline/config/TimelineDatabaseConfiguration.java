@@ -7,15 +7,12 @@ import static com.icthh.xm.ms.timeline.config.TimelineDatabaseConfiguration.DBPR
 import com.icthh.xm.commons.migration.db.config.DatabaseConfiguration;
 import com.icthh.xm.commons.migration.db.tenant.SchemaResolver;
 import jakarta.persistence.EntityManagerFactory;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import tech.jhipster.config.JHipsterConstants;
-import java.sql.SQLException;
+import org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration;
+import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
+import org.springframework.boot.jpa.autoconfigure.JpaProperties;
+import org.springframework.boot.persistence.autoconfigure.EntityScan;
 import lombok.extern.slf4j.Slf4j;
-import org.h2.tools.Server;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
-import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -43,18 +40,6 @@ public class TimelineDatabaseConfiguration extends DatabaseConfiguration {
 
     public TimelineDatabaseConfiguration(Environment env, JpaProperties jpaProperties, SchemaResolver schemaResolver) {
         super(env, jpaProperties, schemaResolver);
-    }
-
-    /**
-     * Open the TCP port for the H2 database, so it is available remotely.
-     *
-     * @return the H2 database TCP server
-     * @throws SQLException if the server failed to start
-     */
-    @Bean(initMethod = "start", destroyMethod = "stop")
-    @Profile(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT)
-    public Server h2TCPServer() throws SQLException {
-        return Server.createTcpServer("-tcp", "-tcpAllowOthers");
     }
 
     @Bean

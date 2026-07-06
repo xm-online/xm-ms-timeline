@@ -1,7 +1,8 @@
 package com.icthh.xm.ms.timeline.repository.kafka;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.icthh.xm.commons.tenant.JsonMapperUtils;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import com.icthh.xm.commons.logging.util.MdcUtils;
 import com.icthh.xm.commons.messaging.event.system.SystemEvent;
 import com.icthh.xm.commons.messaging.event.system.SystemEventType;
@@ -36,8 +37,7 @@ public class SystemTopicConsumer {
         MdcUtils.putRid();
         try {
             log.info("Consume event from topic [{}]", message.topic());
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.registerModule(new JavaTimeModule());
+            ObjectMapper mapper = JsonMapperUtils.getDefaultJsonMapper();
             try {
                 SystemEvent event = mapper.readValue(message.value(), SystemEvent.class);
 
@@ -59,7 +59,7 @@ public class SystemTopicConsumer {
                         break;
                 }
 
-            } catch (IOException e) {
+            } catch (JacksonException e) {
                 log.error("System topic message has incorrect format: '{}' ", message.value(), e);
             }
 

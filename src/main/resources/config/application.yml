@@ -29,19 +29,14 @@ feign:
 #                connectTimeout: 5000
 #                readTimeout: 5000
 
-# See https://github.com/Netflix/Hystrix/wiki/Configuration
-hystrix:
-    command:
-        default:
-            execution:
-                isolation:
-                    strategy: SEMAPHORE
-# See https://github.com/spring-cloud/spring-cloud-netflix/issues/1330
-#                    thread:
-#                        timeoutInMilliseconds: 10000
-    shareSecurityContext: true
-
 management:
+    tracing:
+        export:
+            enabled: ${MANAGEMENT_TRACING_EXPORT_ENABLED:false}
+    otlp:
+        metrics:
+            export:
+                enabled: ${MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED:false}
     endpoints:
         web:
             base-path: /management
@@ -85,13 +80,18 @@ spring:
                 - 10.
         consul:
             discovery:
+                query-passing: true
                 healthCheckPath: /management/health
                 instanceId: ${spring.application.name}:${spring.application.instance-id:${random.value}}
             config:
                 watch:
                     enabled: false
     jackson:
-        serialization.write_dates_as_timestamps: false
+        serialization:
+            INDENT_OUTPUT: true
+        default-property-inclusion: non_empty
+        mapper:
+            sort-properties-alphabetically: false
     messages:
         basename: i18n/messages
     mvc:
@@ -116,9 +116,6 @@ spring:
         jpa:
          repositories:
             enabled: false
-    autoconfigure:
-        exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
-
     liquibase:
         enabled: false
         change-log: classpath:config/liquibase/master.xml

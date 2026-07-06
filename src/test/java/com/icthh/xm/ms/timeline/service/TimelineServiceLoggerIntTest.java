@@ -6,18 +6,18 @@ import com.icthh.xm.ms.timeline.service.dto.TimelineDto;
 import com.icthh.xm.ms.timeline.service.logger.TimelineServiceLoggerImpl;
 import com.icthh.xm.ms.timeline.service.mapper.XmTimelineMapper;
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.Instant;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {TimelineApp.class})
 @TestPropertySource(properties = {
     "application.timeline-service-impl = logger",
@@ -39,7 +39,7 @@ public class TimelineServiceLoggerIntTest {
     private static final String AGGREGATE_TYPE = "test_type";
     private static final String ENTITY_KEY = "test_entity_key";
 
-    @Before
+    @BeforeEach
     public void init() {
         timelineService = new TimelineServiceLoggerImpl(xmTimelineMapper);
         timeline = createTestTimeline();
