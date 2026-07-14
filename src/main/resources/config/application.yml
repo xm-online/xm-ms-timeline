@@ -119,6 +119,9 @@ spring:
     liquibase:
         enabled: false
         change-log: classpath:config/liquibase/master.xml
+    docker:
+        compose:
+            enabled: false
 
 security:
     oauth2:
