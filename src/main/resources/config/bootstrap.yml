@@ -26,3 +26,6 @@ spring:
                     - swagger=v3
             host: localhost
             port: 8500
+    docker:
+        compose:
+            enabled: false
