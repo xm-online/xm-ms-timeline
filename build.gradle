@@ -218,10 +218,6 @@ dependencies {
 
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
     implementation "org.apache.commons:commons-lang3"
-    implementation ("io.springfox:springfox-swagger2:3.0.0") {
-        exclude module: "mapstruct"
-    }
-    implementation "io.springfox:springfox-bean-validators:${springfoxVersion}"
     implementation "org.postgresql:postgresql:${postgresqlVersion}"
     implementation 'com.microsoft.sqlserver:mssql-jdbc'
     implementation "tools.jackson.datatype:jackson-datatype-hibernate7"
