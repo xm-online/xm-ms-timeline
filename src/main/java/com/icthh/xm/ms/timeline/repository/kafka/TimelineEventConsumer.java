@@ -3,6 +3,7 @@ package com.icthh.xm.ms.timeline.repository.kafka;
 import com.icthh.xm.commons.tenant.JsonMapperUtils;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.module.SimpleModule;
 import com.icthh.xm.commons.lep.api.LepManagementService;
 import com.icthh.xm.commons.logging.aop.IgnoreLogginAspect;
 import com.icthh.xm.commons.logging.util.MdcUtils;
@@ -11,6 +12,7 @@ import com.icthh.xm.commons.tenant.TenantContextUtils;
 import com.icthh.xm.ms.timeline.domain.XmTimeline;
 import com.icthh.xm.ms.timeline.service.TenantPropertiesService;
 import com.icthh.xm.ms.timeline.service.TimelineService;
+import com.icthh.xm.ms.timeline.service.dto.HeaderValueDeserializer;
 import com.icthh.xm.ms.timeline.service.dto.TimelineEvent;
 import com.icthh.xm.ms.timeline.service.mapper.XmTimelineMapper;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +38,10 @@ public class TimelineEventConsumer {
     private final TenantPropertiesService tenantPropertiesService;
     private final TenantContextHolder tenantContextHolder;
     private final LepManagementService lepManagementService;
-    private final ObjectMapper mapper = JsonMapperUtils.getDefaultJsonMapper();
+    private final ObjectMapper mapper = JsonMapperUtils.getDefaultJsonMapper()
+        .rebuild()
+        .addModule(new SimpleModule().addDeserializer(String.class, new HeaderValueDeserializer()))
+        .build();
 
     /**
      * Consume timeline event message.
