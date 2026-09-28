@@ -1,5 +1,6 @@
 package com.icthh.xm.ms.timeline.config.lep;
 
+import com.icthh.xm.commons.cache.TenantCacheManager;
 import com.icthh.xm.commons.config.client.api.ConfigService;
 import com.icthh.xm.commons.config.client.service.TenantConfigService;
 import com.icthh.xm.commons.lep.api.BaseLepContext;
@@ -18,6 +19,7 @@ public class LepContextListener implements LepContextFactory {
     private final TenantConfigService tenantConfigService;
     private final ConfigService configService;
     private final Optional<EventDeduplicationStrategyFactory> tenantCacheManagerFacade;
+    private final Optional<TenantCacheManager> tenantCacheManager;
 
     @Override
     public BaseLepContext buildLepContext(LepMethod lepMethod) {
@@ -25,6 +27,7 @@ public class LepContextListener implements LepContextFactory {
         lepContext.tenantConfigService = tenantConfigService;
         lepContext.configService = configService;
         tenantCacheManagerFacade.ifPresent(facade -> lepContext.eventDeduplicationStrategyFactory = facade);
+        tenantCacheManager.ifPresent(manager -> lepContext.tenantCacheManager = manager);
         return lepContext;
     }
 }
