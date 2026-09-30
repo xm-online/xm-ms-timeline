@@ -24,6 +24,9 @@ public final class Constants {
     public static final String CREATE_COMMAND = "CREATE";
     public static final String DELETE_COMMAND = "DELETE";
 
+    public static final String CERTIFICATE = "X.509";
+    public static final String PUBLIC_KEY = "-----BEGIN PUBLIC KEY-----%n%s%n-----END PUBLIC KEY-----";
+
     //System event data fields
     public static final String EVENT_TENANT = "tenant";
 
