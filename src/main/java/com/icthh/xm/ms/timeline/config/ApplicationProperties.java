@@ -30,6 +30,7 @@ public class ApplicationProperties {
     private String domainEventTopicsPathPattern;
     private String domainEventTopicsName;
     private String specificationTemplatesPathPattern;
+    private int maxPageSize = 1000;
 
     private final KafkaHealthCheck kafkaHealthCheck = new KafkaHealthCheck();
 

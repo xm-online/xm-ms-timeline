@@ -39,6 +39,7 @@ public class TimelineServiceDbImpl implements TimelineService {
     private final XmTimelineMapper xmTimelineMapper;
     private TenantPropertiesService tenantPropertiesService;
     private SortProcessor sortProcessor;
+    private int maxPageSize;
 
     private static final String FIELD_START_DATE = "startDate";
     private static final String FIELD_MS_NAME = "msName";
@@ -70,7 +71,7 @@ public class TimelineServiceDbImpl implements TimelineService {
         int page = next != null ? Integer.parseInt(next) : ZERO.intValue();
         PageRequest pageRequest = PageRequest.of(
             page,
-            limit,
+            Math.min(limit, maxPageSize),
             sortProcessor.findValidOrDefault(XmTimeline.class, sort, Sort.by(DESC, FIELD_START_DATE))
         );
 
@@ -103,7 +104,7 @@ public class TimelineServiceDbImpl implements TimelineService {
                                           Sort sort) {
         Pageable pageable = PageRequest.of(
             page,
-            size,
+            Math.min(size, maxPageSize),
             sortProcessor.findValidOrDefault(XmTimeline.class, sort, Sort.by(DESC, FIELD_START_DATE))
         );
 
