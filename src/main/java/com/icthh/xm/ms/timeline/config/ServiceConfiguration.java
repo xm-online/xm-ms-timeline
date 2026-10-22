@@ -26,6 +26,7 @@ public class ServiceConfiguration {
     private final TenantPropertiesService tenantPropertiesService;
     private final XmTimelineMapper xmTimelineMapper;
     private final SortProcessor sortProcessor;
+    private final ApplicationProperties applicationProperties;
 
     @Bean(name = "timelineService")
     @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = LOGGER_IMPL)
@@ -36,7 +37,8 @@ public class ServiceConfiguration {
     @Bean(name = "timelineService")
     @ConditionalOnProperty(name = "application.timeline-service-impl", havingValue = RDBMS_IMPL)
     public TimelineService dbTimelineService(TimelineJpaRepository timelineJpaRepository) {
-        return new TimelineServiceDbImpl(timelineJpaRepository, xmTimelineMapper, tenantPropertiesService, sortProcessor);
+        return new TimelineServiceDbImpl(timelineJpaRepository, xmTimelineMapper, tenantPropertiesService, sortProcessor,
+            applicationProperties.getMaxPageSize());
     }
 
     @Primary

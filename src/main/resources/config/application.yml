@@ -201,6 +201,7 @@ application:
     # options [logger, rdbms]
     # =================================================
     timeline-service-impl: rdbms
+    max-page-size: 1000
     retry:
         max-attempts: 3
         delay: 1000 #in milliseconds
