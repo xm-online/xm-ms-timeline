@@ -106,12 +106,6 @@ jhipster:
                 secret: afa5b8981b4cd0d7cf06a7152ac3144effad109d
                 # Token is valid 24 hours
                 token-validity-in-seconds: 86400
-        client-authorization:
-            access-token-uri: http://uaa/oauth/token
-            token-service-id: uaa
-            client-id:
-            client-secret:
-
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class
