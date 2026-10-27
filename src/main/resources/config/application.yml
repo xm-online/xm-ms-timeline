@@ -194,7 +194,7 @@ application:
     tenant-properties-name: timeline.yml
     domain-event-topics-name: domain-event-topic-consumers.yml
     domain-event-topics-path-pattern: /config/tenants/{tenantName}/${spring.application.name}/${application.domain-event-topics-name}
-    tenant-ignored-path-list: /v3/api-docs, /api/profile-info, /swagger-resources/configuration/ui, /management/health, /management/health/liveness, /management/health/readiness
+    tenant-ignored-path-list: /v3/api-docs, /api/profile-info, /swagger-resources/configuration/ui, /management/health, /management/health/liveness, /management/health/readiness, /error
     kafka-system-topic: system_topic
     kafka-system-queue: system_queue
     kafka-metadata-max-age: 60000 #in milliseconds
