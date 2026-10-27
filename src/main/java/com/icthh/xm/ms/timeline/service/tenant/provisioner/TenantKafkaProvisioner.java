@@ -6,7 +6,6 @@ import static java.util.Collections.singletonMap;
 import com.icthh.xm.commons.tenant.JsonMapperUtils;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
-import com.google.common.collect.Maps;
 import com.icthh.xm.commons.exceptions.BusinessException;
 import com.icthh.xm.commons.gen.model.Tenant;
 import com.icthh.xm.commons.logging.util.MdcUtils;
@@ -34,11 +33,11 @@ import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.errors.TopicExistsException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @Slf4j
@@ -51,14 +50,12 @@ public class TenantKafkaProvisioner implements TenantProvisioner {
 
     private final ApplicationProperties properties;
     private final KafkaTemplate<String, String> template;
+    private final KafkaAdmin kafkaAdmin;
     private final TenantContextHolder tenantContextHolder;
     private final XmAuthenticationContextHolder authContextHolder;
 
     @Value("${spring.application.name}")
     private String appName;
-
-    @Value("${spring.kafka.bootstrap-servers}")
-    private String kafkaBootstrapServers;
 
     @Override
     public void createTenant(final Tenant tenant) {
@@ -83,10 +80,6 @@ public class TenantKafkaProvisioner implements TenantProvisioner {
         return appName;
     }
 
-    String getKafkaBootstrapServers() {
-        return kafkaBootstrapServers;
-    }
-
     /**
      * Creates a topic in Kafka. If the topic already exists this does nothing.
      *
@@ -94,7 +87,7 @@ public class TenantKafkaProvisioner implements TenantProvisioner {
      */
     private void createTopic(final String topicName) {
         StopWatch stopWatch = StopWatch.createStarted();
-        try (final AdminClient adminClient = KafkaAdminClient.create(buildDefaultClientConfig())) {
+        try (final AdminClient adminClient = KafkaAdminClient.create(kafkaAdmin.getConfigurationProperties())) {
             try {
                 int partitions = properties.getZookeeper().getPartitions();
                 short replications = properties.getZookeeper().getReplication();
@@ -121,7 +114,7 @@ public class TenantKafkaProvisioner implements TenantProvisioner {
      */
     private void deleteTopic(final String topicName) {
         StopWatch stopWatch = StopWatch.createStarted();
-        try (final AdminClient adminClient = KafkaAdminClient.create(buildDefaultClientConfig())) {
+        try (final AdminClient adminClient = KafkaAdminClient.create(kafkaAdmin.getConfigurationProperties())) {
             try {
                 assertTopicDisconnected(topicName, adminClient);
 
@@ -136,12 +129,6 @@ public class TenantKafkaProvisioner implements TenantProvisioner {
                 throw new RuntimeException(e.getMessage(), e);
             }
         }
-    }
-
-    private Map<String, Object> buildDefaultClientConfig() {
-        Map<String, Object> defaultClientConfig = Maps.newHashMap();
-        defaultClientConfig.put("bootstrap.servers", getKafkaBootstrapServers());
-        return defaultClientConfig;
     }
 
     private void assertTopicDisconnected(String topicName, AdminClient adminClient)
