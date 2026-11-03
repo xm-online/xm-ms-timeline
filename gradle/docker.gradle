@@ -7,7 +7,7 @@ jib {
     }
     container {
         entrypoint = ["sh", "-c", "/entrypoint.sh"]
-        ports = ["8083"]
+        ports = ["8083", "9080"]
         environment = [
             SPRING_OUTPUT_ANSI_ENABLED: "ALWAYS",
             JHIPSTER_SLEEP: "0",

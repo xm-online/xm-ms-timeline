@@ -2,6 +2,7 @@ package com.icthh.xm.ms.timeline.config;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.icthh.xm.commons.config.XmCommonsApplicationProperties;
 import com.icthh.xm.commons.lep.TenantScriptStorage;
 import lombok.Data;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "application")
 @Getter
 @Setter
-public class ApplicationProperties {
+public class ApplicationProperties extends XmCommonsApplicationProperties {
     private final Retry retry = new Retry();
     private List<String> tenantIgnoredPathList = new ArrayList<>();
     private Zookeeper zookeeper = new Zookeeper();
@@ -31,6 +32,7 @@ public class ApplicationProperties {
     private String domainEventTopicsName;
     private String specificationTemplatesPathPattern;
     private int maxPageSize = 1000;
+    private final Deduplication deduplication = new Deduplication();
 
     private final KafkaHealthCheck kafkaHealthCheck = new KafkaHealthCheck();
 
@@ -62,5 +64,10 @@ public class ApplicationProperties {
     @Setter
     public static class Lep {
         private TenantScriptStorage tenantScriptStorage;
+    }
+
+    @Data
+    public static class Deduplication {
+        private String strategy;
     }
 }

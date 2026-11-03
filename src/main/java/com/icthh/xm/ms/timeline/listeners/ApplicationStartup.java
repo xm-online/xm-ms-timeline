@@ -11,7 +11,7 @@ import tech.jhipster.config.JHipsterConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.springframework.boot.kafka.autoconfigure.KafkaProperties;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.env.Environment;
@@ -23,6 +23,7 @@ import org.springframework.kafka.listener.MessageListener;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -36,7 +37,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
     private final TimelineEventConsumerHolder timelineConsumerHolder;
     private final SystemTopicConsumer commandConsumer;
     private final Environment env;
-    private final KafkaProperties kafkaProperties;
+    private final ConsumerFactory<String, String> consumerFactory;
     private final TenantListRepository tenantListRepository;
     private final PrivilegeInspector privilegeInspector;
     private final SystemQueueConsumer systemQueueConsumer;
@@ -68,9 +69,10 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
         log.info("Creating kafka command consumer for topic {}", name);
         ContainerProperties containerProps = new ContainerProperties(name);
 
-        Map<String, Object> props = kafkaProperties.buildConsumerProperties();
+        Map<String, Object> props = new HashMap<>(consumerFactory.getConfigurationProperties());
         props.put(ConsumerConfig.GROUP_ID_CONFIG, UUID.randomUUID().toString());
-        ConsumerFactory<String, String> factory = new DefaultKafkaConsumerFactory<>(props);
+        ConsumerFactory<String, String> factory = new DefaultKafkaConsumerFactory<>(props,
+            new StringDeserializer(), new StringDeserializer());
 
         ConcurrentMessageListenerContainer<String, String> container =
             new ConcurrentMessageListenerContainer<>(factory, containerProps);
@@ -87,10 +89,11 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
         log.info("Creating kafka consumer for topic {}", name);
         ContainerProperties containerProps = new ContainerProperties(name);
 
-        Map<String, Object> props = kafkaProperties.buildConsumerProperties();
+        Map<String, Object> props = new HashMap<>(consumerFactory.getConfigurationProperties());
         props.put(ConsumerConfig.GROUP_ID_CONFIG, UUID.randomUUID().toString());
         props.put(ConsumerConfig.METADATA_MAX_AGE_CONFIG, properties.getKafkaMetadataMaxAge());
-        ConsumerFactory<String, String> factory = new DefaultKafkaConsumerFactory<>(props);
+        ConsumerFactory<String, String> factory = new DefaultKafkaConsumerFactory<>(props,
+            new StringDeserializer(), new StringDeserializer());
 
         ConcurrentMessageListenerContainer<String, String> container =
                 new ConcurrentMessageListenerContainer<>(factory, containerProps);
